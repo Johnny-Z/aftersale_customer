@@ -1,0 +1,45 @@
+<template>
+    <view class="machine_detail">机器详情</view>
+    <machinedetails :machine.sync="machine_details"></machinedetails>
+</template>
+<style lang="less">
+    .machine_detail {
+        padding: 10rpx;
+        font-size: large;
+        font-weight: bold;
+        background: #EBEBEB;
+        color: #000000;
+    }
+</style>
+<script>
+    import wepy from 'wepy'
+    import MachineDetails from '../components/machine_details'
+
+    export default class EventingDetail extends wepy.page {
+      config = {
+        navigationBarTitleText: '事件详情'
+      }
+      components = {
+        machinedetails: MachineDetails
+      }
+      data = {
+        machine_details: {
+          nameplate: 'abcd',
+          machine_type: 'aaa',
+          needle_num: 123,
+          head_num: 1,
+          head_distance: 2,
+          x_distance: 3,
+          y_distance: 4
+        }
+      };
+      methods = {};
+
+      events = {};
+
+      onLoad() {
+      };
+
+        // Other properties
+    }
+</script>

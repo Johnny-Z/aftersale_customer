@@ -1,0 +1,59 @@
+<style lang="less">
+    @import "./styles/base";
+    @import "./styles/icon";
+    @import "./styles/style";
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/authorize',
+      'pages/eventing',
+      'pages/eventing_detail',
+      'pages/machines',
+      'pages/machines_detail',
+      'pages/index'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    },
+    'tabBar': {
+      'color': '#999999',
+      'selectedColor': '#ff6a3c',
+      'backgroundColor': '#ffffff',
+      'borderStyle': 'black',
+      'list': [{
+        'pagePath': 'pages/eventing',
+        'text': '事件',
+        'iconPath': 'images/icon_eventing.png',
+        'selectedIconPath': 'images/icon_eventing_active.png'
+      }, {
+        'pagePath': 'pages/machines',
+        'text': '机器',
+        'iconPath': 'images/icon_machine_list.png',
+        'selectedIconPath': 'images/icon_machine_list_active.png'
+      }]
+    }
+  }
+
+  globalData = {
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+  }
+
+  onLaunch() {
+    console.log('进入小程序')
+  }
+}
+</script>

@@ -1,0 +1,146 @@
+<template>
+  <view class="authorize-contianer">
+    <image class="authorize-icon" src="../images/authorize.png"></image>
+    <view class="item_userid">
+      <view class="userid">账号:</view>
+      <view class="input_id">
+        <input type="number" focus="true" placeholder="输入你的账号" />
+      </view>
+    </view>
+    <view class="item_password">
+      <view class="user_password">密码:</view>
+      <view class="input_pw">
+          <input type="number" password="true" placeholder="输入你的密码"  />
+      </view>
+    </view>
+    <view class="btn-authorize">
+      <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权登录</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '../api/api'
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO,
+  USER_INFO
+} from '../utils/constant'
+export default class Authorize extends wepy.page {
+  config = {
+    navigationBarTitleText: '授权登录'
+  }
+  async onLoad() {
+    let res = await wepy.getSetting()
+    console.log('222')
+    console.log(res)
+    if ((res.authSetting)['scope.userInfo']) {
+      wepy.switchTab({
+        url: '/pages/eventing'
+      })
+    }
+  }
+  async onGotUserInfo(e) {
+    if (e.detail.errMsg === 'getUserInfo:ok') {
+      let res = await wepy.login()
+      console.log(res.code)
+      if (res.code) {
+        console.log(e.detail.userInfo)
+        wepy.setStorageSync(USER_INFO, e.detail.userInfo)
+        let systemInfo = wepy.getSystemInfoSync()
+        wepy.setStorageSync(SYSTEM_INFO, systemInfo)
+        let rlt = await api.wxJsCode2Session({
+          query: {
+            jsCode: res.code,
+            nickName: e.detail.userInfo.nickName
+          }
+        })
+        console.log('get session resoult: ' + rlt.data.result)
+        if (rlt.data.result) {
+          let data = rlt.data
+          if (data.data.openid) {
+            wepy.setStorageSync(USER_SPECICAL_INFO, data.data)
+            wepy.switchTab({
+              url: '/pages/eventing'
+            })
+          }
+        } else {
+          let res = await wepy.showModal({
+            title: 'appid有误',
+            content: '授权失败'
+          })
+          if (res.confirm) {
+            wepy.switchTab({
+              url: '/pages/eventing'
+            })
+          }
+        }
+      }
+    }
+  }
+  methods = {
+
+  }
+  events = {
+
+  }
+}
+
+</script>
+<style lang="less">
+page {
+  height: 100%;
+}
+
+.authorize-contianer {
+    height: 100%;
+    background: #fff;
+    padding-top: 100rpx;
+    .authorize-icon {
+        width: 128rpx;
+        height: 128rpx;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+        padding-bottom: 10rpx;
+    }
+    .item_userid {
+        display: flex;
+        align-items: center;
+        margin: 1rpx 180rpx;
+        border-top: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
+        padding: 20rpx 20rpx;
+        .userid {
+          margin-right: 20rpx;
+        }
+        .input_id {
+          flex: 1;
+          input {
+            color: #333;
+          }
+        }
+    }
+    .item_password {
+        display: flex;
+        align-items: center;
+        margin: 1rpx 180rpx;
+        border-bottom: 1px solid #efefef;
+        padding: 20rpx 20rpx;
+        .user_password {
+            margin-right: 20rpx;
+        }
+        .input_pw {
+          flex: 1;
+          input {
+            color: #333;
+          }
+        }
+        }
+
+  .btn-authorize {
+    margin: 100rpx 100rpx;
+  }
+}
+
+</style>
