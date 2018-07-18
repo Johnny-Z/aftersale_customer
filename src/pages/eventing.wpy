@@ -4,8 +4,9 @@
     <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/eventing_detail?code={{item.code}}" >
       <image class="debug_img" src="{{item.logo}}"></image>
       <view class="info">
-        <view>{{item.name}}: </view>
-        <view>{{item.id}} </view>
+        <view>{{item.nameplate}}: </view>
+        <view>{{item.machineType}} </view>
+        <view>{{item.machineType}}/{{item.machineType}}/{{item.machineType}}/{{item.machineType}}/{{item.machineType}} </view>
       </view>
     </navigator>
   </view>
@@ -14,6 +15,7 @@
 <script>
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
+    import api from '@/api/api'
 
     export default class Eventing extends wepy.page {
       config = {
@@ -24,31 +26,31 @@
       }
       data = {
         machine: {
-          nameplate: 'abcd',
-          machine_type: 'aaa',
-          needle_num: 123,
-          head_num: 1,
-          head_distance: 2,
-          x_distance: 3,
-          y_distance: 4
+          // nameplate: 'abcd',
+          // machineType: 'aaa',
+          // needleNum: 123,
+          // headNum: 1,
+          // headDistance: 2,
+          // xDistance: 3,
+          // yDistance: 4
         },
         list: [
           {
             id: 1,
-            code: 1,
-            name: '点击改变1',
+            machineType: 1,
+            nameplate: '点击改变1',
             logo: '/images/icon_eventing.png'
           },
           {
             id: 2,
-            code: 2,
-            name: '点击改变2',
+            machineType: 2,
+            nameplate: '点击改变2',
             logo: '/images/icon_eventing.png'
           },
           {
             id: 3,
-            code: 3,
-            name: '点击改变3',
+            machineType: 3,
+            nameplate: '点击改变3',
             logo: '/images/icon_eventing.png'
           }
         ]
@@ -65,7 +67,19 @@
 
       }
 
-      onLoad() {}
+      onLoad() {
+        this.getMachineList()
+      }
+
+      async getMachineList() {
+        const json = await api.getMachineList({
+          query: {}
+        })
+        console.log(json)
+        console.log(json.data.data.list[0])
+        this.machine = json.data.data.list[0]
+        this.$apply()
+      }
     }
 
 </script>
