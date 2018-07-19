@@ -13,6 +13,7 @@ const apiMall = 'http://localhost:8080/'
  */
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2')
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
+const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
 
 // 微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
@@ -147,6 +148,7 @@ const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list')
 
 export default {
   getMachineList,
+  getMachineListByCustomer,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,

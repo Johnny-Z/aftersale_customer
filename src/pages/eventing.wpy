@@ -2,11 +2,11 @@
 <template>
   <view class="eventing_list">
     <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/eventing_detail?code={{item.code}}" >
-      <image class="debug_img" src="{{item.logo}}"></image>
+      <image class="debug_img" src="{{logo}}"></image>
       <view class="info">
         <view>{{item.nameplate}}: </view>
-        <view>{{item.machineType}} </view>
-        <view>{{item.machineType}}/{{item.machineType}}/{{item.machineType}}/{{item.machineType}}/{{item.machineType}} </view>
+        <view>{{item.machineType}}: </view>
+        <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
       </view>
     </navigator>
   </view>
@@ -16,7 +16,10 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
-
+    import {
+        AUTHORIZATION,
+        ACCOUNT
+    } from '@/utils/constant'
     export default class Eventing extends wepy.page {
       config = {
         navigationBarTitleText: '事件列表'
@@ -26,33 +29,8 @@
       }
       data = {
         machine: {
-          // nameplate: 'abcd',
-          // machineType: 'aaa',
-          // needleNum: 123,
-          // headNum: 1,
-          // headDistance: 2,
-          // xDistance: 3,
-          // yDistance: 4
         },
         list: [
-          {
-            id: 1,
-            machineType: 1,
-            nameplate: '点击改变1',
-            logo: '/images/icon_eventing.png'
-          },
-          {
-            id: 2,
-            machineType: 2,
-            nameplate: '点击改变2',
-            logo: '/images/icon_eventing.png'
-          },
-          {
-            id: 3,
-            machineType: 3,
-            nameplate: '点击改变3',
-            logo: '/images/icon_eventing.png'
-          }
         ]
       }
 
@@ -72,12 +50,26 @@
       }
 
       async getMachineList() {
+        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+        let userAccount = wepy.getStorageSync(ACCOUNT)
         const json = await api.getMachineList({
-          query: {}
+          query: {},
+          header: {Authorization: jwtAuthorization}
         })
+        console.log('test machine:')
         console.log(json)
         console.log(json.data.data.list[0])
+
+        const machineListJson = await api.getMachineListByCustomer({
+          query: {account: userAccount},
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log('machineListJson:')
+        console.log(machineListJson)
+        console.log(machineListJson.data.data.list)
+        this.list = machineListJson.data.data.list
         this.machine = json.data.data.list[0]
+
         this.$apply()
       }
     }

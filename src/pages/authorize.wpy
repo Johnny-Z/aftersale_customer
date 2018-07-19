@@ -22,7 +22,9 @@
 import wepy from 'wepy'
 import api from '../api/api'
 import {
-  SYSTEM_INFO,
+    AUTHORIZATION,
+    ACCOUNT,
+    SYSTEM_INFO,
   USER_SPECICAL_INFO,
   USER_INFO
 } from '../utils/constant'
@@ -31,8 +33,11 @@ export default class Authorize extends wepy.page {
     navigationBarTitleText: '授权登录'
   }
   async onLoad() {
+    let jwtAuthorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWNjb3VudE5vbkV4cGlyZWRcIjp0cnVlLFwiYWNjb3VudE5vbkxvY2tlZFwiOnRydWUsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzEyNzQ2MjMwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiZW5hYmxlZFwiOnRydWUsXCJpZFwiOjEsXCJuYW1lXCI6XCJhZG1pblwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzNTY2NjY3Nzc3XCIsXCJyb2xlSWRcIjoxLFwidXNlcm5hbWVcIjpcImFkbWluXCIsXCJ2YWxpZFwiOlwiMVwiLFwid2VjaGF0VW5pb25JZFwiOlwid2VjaGF0MjIyXCJ9IiwiZXhwIjoxNTM0NDc1MzY2fQ.tDY680tvyfgEbwjDEXSUGpmfAlec_IH-Qrw1HD_RB1ikLHbZYPp4UjqzE1gF7v2kYfM2Rf7pMc1-m3wcqdbjNQ'
+    wepy.setStorageSync(AUTHORIZATION, jwtAuthorization)
+    wepy.setStorageSync(ACCOUNT, 'admin')
     let res = await wepy.getSetting()
-    console.log('222')
+    console.log('authorize onLoad: ')
     console.log(res)
     if ((res.authSetting)['scope.userInfo']) {
       wepy.switchTab({
@@ -41,10 +46,13 @@ export default class Authorize extends wepy.page {
     }
   }
   async onGotUserInfo(e) {
+    let authorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWNjb3VudE5vbkV4cGlyZWRcIjp0cnVlLFwiYWNjb3VudE5vbkxvY2tlZFwiOnRydWUsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzEyNzQ2MjMwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiZW5hYmxlZFwiOnRydWUsXCJpZFwiOjEsXCJuYW1lXCI6XCJhZG1pblwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzNTY2NjY3Nzc3XCIsXCJyb2xlSWRcIjoxLFwidXNlcm5hbWVcIjpcImFkbWluXCIsXCJ2YWxpZFwiOlwiMVwiLFwid2VjaGF0VW5pb25JZFwiOlwid2VjaGF0MjIyXCJ9IiwiZXhwIjoxNTM0NDc1MzY2fQ.tDY680tvyfgEbwjDEXSUGpmfAlec_IH-Qrw1HD_RB1ikLHbZYPp4UjqzE1gF7v2kYfM2Rf7pMc1-m3wcqdbjNQ'
     if (e.detail.errMsg === 'getUserInfo:ok') {
       let res = await wepy.login()
-      console.log(res.code)
+      console.log('ongetuserinfo:')
+      console.log(res)
       if (res.code) {
+        console.log(e)
         console.log(e.detail.userInfo)
         wepy.setStorageSync(USER_INFO, e.detail.userInfo)
         let systemInfo = wepy.getSystemInfoSync()
@@ -53,7 +61,8 @@ export default class Authorize extends wepy.page {
           query: {
             jsCode: res.code,
             nickName: e.detail.userInfo.nickName
-          }
+          },
+          header: {Authorization: authorization}
         })
         console.log('get session resoult: ' + rlt.data.result)
         if (rlt.data.result) {
