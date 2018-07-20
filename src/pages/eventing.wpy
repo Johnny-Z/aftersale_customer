@@ -1,20 +1,18 @@
 <!--积分规则-->
 <template>
-  <view class="eventing_list">
-    <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/eventing_detail?code={{item.code}}" >
-      <image class="debug_img" src="{{logo}}"></image>
+  <view class="eventing_list" wx:for="{{list}}" wx:key="item" @tap="click({{item}})">
+    <!--<navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/eventing_install_info?nameplates={{item.nameplate}}" >-->
+      <image class="eventing_img" src="{{logo}}"></image>
       <view class="info">
         <view>{{item.nameplate}}: </view>
         <view>{{item.machineType}}: </view>
         <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
       </view>
-    </navigator>
+    <!--</navigator>-->
   </view>
-  <machinedetails :machine.sync="machine"></machinedetails>
 </template>
 <script>
     import wepy from 'wepy'
-    import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
     import {
         AUTHORIZATION,
@@ -25,13 +23,11 @@
         navigationBarTitleText: '事件列表'
       }
       components = {
-        machinedetails: MachineDetails
       }
       data = {
-        machine: {
-        },
         list: [
-        ]
+        ],
+        logo: '/images/icon_eventing.png'
       }
 
       events = {
@@ -42,6 +38,25 @@
       }
 
       methods = {
+        click(e) {
+          console.log(e)
+          let machines = JSON.stringify(e)
+          if (e.status === '2') {
+            wepy.navigateTo({
+              url: '/pages/eventing_install_info?machine_details=' + machines
+            })
+          } else if (e.status === '4') {
+            wepy.navigateTo({
+              url: '/pages/eventing_maintain_info?machine_details=' + machines
+            })
+          } else if (e.status === '5') {
+            wepy.navigateTo({
+              url: '/pages/eventing_repair_info?machine_details=' + machines
+            })
+          } else {
+            console.log('status 错误')
+          }
+        }
 
       }
 
@@ -52,13 +67,6 @@
       async getMachineList() {
         let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let userAccount = wepy.getStorageSync(ACCOUNT)
-        const json = await api.getMachineList({
-          query: {},
-          header: {Authorization: jwtAuthorization}
-        })
-        console.log('test machine:')
-        console.log(json)
-        console.log(json.data.data.list[0])
 
         const machineListJson = await api.getMachineListByCustomer({
           query: {account: userAccount},
@@ -68,7 +76,6 @@
         console.log(machineListJson)
         console.log(machineListJson.data.data.list)
         this.list = machineListJson.data.data.list
-        this.machine = json.data.data.list[0]
 
         this.$apply()
       }
@@ -77,7 +84,11 @@
 </script>
 <style lang="less">
   .eventing_list {
-    .debug_img {
+    background: #fff;
+    padding: 15rpx;
+    display: flex;
+    margin-top: 15rpx;
+    .eventing_img {
       width: 10%;
       height: 70rpx;
     }

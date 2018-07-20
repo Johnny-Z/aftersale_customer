@@ -13,9 +13,11 @@ export default class extends wepy.app {
     pages: [
       'pages/authorize',
       'pages/eventing',
-      'pages/eventing_detail',
+      'pages/eventing_install_info',
+      'pages/eventing_maintain_info',
+      'pages/eventing_repair_info',
       'pages/machines',
-      'pages/machines_detail',
+      'pages/machines_info',
       'pages/index'
     ],
     window: {

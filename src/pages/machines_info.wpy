@@ -13,7 +13,7 @@
 <script>
     import wepy from 'wepy'
 
-    export default class MachinesDetail extends wepy.page {
+    export default class MachinesInfo extends wepy.page {
       config = {
         navigationBarTitleText: '机器详情'
       }

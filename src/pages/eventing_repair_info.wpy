@@ -1,0 +1,41 @@
+<template>
+    <view class="machine_detail">机器详情</view>
+    <machinedetails :machine.sync="machine_details"></machinedetails>
+</template>
+<style lang="less">
+    .machine_detail {
+        padding: 10rpx;
+        font-size: large;
+        font-weight: bold;
+        background: #EBEBEB;
+        color: #000000;
+    }
+</style>
+<script>
+    import wepy from 'wepy'
+    import MachineDetails from '../components/machine_details'
+
+    export default class EventingRepairInfo extends wepy.page {
+      config = {
+        navigationBarTitleText: '维修评价'
+      }
+      components = {
+        machinedetails: MachineDetails
+      }
+      data = {
+        machine_details: {
+        }
+      };
+      methods = {};
+
+      events = {};
+
+      onLoad(options) {
+        console.log(options)
+        this.machine_details = JSON.parse(options.machine_details)
+        console.log(this.machine_details)
+      };
+
+        // Other properties
+    }
+</script>

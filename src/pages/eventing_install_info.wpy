@@ -15,29 +15,26 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
 
-    export default class EventingDetail extends wepy.page {
+    export default class EventingInstallInfo extends wepy.page {
       config = {
-        navigationBarTitleText: '事件详情'
+        navigationBarTitleText: '安装评价'
       }
       components = {
         machinedetails: MachineDetails
       }
       data = {
-        machine_details: {
-          nameplate: 'abcd',
-          machine_type: 'aaa',
-          needle_num: 123,
-          head_num: 1,
-          head_distance: 2,
-          x_distance: 3,
-          y_distance: 4
-        }
+        machine_details: {},
+        nameplate: ''
+
       };
       methods = {};
 
       events = {};
 
-      onLoad() {
+      onLoad(options) {
+        console.log(options)
+        this.machine_details = JSON.parse(options.machine_details)
+        console.log(this.machine_details)
       };
 
         // Other properties
