@@ -1,9 +1,10 @@
 <template>
-    <view class="machine_detail">机器详情</view>
+    <machinedetails :machine.sync="machine_details"></machinedetails>
+    <view class="title_vw">保养详情</view>
 </template>
 <style lang="less">
-    .machine_detail {
-        padding: 10rpx;
+    .title_vw {
+        padding: 15rpx;
         font-size: large;
         font-weight: bold;
         background: #EBEBEB;
@@ -12,19 +13,24 @@
 </style>
 <script>
     import wepy from 'wepy'
+    import MachineDetails from '../components/machine_details'
 
     export default class MachinesInfo extends wepy.page {
       config = {
         navigationBarTitleText: '机器详情'
       }
-      components = {};
-
+      components = {
+        machinedetails: MachineDetails
+      }
       data = {};
       methods = {};
 
       events = {};
 
-      onLoad() {
+      onLoad(options) {
+        console.log(options)
+        this.machine_details = JSON.parse(options.machine_details)
+        console.log(this.machine_details)
       };
 
         // Other properties

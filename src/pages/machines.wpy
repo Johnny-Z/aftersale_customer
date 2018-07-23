@@ -1,7 +1,29 @@
 <!--积分规则-->
+<style lang="less">
+  .machines_list {
+    .machine_img {
+      width: 10%;
+      height: 70rpx;
+    }
+    .info {
+      padding: 5rpx;
+      color: #000000;
+      font-size: 26rpx;
+      line-height: 35rpx;
+      display: flex;
+      align-items: center;
+    }
+    .item {
+      background: #fff;
+      padding: 15rpx;
+      display: flex;
+      margin-top: 15rpx;
+    }
+  }
+</style>
 <template>
   <view class="machines_list">
-    <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/machines_info?code={{item.code}}" >
+    <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/machines_info?machine_details={{item}}" >
       <image class="machine_img" src="{{logo}}"></image>
       <view class="info">
         <view>{{item.nameplate}}: </view>
@@ -62,25 +84,3 @@
     }
 
 </script>
-<style lang="less">
-  .machines_list {
-    .machine_img {
-      width: 10%;
-      height: 70rpx;
-    }
-    .info {
-      padding: 5rpx;
-      color: #000000;
-      font-size: 26rpx;
-      line-height: 35rpx;
-      display: flex;
-      align-items: center;
-    }
-    .item {
-      background: #fff;
-      padding: 15rpx;
-      display: flex;
-      margin-top: 15rpx;
-    }
-  }
-</style>

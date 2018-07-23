@@ -1,10 +1,18 @@
 <template>
-    <view class="machine_detail">机器详情</view>
     <machinedetails :machine.sync="machine_details"></machinedetails>
+    <view class="line_vw">
+        <text>订单编号：</text>
+        <text class="nameplate_tx">{{machine_details.orderNum.empty? '暂无':machine_details.orderNum}}</text>
+    </view>
+    <view class="title_vw">调试详情</view>
 </template>
 <style lang="less">
-    .machine_detail {
-        padding: 10rpx;
+    .line_vw {
+        margin: 20rpx;
+        display: flex;
+    }
+    .title_vw {
+        padding: 15rpx;
         font-size: large;
         font-weight: bold;
         background: #EBEBEB;
