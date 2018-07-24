@@ -22,12 +22,15 @@
       components = {
         machinedetails: MachineDetails
       }
-      data = {};
+      data = {
+        machine_details: {}
+      };
       methods = {};
 
       events = {};
 
       onLoad(options) {
+        console.log('nnnnnnnnnnnnnnnnnnnnnn')
         console.log(options)
         this.machine_details = JSON.parse(options.machine_details)
         console.log(this.machine_details)

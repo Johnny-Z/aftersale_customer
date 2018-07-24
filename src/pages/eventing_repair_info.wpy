@@ -1,7 +1,36 @@
 <template>
     <machinedetails :machine.sync="machine_details"></machinedetails>
-    <view class="title_vw">客户信息</view>
+    <view class="title_vw">报修信息</view>
+    <view class="line_vw">
+        <text>标题：</text>
+        <text>电机烧坏</text>
+    </view>
+    <view class="line_vw">
+        <text>描述：电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏</text>
+    </view>
+    <view class="line_vw">
+        <text>语音：</text>
+        <image class="voice_img" src="{{logo}}"></image>
+    </view>
+    <view class="line_vw">
+        <text>照片：</text>
+    </view>
+    <image class="pre_repair_image" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="title_vw">维修详情</view>
+    <view class="line_vw">
+        <text>故障部位：电机烧坏</text>
+    </view>
+    <view class="line_vw">
+        <text>问题描述：电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏</text>
+    </view>
+    <view class="line_vw">
+        <text>处理方法：电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏</text>
+    </view>
+    <view class="line_vw">
+        <text>照片：</text>
+    </view>
+    <image class="repair_image" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+
 </template>
 <style lang="less">
     .title_vw {
@@ -10,6 +39,27 @@
         font-weight: bold;
         background: #EBEBEB;
         color: #000000;
+    }
+    .line_vw {
+        margin: 20rpx;
+        display: flex;
+        .line_half_vw {
+            width: 50%;
+        }
+        .voice_img {
+            width: 10%;
+            height: 70rpx;
+        }
+    }
+    .pre_repair_image {
+        margin-left: 2.5%;
+        width: 30%;
+        height: 200rpx;
+    }
+    .repair_image {
+        margin-left: 2.5%;
+        width: 30%;
+        height: 200rpx;
     }
 </style>
 <script>
@@ -25,9 +75,19 @@
       }
       data = {
         machine_details: {
+        },
+        logo: '/images/icon_eventing.png',
+        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg']
+      };
+      methods = {
+        changePreview(e) {
+          var self = this
+          wepy.previewImage({
+            current: e.currentTarget.dataset.src,
+            urls: self.data.previewImageArr
+          })
         }
       };
-      methods = {};
 
       events = {};
 
