@@ -5,11 +5,45 @@
         <text class="nameplate_tx">{{machine_details.orderNum.empty? '暂无':machine_details.orderNum}}</text>
     </view>
     <view class="title_vw">调试详情</view>
+    <view>调试项1：</view>
+    <view>调试项2：</view>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>调试安装人：</text>
+            <text>暂无</text>
+        </view>
+        <view class="line_half_vw">
+            <text>电话：</text>
+            <text>12311113333</text>
+        </view>
+    </view>
+    <view class="line_vw">
+        <text>调试安装日期：</text>
+        <text>2018/07/25</text>
+    </view>
+    <view class="title_vw">客户反馈</view>
+    <view class="line_vw">
+        <text>评价：</text>
+        <text>下拉选择框</text>
+    </view>
+    <view class="line_vw">
+        <text>意见/建议：</text>
+    </view>
+    <view class="line_vw">
+        <text>暂无</text>
+    </view>
+    <view class="line_vw">
+        <button type="primary">提交</button>
+        <button>返回</button>
+    </view>
 </template>
 <style lang="less">
     .line_vw {
         margin: 20rpx;
         display: flex;
+        .line_half_vw {
+            width: 50%;
+        }
     }
     .title_vw {
         padding: 15rpx;

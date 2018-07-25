@@ -15,7 +15,7 @@
     <view class="line_vw">
         <text>照片：</text>
     </view>
-    <image class="pre_repair_image" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <image class="pre_repair_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="title_vw">维修详情</view>
     <view class="line_vw">
         <text>故障部位：电机烧坏</text>
@@ -29,8 +29,36 @@
     <view class="line_vw">
         <text>照片：</text>
     </view>
-    <image class="repair_image" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
-
+    <image class="repair_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>维修人：</text>
+            <text>暂无</text>
+        </view>
+        <view class="line_half_vw">
+            <text>电话：</text>
+            <text>12311113333</text>
+        </view>
+    </view>
+    <view class="line_vw">
+        <text>维修日期：</text>
+        <text>2018/07/25</text>
+    </view>
+    <view class="title_vw">客户反馈</view>
+    <view class="line_vw">
+        <text>评价：</text>
+        <text>下拉选择框</text>
+    </view>
+    <view class="line_vw">
+        <text>意见/建议：</text>
+    </view>
+    <view class="line_vw">
+        <text>暂无</text>
+    </view>
+    <view class="line_vw">
+        <button type="primary">提交</button>
+        <button>返回</button>
+    </view>
 </template>
 <style lang="less">
     .title_vw {

@@ -1,6 +1,37 @@
 <template>
     <machinedetails :machine.sync="machine_details"></machinedetails>
     <view class="title_vw">保养详情</view>
+    <view>保养项1：</view>
+    <view>保养项2：</view>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>保养人：</text>
+            <text>暂无</text>
+        </view>
+        <view class="line_half_vw">
+            <text>电话：</text>
+            <text>12311113333</text>
+        </view>
+    </view>
+    <view class="line_vw">
+        <text>保养日期：</text>
+        <text>2018/07/25</text>
+    </view>
+    <view class="title_vw">客户反馈</view>
+    <view class="line_vw">
+        <text>评价：</text>
+        <text>下拉选择框</text>
+    </view>
+    <view class="line_vw">
+        <text>意见/建议：</text>
+    </view>
+    <view class="line_vw">
+        <text>暂无</text>
+    </view>
+    <view class="line_vw">
+        <button type="primary">提交</button>
+        <button>返回</button>
+    </view>
 </template>
 <style lang="less">
     .title_vw {
@@ -9,6 +40,13 @@
         font-weight: bold;
         background: #EBEBEB;
         color: #000000;
+    }
+    .line_vw {
+        margin: 20rpx;
+        display: flex;
+        .line_half_vw {
+            width: 50%;
+        }
     }
 </style>
 <script>

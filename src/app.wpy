@@ -18,6 +18,7 @@ export default class extends wepy.app {
       'pages/eventing_repair_info',
       'pages/machines',
       'pages/machines_info',
+      'pages/request_repair',
       'pages/index'
     ],
     window: {

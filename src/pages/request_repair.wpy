@@ -1,17 +1,6 @@
 <template>
     <machinedetails :machine.sync="machine_details"></machinedetails>
-    <view class="install_record">
-      <view class="title_vw">安装记录</view>
-    </view>
-    <view class="maintain_record">
-      <view class="title_vw">保养记录</view>
-    </view>
-    <view class="repair_record">
-      <view class="title_vw">维修记录</view>
-    </view>
-    <view>
-        <button type="primary">报修</button>
-    </view>
+    <view class="title_vw">保养详情</view>
 </template>
 <style lang="less">
     .title_vw {
@@ -21,21 +10,14 @@
         background: #EBEBEB;
         color: #000000;
     }
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        .line_half_vw {
-            width: 50%;
-        }
-    }
 </style>
 <script>
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
 
-    export default class MachinesInfo extends wepy.page {
+    export default class RequestRepair extends wepy.page {
       config = {
-        navigationBarTitleText: '机器详情'
+        navigationBarTitleText: '机器报修'
       }
       components = {
         machinedetails: MachineDetails
