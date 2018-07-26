@@ -8,10 +8,7 @@
     <view class="line_vw">
         <text>描述：电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏电机烧坏</text>
     </view>
-    <view class="line_vw">
-        <text>语音：</text>
-        <image class="voice_img" src="{{logo}}"></image>
-    </view>
+    <button class="single_btn" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
     <view class="line_vw">
         <text>照片：</text>
     </view>
@@ -55,10 +52,8 @@
     <view class="line_vw">
         <text>暂无</text>
     </view>
-    <view class="line_vw">
-        <button type="primary">提交</button>
-        <button>返回</button>
-    </view>
+    <button class="double_btn" size="mini" type="primary">提交</button>
+    <button class="double_btn" size="mini">返回</button>
 </template>
 <style lang="less">
     .title_vw {
@@ -73,11 +68,15 @@
         display: flex;
         .line_half_vw {
             width: 50%;
+            height: 60%
         }
-        .voice_img {
-            width: 10%;
-            height: 70rpx;
-        }
+    }
+    .single_btn {
+        margin-left: 25rpx;
+        width: 50%;
+    }
+    .double_btn {
+        margin: 25rpx;
     }
     .pre_repair_image {
         margin-left: 2.5%;
@@ -105,9 +104,44 @@
         machine_details: {
         },
         logo: '/images/icon_eventing.png',
+        isSpeaking: false,
         previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg']
       };
       methods = {
+        voicePlay() {
+          console.log('eventing_repair_info:手指按下了...')
+          this.isSpeaking = true
+          const innerAudioContext = wepy.createInnerAudioContext()
+          innerAudioContext.autoplay = true
+          innerAudioContext.src = 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E061FF02C31F716658E5C81F5594D561F2E88B854E81CAAB7806D5E4F103E55D33C16F3FAC506D1AB172DE8600B37E43FAD&fromtag=46'
+          innerAudioContext.onPlay(() => {
+            console.log('开始播放')
+          })
+          innerAudioContext.onPause(() => {
+            console.log('pause了')
+            this.isSpeaking = false
+            this.$apply()
+          })
+          innerAudioContext.onStop(() => {
+            console.log('stop了')
+            this.isSpeaking = false
+            this.$apply()
+          })
+          innerAudioContext.onError((res) => {
+            console.log(res.errMsg)
+            console.log(res.errCode)
+            this.isSpeaking = false
+            this.$apply()
+          })
+          innerAudioContext.onEnded(() => {
+            console.log('bo完了')
+            this.isSpeaking = false
+            this.$apply()
+          })
+        },
+        touchup() {
+          console.log('手指songkai了...')
+        },
         changePreview(e) {
           var self = this
           wepy.previewImage({

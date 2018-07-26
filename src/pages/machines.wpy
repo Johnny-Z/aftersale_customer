@@ -16,6 +16,10 @@
       line-height: 35rpx;
       display: flex;
       align-items: center;
+        .nameplate_tx {
+            font-weight: bold;
+            font-size: 36rpx;
+        }
     }
     .item {
       background: #fff;
@@ -26,10 +30,10 @@
   }
 </style>
 <template>
-  <view class="machines_list" wx:for="{{list}}" wx:key="item" @tap="click({{item}})">
+  <view class="machines_list" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
     <image class="machine_img" src="{{logo}}"></image>
     <view class="info">
-      <view>{{item.nameplate}}: </view>
+      <view class="nameplate_tx">{{item.nameplate}}: </view>
       <view>{{item.machineType}}: {{item.status}} : </view>
       <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
     </view>
@@ -61,7 +65,7 @@
       }
 
       methods = {
-        click(e) {
+        listItemClick(e) {
           console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
           console.log(e)
           let machines = JSON.stringify(e)

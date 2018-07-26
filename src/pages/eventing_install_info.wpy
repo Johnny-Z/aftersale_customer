@@ -32,10 +32,8 @@
     <view class="line_vw">
         <text>暂无</text>
     </view>
-    <view class="line_vw">
-        <button type="primary">提交</button>
-        <button>返回</button>
-    </view>
+    <button class="double_btn" size="mini" type="primary">提交</button>
+    <button class="double_btn" size="mini" >返回</button>
 </template>
 <style lang="less">
     .line_vw {
@@ -51,6 +49,9 @@
         font-weight: bold;
         background: #EBEBEB;
         color: #000000;
+    }
+    .double_btn {
+        margin: 25rpx;
     }
 </style>
 <script>

@@ -10,7 +10,7 @@
       <view class="title_vw">维修记录</view>
     </view>
     <view>
-        <button type="primary">报修</button>
+        <button class="single_btn" size="mini" type="primary">报修</button>
     </view>
 </template>
 <style lang="less">
@@ -27,6 +27,10 @@
         .line_half_vw {
             width: 50%;
         }
+    }
+    .single_btn {
+        margin: 25rpx;
+        width: 50%;
     }
 </style>
 <script>
@@ -48,7 +52,7 @@
       events = {};
 
       onLoad(options) {
-        console.log('nnnnnnnnnnnnnnnnnnnnnn')
+        console.log('machines_info,onLoad:')
         console.log(options)
         this.machine_details = JSON.parse(options.machine_details)
         console.log(this.machine_details)
