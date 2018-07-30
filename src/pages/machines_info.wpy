@@ -1,5 +1,5 @@
 <template>
-    <machinedetails :machine.sync="machine_details"></machinedetails>
+    <machinedetails :machine.sync="machineDetail"></machinedetails>
     <view class="install_record">
       <view class="title_vw">安装记录</view>
     </view>
@@ -9,9 +9,7 @@
     <view class="repair_record">
       <view class="title_vw">维修记录</view>
     </view>
-    <view>
-        <button class="single_btn" size="mini" type="primary">报修</button>
-    </view>
+    <button class="single_btn" size="mini" type="primary" @tap="buttonClick">报修</button>
 </template>
 <style lang="less">
     .title_vw {
@@ -45,17 +43,24 @@
         machinedetails: MachineDetails
       }
       data = {
-        machine_details: {}
+        machineDetail: {}
       };
-      methods = {};
+      methods = {
+        buttonClick() {
+          let machines = JSON.stringify(this.machineDetail)
+          wepy.navigateTo({
+            url: '/pages/request_repair?machineDetail=' + machines
+          })
+        }
+      };
 
       events = {};
 
       onLoad(options) {
-        console.log('machines_info,onLoad:')
+        console.log('machines_info,onLoad: ')
         console.log(options)
-        this.machine_details = JSON.parse(options.machine_details)
-        console.log(this.machine_details)
+        this.machineDetail = JSON.parse(options.machineDetail)
+        console.log(this.machineDetail)
       };
 
         // Other properties

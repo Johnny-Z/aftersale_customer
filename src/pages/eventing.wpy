@@ -71,18 +71,18 @@
           let machines = JSON.stringify(e)
           if (e.status === '2') {
             wepy.navigateTo({
-              url: '/pages/eventing_install_info?machine_details=' + machines
+              url: '/pages/eventing_install_info?machineDetail=' + machines
             })
           } else if (e.status === '4') {
             wepy.navigateTo({
-              url: '/pages/eventing_maintain_info?machine_details=' + machines
+              url: '/pages/eventing_maintain_info?machineDetail=' + machines
             })
           } else if (e.status === '5') {
             wepy.navigateTo({
-              url: '/pages/eventing_repair_info?machine_details=' + machines
+              url: '/pages/eventing_repair_info?machineDetail=' + machines
             })
           } else {
-            console.log('status 错误')
+            console.log('status 错误: ' + e.status)
           }
         }
 

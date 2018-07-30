@@ -1,5 +1,5 @@
 <template>
-    <machinedetails :machine.sync="machine_details"></machinedetails>
+    <machinedetails :machine.sync="machineDetail"></machinedetails>
     <view class="title_vw">报修信息</view>
     <view class="line_vw">
         <text>标题：</text>
@@ -101,7 +101,7 @@
         machinedetails: MachineDetails
       }
       data = {
-        machine_details: {
+        machineDetail: {
         },
         logo: '/images/icon_eventing.png',
         isSpeaking: false,
@@ -155,8 +155,8 @@
 
       onLoad(options) {
         console.log(options)
-        this.machine_details = JSON.parse(options.machine_details)
-        console.log(this.machine_details)
+        this.machineDetail = JSON.parse(options.machineDetail)
+        console.log(this.machineDetail)
       };
 
         // Other properties

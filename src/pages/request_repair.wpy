@@ -1,6 +1,13 @@
 <template>
-    <machinedetails :machine.sync="machine_details"></machinedetails>
-    <view class="title_vw">保养详情</view>
+    <machinedetails :machine.sync="machineDetail"></machinedetails>
+    <view wx:if="{{isOldMachine}}" class="title_vw">保养详情</view>
+    <view wx:else >
+        <view class="line_vw">
+            <text>机器编号：</text>
+            <input class="nameplate_in" placeholder="请输入机器编号"/>
+        </view>
+        
+    </view>
 </template>
 <style lang="less">
     .title_vw {
@@ -23,17 +30,23 @@
         machinedetails: MachineDetails
       }
       data = {
-        machine_details: {}
+        machineDetail: {},
+        isOldMachine: false
       };
       methods = {};
 
       events = {};
 
       onLoad(options) {
-        console.log('nnnnnnnnnnnnnnnnnnnnnn')
+        console.log('request_repair onLoad: ')
         console.log(options)
-        this.machine_details = JSON.parse(options.machine_details)
-        console.log(this.machine_details)
+        if (options.empty) {
+          this.isOldMachine = false
+          this.machineDetail = JSON.parse(options.machineDetail)
+          console.log(this.machineDetail)
+        } else {
+          this.isOldMachine = true
+        }
       };
 
         // Other properties

@@ -70,7 +70,7 @@
           console.log(e)
           let machines = JSON.stringify(e)
           wepy.navigateTo({
-            url: '/pages/machines_info?machine_details=' + machines
+            url: '/pages/machines_info?machineDetail=' + machines
           })
         }
       }

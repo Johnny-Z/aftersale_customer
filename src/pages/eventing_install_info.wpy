@@ -1,8 +1,8 @@
 <template>
-    <machinedetails :machine.sync="machine_details"></machinedetails>
+    <machinedetails :machine.sync="machineDetail"></machinedetails>
     <view class="line_vw">
         <text>订单编号：</text>
-        <text class="nameplate_tx">{{machine_details.orderNum.empty? '暂无':machine_details.orderNum}}</text>
+        <text class="nameplate_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
     </view>
     <view class="title_vw">调试详情</view>
     <view>调试项1：</view>
@@ -66,7 +66,7 @@
         machinedetails: MachineDetails
       }
       data = {
-        machine_details: {},
+        machineDetail: {},
         nameplate: ''
 
       };
@@ -76,8 +76,8 @@
 
       onLoad(options) {
         console.log(options)
-        this.machine_details = JSON.parse(options.machine_details)
-        console.log(this.machine_details)
+        this.machineDetail = JSON.parse(options.machineDetail)
+        console.log(this.machineDetail)
       };
 
         // Other properties
