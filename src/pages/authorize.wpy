@@ -1,3 +1,60 @@
+<style lang="less">
+  page {
+    height: 100%;
+  }
+
+  .authorize-contianer {
+    height: 100%;
+    background: #fff;
+    padding-top: 100rpx;
+    .authorize-icon {
+      width: 128rpx;
+      height: 128rpx;
+      text-align: center;
+      display: block;
+      margin: 0 auto;
+      padding-bottom: 10rpx;
+    }
+    .item_userid {
+      display: flex;
+      align-items: center;
+      margin: 1rpx 180rpx;
+      border-top: 1px solid #efefef;
+      border-bottom: 1px solid #efefef;
+      padding: 20rpx 20rpx;
+      .userid {
+        margin-right: 20rpx;
+      }
+      .input_id {
+        flex: 1;
+        input {
+          color: #333;
+        }
+      }
+    }
+    .item_password {
+      display: flex;
+      align-items: center;
+      margin: 1rpx 180rpx;
+      border-bottom: 1px solid #efefef;
+      padding: 20rpx 20rpx;
+      .user_password {
+        margin-right: 20rpx;
+      }
+      .input_pw {
+        flex: 1;
+        input {
+          color: #333;
+        }
+      }
+    }
+
+    .btn-authorize {
+      margin: 100rpx 100rpx;
+    }
+  }
+
+</style>
 <template>
   <view class="authorize-contianer">
     <image class="authorize-icon" src="../images/authorize.png"></image>
@@ -96,60 +153,3 @@ export default class Authorize extends wepy.page {
 }
 
 </script>
-<style lang="less">
-page {
-  height: 100%;
-}
-
-.authorize-contianer {
-    height: 100%;
-    background: #fff;
-    padding-top: 100rpx;
-    .authorize-icon {
-        width: 128rpx;
-        height: 128rpx;
-        text-align: center;
-        display: block;
-        margin: 0 auto;
-        padding-bottom: 10rpx;
-    }
-    .item_userid {
-        display: flex;
-        align-items: center;
-        margin: 1rpx 180rpx;
-        border-top: 1px solid #efefef;
-        border-bottom: 1px solid #efefef;
-        padding: 20rpx 20rpx;
-        .userid {
-          margin-right: 20rpx;
-        }
-        .input_id {
-          flex: 1;
-          input {
-            color: #333;
-          }
-        }
-    }
-    .item_password {
-        display: flex;
-        align-items: center;
-        margin: 1rpx 180rpx;
-        border-bottom: 1px solid #efefef;
-        padding: 20rpx 20rpx;
-        .user_password {
-            margin-right: 20rpx;
-        }
-        .input_pw {
-          flex: 1;
-          input {
-            color: #333;
-          }
-        }
-        }
-
-  .btn-authorize {
-    margin: 100rpx 100rpx;
-  }
-}
-
-</style>

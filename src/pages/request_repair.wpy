@@ -1,12 +1,15 @@
 <template>
-    <machinedetails :machine.sync="machineDetail"></machinedetails>
-    <view wx:if="{{isOldMachine}}" class="title_vw">保养详情</view>
+    <machinedetails wx:if="{{isOldMachine}}" :machine.sync="machineDetail"></machinedetails>
     <view wx:else >
+        <view class="title_vw">机器信息</view>
         <view class="line_vw">
             <text>机器编号：</text>
             <input class="nameplate_in" placeholder="请输入机器编号"/>
         </view>
-        
+        <button class="single_btn" @tap="previewImage" size="mini" type="primary">请拍下机器铭牌照片</button>
+        <view>
+            <image class="nameplate_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+        </view>
     </view>
 </template>
 <style lang="less">
@@ -16,6 +19,20 @@
         font-weight: bold;
         background: #EBEBEB;
         color: #000000;
+    }
+    .line_vw {
+        margin: 20rpx;
+        display: flex;
+        align-items: center;
+    }
+    .single_btn {
+        margin-left: 25rpx;
+        width: 50%;
+    }
+    .nameplate_image {
+        margin-left: 2.5%;
+        width: 30%;
+        height: 200rpx;
     }
 </style>
 <script>
@@ -31,9 +48,28 @@
       }
       data = {
         machineDetail: {},
+        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
         isOldMachine: false
       };
-      methods = {};
+      methods = {
+        async previewImage() {
+          let res = await wepy.chooseImage({count: 8})
+          if (res.errMsg === 'chooseImage:ok') {
+            let tempFilePaths = res.tempFilePaths
+            this.previewImageArr = tempFilePaths
+            console.log('srcsssssssssssssssssssssssss')
+            console.log(tempFilePaths)
+            this.$apply()
+          }
+        },
+        changePreview(e) {
+          var self = this
+          wepy.previewImage({
+            current: e.currentTarget.dataset.src,
+            urls: self.data.previewImageArr
+          })
+        }
+      };
 
       events = {};
 
@@ -41,11 +77,11 @@
         console.log('request_repair onLoad: ')
         console.log(options)
         if (options.empty) {
+          this.isOldMachine = true
+        } else {
           this.isOldMachine = false
           this.machineDetail = JSON.parse(options.machineDetail)
           console.log(this.machineDetail)
-        } else {
-          this.isOldMachine = true
         }
       };
 
