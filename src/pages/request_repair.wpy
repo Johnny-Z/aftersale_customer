@@ -6,11 +6,19 @@
             <text>机器编号：</text>
             <input class="nameplate_in" placeholder="请输入机器编号"/>
         </view>
-        <button class="single_btn" @tap="previewImage" size="mini" type="primary">请拍下机器铭牌照片</button>
+        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍下机器铭牌照片</button>
         <view>
             <image class="nameplate_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
         </view>
     </view>
+    <view class="line_vw">
+        <text>故障文字描述：</text>
+    </view>
+    <input class="pre_machine_error_in" placeholder="请输入机器故障详情"/>
+    <view class="line_vw">
+      <text>故障语音描述：</text>
+    </view>
+    <button class="single_btn" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">按住 说话</button>
 </template>
 <style lang="less">
     .title_vw {
@@ -68,6 +76,14 @@
             current: e.currentTarget.dataset.src,
             urls: self.data.previewImageArr
           })
+        },
+        touchdown() {
+          console.log('手指anxia了...')
+          this.isSpeaking = false
+        },
+        touchup() {
+          console.log('手指抬起了...')
+          this.isSpeaking = false
         }
       };
 

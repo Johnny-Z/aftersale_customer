@@ -139,9 +139,6 @@
             this.$apply()
           })
         },
-        touchup() {
-          console.log('手指songkai了...')
-        },
         changePreview(e) {
           var self = this
           wepy.previewImage({
