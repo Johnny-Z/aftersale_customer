@@ -6,19 +6,44 @@
             <text>机器编号：</text>
             <input class="nameplate_in" placeholder="请输入机器编号"/>
         </view>
-        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍下机器铭牌照片</button>
+        <view class="line_vw">
+            <text>铭牌照片：</text>
+            <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
+        </view>
         <view>
             <image class="nameplate_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
         </view>
     </view>
+    <view class="title_vw">故障描述</view>
     <view class="line_vw">
-        <text>故障文字描述：</text>
+        <view>文字：</view>
+        <textarea class="pre_machine_error_in" placeholder="请输入机器故障详情" auto-height/>
     </view>
-    <input class="pre_machine_error_in" placeholder="请输入机器故障详情"/>
     <view class="line_vw">
-      <text>故障语音描述：</text>
+      <view>语音：</view>
+      <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
     </view>
-    <button class="single_btn" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">按住 说话</button>
+    <view class="line_vw">
+        <text>故障照片：</text>
+        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
+    </view>
+    <view>
+        <image class="machine_error_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    </view>
+    <view class="title_vw">联系方式</view>
+    <view class="line_vw">
+        <text>联系人：</text>
+        <input class="nameplate_in" placeholder="请联系人姓名"/>
+    </view>
+    <view class="line_vw">
+        <text>电话：</text>
+        <input class="nameplate_in" placeholder="请输入联系电话"/>
+    </view>
+    <view class="line_vw">
+        <text>地址：</text>
+        <input class="nameplate_in" placeholder="请输入详细地址"/>
+    </view>
+    <button class="single_btn" size="mini" type="primary">提交</button>
 </template>
 <style lang="less">
     .title_vw {
@@ -32,12 +57,23 @@
         margin: 20rpx;
         display: flex;
         align-items: center;
+        .nameplate_in {
+            border-bottom: 1px solid #000000;
+        }
+    }
+    .pre_machine_error_in {
+        background: #EBEBEB;
     }
     .single_btn {
         margin-left: 25rpx;
         width: 50%;
     }
     .nameplate_image {
+        margin-left: 2.5%;
+        width: 30%;
+        height: 200rpx;
+    }
+    .machine_error_image {
         margin-left: 2.5%;
         width: 30%;
         height: 200rpx;
@@ -55,9 +91,11 @@
         machinedetails: MachineDetails
       }
       data = {
+        recordBtnVal: '按住 说话',
         machineDetail: {},
         previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
-        isOldMachine: false
+        isOldMachine: false,
+        isRecording: false
       };
       methods = {
         async previewImage() {
@@ -79,11 +117,13 @@
         },
         touchdown() {
           console.log('手指anxia了...')
-          this.isSpeaking = false
+          this.isRecording = true
+          this.recordBtnVal = '松开 结束'
         },
         touchup() {
           console.log('手指抬起了...')
-          this.isSpeaking = false
+          this.isRecording = false
+          this.recordBtnVal = '按住 说话'
         }
       };
 
