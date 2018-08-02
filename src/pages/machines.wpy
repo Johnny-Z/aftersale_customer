@@ -52,8 +52,7 @@
         navigationBarTitleText: '机器列表'
       }
       data = {
-        list: [
-        ],
+        list: [],
         logo: '/images/icon_machine_list.png'
       }
 

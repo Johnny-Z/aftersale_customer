@@ -4,7 +4,7 @@ import {
 
 let env = '-test' // -dev 或者 -test
 // const apiMall = 'https://sujiefs.com/'
-//const apiMall = 'http://localhost:8080/'
+// const apiMall = 'http://localhost:8080/'
 const apiMall = 'http://192.168.43.223:8080'
 
 /**
@@ -15,6 +15,9 @@ const apiMall = 'http://192.168.43.223:8080'
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2')
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
 const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
+const getInstallRecordListByNameplate = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
+const getMaintainRecordListByNameplate = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
+const getRepairRecordListByNameplate = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
 
 // 微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
@@ -29,20 +32,6 @@ const getGoodsList = (params) => wxRequest(params, apiMall + '/api/mall/searchGo
 
 // 查询商品详情信息
 const goodsDetail = (params) => wxRequest(params, apiMall + '/api/mall/goods')
-// 商品加入购物车
-const addCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/add')
-// 用户的购物车商品列表
-const cartList = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/list')
-// 购物车的商品选中状态
-const cartCheck = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/check')
-// 购物车的商品选中状态(全选)
-const cartCheckAll = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/checkAll')
-// 购物车的商品删除
-const cartDel = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/delete')
-// 购物车的商品数量更新
-const cartUpdateNum = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/updateNum')
-// 直接购买商品
-const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData')
 
 // 支付前生成订单
 const saveByCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/saveByCart')
@@ -67,27 +56,6 @@ const userSginInfo = (params) => wxRequest(params, apiMall + '/api/userSign/sign
 const doSign = (params) => wxRequest(params, apiMall + '/api/userSign/doSign')
 // 获取最近七天签到情况
 const getSignDate = (params) => wxRequest(params, apiMall + '/api/userSign/getSignDate')
-
-// 用户积分信息
-const pointInfo = (params) => wxRequest(params, apiMall + '/api/userPoint/pointInfo')
-
-// 用户足迹信息
-const browseInfo = (params) => wxRequest(params, apiMall + '/api/userBrowse/browseInfo')
-// 添加用户足迹
-const addBrowser = (params) => wxRequest(params, apiMall + '/api/userBrowse/add')
-// 添加用户足迹
-const delUserBrowser = (params) => wxRequest(params, apiMall + '/api/userBrowse/delete')
-
-// 用户收藏的商品
-const favoriteInfo = (params) => wxRequest(params, apiMall + '/api/goodsFavorite/favoriteInfo')
-
-// 用户消息
-const messageInfo = (params) => wxRequest(params, apiMall + '/api/systemMessage/messageInfo')
-
-// 用户手机绑定
-const registerUser = (params) => wxRequest(params, apiMall + '/api/userCenter/register')
-// 发送短信
-const sendRandCode = (params) => wxRequest(params, apiMall + '/api/sms/send')
 
 // 用户是否绑定手机号
 const getUserInfo = (params) => wxRequest(params, apiMall + '/api/userCenter/getUserInfo')
@@ -150,31 +118,15 @@ const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list')
 export default {
   getMachineList,
   getMachineListByCustomer,
+  getInstallRecordListByNameplate,
+  getMaintainRecordListByNameplate,
+  getRepairRecordListByNameplate,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,
   getGoodsList,
   goodsDetail,
   wxJsCode2Session,
-  user2session,
-  userSginInfo,
-  doSign,
-  addCart,
-  cartList,
-  cartCheck,
-  cartCheckAll,
-  cartDel,
-  cartUpdateNum,
-  preOrder,
-  refundApply,
-  pointInfo,
-  browseInfo,
-  addBrowser,
-  delUserBrowser,
-  favoriteInfo,
-  messageInfo,
-  registerUser,
-  sendRandCode,
   getUserInfo,
   getUserAddress,
   saveAddress,
