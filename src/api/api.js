@@ -15,9 +15,9 @@ const apiMall = 'http://192.168.43.223:8080'
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2')
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
 const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
-const getInstallRecordListByNameplate = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
-const getMaintainRecordListByNameplate = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
-const getRepairRecordListByNameplate = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
+const getInstallRecordList = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
+const getMaintainRecordList = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
+const getRepairRecordList = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
 
 // 微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
@@ -118,9 +118,9 @@ const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list')
 export default {
   getMachineList,
   getMachineListByCustomer,
-  getInstallRecordListByNameplate,
-  getMaintainRecordListByNameplate,
-  getRepairRecordListByNameplate,
+  getInstallRecordList,
+  getMaintainRecordList,
+  getRepairRecordList,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,

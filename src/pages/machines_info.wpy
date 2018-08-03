@@ -1,5 +1,41 @@
 <template>
-    <machinedetails :machine.sync="machineDetail"></machinedetails>
+    <view class="mathine_details">
+        <view class="title_vw">机器详情</view>
+        <view class="line_vw">
+            <text>机器编号：</text>
+            <text class="nameplate_tx">{{machineDetail.nameplate.empty? '暂无':machineDetail.nameplate}}</text>
+        </view>
+        <view class="line_vw" >
+            <view class="line_half_vw">
+                <text>机型：</text>
+                <text class="machine_type_tx">{{machineDetail.machineType.empty? '暂无':machineDetail.machineType}}</text>
+            </view>
+            <view class="line_half_vw">
+                <text>针数：</text>
+                <text class="needle_num_tx">{{machineDetail.needleNum.empty? '暂无':machineDetail.needleNum}}</text>
+            </view>
+        </view>
+        <view class="line_vw">
+            <view class="line_half_vw">
+                <text>头数：</text>
+                <text class="head_num_tx">{{machineDetail.headNum.empty? '暂无':machineDetail.headNum}}</text>
+            </view>
+            <view class="line_half_vw">
+                <text>头距：</text>
+                <text class="head_distance_tx">{{machineDetail.headDistance.empty? '暂无':machineDetail.headDistance}}</text>
+            </view>
+        </view>
+        <view class="line_vw" >
+            <view class="line_half_vw">
+                <text>x行距：</text>
+                <text class="x_distance_tx">{{machineDetail.xDistance.empty? '暂无':machineDetail.xDistance}}</text>
+            </view>
+            <view class="line_half_vw">
+                <text>y行距：</text>
+                <text class="y_distance_tx">{{machineDetail.yDistance.empty? '暂无':machineDetail.yDistance}}</text>
+            </view>
+        </view>
+    </view>
     <view class="install_record">
         <view class="title_vw">安装记录</view>
         <view class="record_list" wx:for="{{installRecordList}}" wx:key="item" @tap="installRecordClick({{item}})">
@@ -94,25 +130,26 @@
         installRecordClick(e) {
           console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
           console.log(e)
-          let machines = JSON.stringify(e)
+          let installRecord = JSON.stringify(e)
+          console.log(installRecord)
           wepy.navigateTo({
-            url: '/pages/eventing_install_info?machineDetail=' + machines
+            url: '/pages/eventing_install_info?machineDetail=' + installRecord
           })
         },
         maintainRecordClick(e) {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
+          console.log('eeeeeeeeeeeeeeeee')
           console.log(e)
-          let machines = JSON.stringify(e)
+          let maintainRecord = JSON.stringify(e)
           wepy.navigateTo({
-            url: '/pages/eventing_maintain_info?machineDetail=' + machines
+            url: '/pages/eventing_maintain_info?machineDetail=' + maintainRecord
           })
         },
         repairRecordClick(e) {
           console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
           console.log(e)
-          let machines = JSON.stringify(e)
+          let repairRecord = JSON.stringify(e)
           wepy.navigateTo({
-            url: '/pages/eventing_repair_info?machineDetail=' + machines
+            url: '/pages/eventing_repair_info?machineDetail=' + repairRecord
           })
         },
         buttonClick() {
@@ -138,7 +175,7 @@
       async getInstallRecordList(nameplate) {
         let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
 
-        const installRecordListJson = await api.getInstallRecordListByNameplate({
+        const installRecordListJson = await api.getInstallRecordList({
           query: {nameplate: nameplate},
           header: {Authorization: jwtAuthorization}
         })
@@ -153,7 +190,7 @@
       async getMaintainRecordList(nameplate) {
         let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
 
-        const maintainRecordListJson = await api.getMaintainRecordListByNameplate({
+        const maintainRecordListJson = await api.getMaintainRecordList({
           query: {nameplate: nameplate},
           header: {Authorization: jwtAuthorization}
         })
@@ -168,7 +205,7 @@
       async getRepairRecordList(nameplate) {
         let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
 
-        const repairRecordListJson = await api.getRepairRecordListByNameplate({
+        const repairRecordListJson = await api.getRepairRecordList({
           query: {nameplate: nameplate},
           header: {Authorization: jwtAuthorization}
         })

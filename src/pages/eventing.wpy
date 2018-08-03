@@ -33,7 +33,7 @@
   <view class="eventing_list" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
     <image class="eventing_img" src="{{logo}}"></image>
     <view class="info">
-      <view class="nameplate_tx">{{item.nameplate}} </view>
+      <view class="nameplate_tx">{{item.machineNameplate}} </view>
       <view>{{item.machineType}}: </view>
       <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
     </view>
@@ -53,8 +53,7 @@
       components = {
       }
       data = {
-        list: [
-        ],
+        list: [],
         logo: '/images/icon_eventing.png'
       }
 
@@ -89,21 +88,65 @@
       }
 
       onLoad() {
-        this.getMachineList()
-      }
-
-      async getMachineList() {
+        this.list = []
         let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-        let userAccount = wepy.getStorageSync(ACCOUNT)
+        let customerName = wepy.getStorageSync(ACCOUNT)
+        this.getInstallRecordList(customerName, 2, jwtAuthorization)
+        // this.getMaintainRecordList(customerName, 3, jwtAuthorization)
+        this.getRepairRecordList(customerName, 5, jwtAuthorization)
+      };
 
-        const machineListJson = await api.getMachineListByCustomer({
-          query: {account: userAccount},
+      async getInstallRecordList(customerName, status, jwtAuthorization) {
+        const installRecordListJson = await api.getInstallRecordList({
+          query: {
+            installStatus: status,
+            installRecordCustomerName: customerName
+          },
           header: {Authorization: jwtAuthorization}
         })
-        console.log('machineListJson:')
-        console.log(machineListJson)
-        console.log(machineListJson.data.data.list)
-        this.list = machineListJson.data.data.list
+        console.log('installRecordListJson:')
+        console.log(installRecordListJson)
+        console.log(installRecordListJson.data.data.list)
+        console.log(installRecordListJson.data.data.list[1])
+        for (var i = 0; i < installRecordListJson.data.data.list.length; i++) {
+          this.list.push(installRecordListJson.data.data.list[i])
+        }
+        console.log(this.list)
+
+        this.$apply()
+      };
+
+      // async getMaintainRecordList(customerName, status, jwtAuthorization) {
+      //   const maintainRecordListJson = await api.getMaintainRecordList({
+      //     query: {
+      //       maintainStatus: status,
+      //       customerName: customerName
+      //     },
+      //     header: {Authorization: jwtAuthorization}
+      //   })
+      //   console.log('maintainRecordListJson:')
+      //   console.log(maintainRecordListJson)
+      //   console.log(maintainRecordListJson.data.data.list)
+      //   this.list.push(maintainRecordListJson.data.data.list)
+      //
+      //   this.$apply()
+      // };
+
+      async getRepairRecordList(customerName, status, jwtAuthorization) {
+        const repairRecordListJson = await api.getRepairRecordList({
+          query: {
+            repairStatus: status,
+            repairRecordCustomerName: customerName
+          },
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log('repairRecordListJson: ')
+        console.log(repairRecordListJson)
+        console.log(repairRecordListJson.data.data.list)
+        for (var i = 0; i < repairRecordListJson.data.data.list.length; i++) {
+          this.list.push(repairRecordListJson.data.data.list[i])
+        }
+        console.log(this.list)
 
         this.$apply()
       }
