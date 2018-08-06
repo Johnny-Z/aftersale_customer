@@ -1,21 +1,21 @@
 <template>
     <machinedetails :machine.sync="machineDetail"></machinedetails>
     <view class="title_vw">保养详情</view>
-    <view>保养项1：</view>
+    <view>{{machineDetail.maintainInfo}}</view>
     <view>保养项2：</view>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>保养人：</text>
-            <text>暂无</text>
+            <text>{{machineDetail.maintainChargePersonName}}</text>
         </view>
         <view class="line_half_vw">
             <text>电话：</text>
-            <text>12311113333</text>
+            <text>{{machineDetail.maintainChargePersonPhone}}</text>
         </view>
     </view>
     <view class="line_vw">
         <text>保养日期：</text>
-        <text>2018/07/25</text>
+        <text>{{machineDetail.maintainDateActual}}</text>
     </view>
     <view class="title_vw">客户反馈</view>
     <view class="line_vw">

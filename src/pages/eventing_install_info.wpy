@@ -5,26 +5,26 @@
         <text class="nameplate_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
     </view>
     <view class="title_vw">调试详情</view>
-    <view>调试项1：</view>
+    <view>{{machineDetail.installInfo}}</view>
     <view>调试项2：</view>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>调试安装人：</text>
-            <text>暂无</text>
+            <text>{{machineDetail.installChargePersonName}}</text>
         </view>
         <view class="line_half_vw">
             <text>电话：</text>
-            <text>12311113333</text>
+            <text>{{machineDetail.installChargePersonPhone}}</text>
         </view>
     </view>
     <view class="line_vw">
         <text>调试安装日期：</text>
-        <text>2018/07/25</text>
+        <text>{{machineDetail.installActualTime}}</text>
     </view>
     <view class="title_vw">客户反馈</view>
     <view class="line_vw">
         <text>评价：</text>
-        <text>下拉选择框</text>
+        <text>{{machineDetail.installChargePersonPhone}}</text>
     </view>
     <view class="line_vw">
         <text>意见/建议：</text>

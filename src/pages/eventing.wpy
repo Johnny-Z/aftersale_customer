@@ -30,11 +30,35 @@
   }
 </style>
 <template>
-  <view class="eventing_list" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
+  <view class="eventing_list" wx:for="{{installedList}}" wx:key="item" @tap="installedListClick({{item}})">
     <image class="eventing_img" src="{{logo}}"></image>
     <view class="info">
       <view class="nameplate_tx">{{item.machineNameplate}} </view>
-      <view>{{item.machineType}}: </view>
+      <view>{{item.machineType}}: 安装待评价 </view>
+      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+    </view>
+  </view>
+  <view class="eventing_list" wx:for="{{maintainedList}}" wx:key="item" @tap="maintainedListClick({{item}})">
+    <image class="eventing_img" src="{{logo}}"></image>
+    <view class="info">
+      <view class="nameplate_tx">{{item.machineNameplate}} </view>
+      <view>{{item.machineType}}: 保养待评价 </view>
+      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+    </view>
+  </view>
+  <view class="eventing_list" wx:for="{{repairedList}}" wx:key="item" @tap="repairedListClick({{item}})">
+    <image class="eventing_img" src="{{logo}}"></image>
+    <view class="info">
+      <view class="nameplate_tx">{{item.machineNameplate}} </view>
+      <view>{{item.machineType}}: 维修待评价 </view>
+      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+    </view>
+  </view>
+  <view class="eventing_list" wx:for="{{deliveredList}}" wx:key="item" @tap="deliveredListClick({{item}})">
+    <image class="eventing_img" src="{{logo}}"></image>
+    <view class="info">
+      <view class="nameplate_tx">{{item.machineNameplate}} </view>
+      <view>{{item.machineType}}: 部件待寄回 </view>
       <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
     </view>
   </view>
@@ -53,7 +77,10 @@
       components = {
       }
       data = {
-        list: [],
+        installedList: [],
+        maintainedList: [],
+        repairedList: [],
+        deliveredList: [],
         logo: '/images/icon_eventing.png'
       }
 
@@ -65,77 +92,83 @@
       }
 
       methods = {
-        listItemClick(e) {
+        installedListClick(e) {
           console.log(e)
-          let machines = JSON.stringify(e)
-          if (e.status === '2') {
-            wepy.navigateTo({
-              url: '/pages/eventing_install_info?machineDetail=' + machines
-            })
-          } else if (e.status === '4') {
-            wepy.navigateTo({
-              url: '/pages/eventing_maintain_info?machineDetail=' + machines
-            })
-          } else if (e.status === '5') {
-            wepy.navigateTo({
-              url: '/pages/eventing_repair_info?machineDetail=' + machines
-            })
-          } else {
-            console.log('status 错误: ' + e.status)
-          }
+          let installedRecord = JSON.stringify(e)
+          wepy.navigateTo({
+            url: '/pages/eventing_install_info?machineDetail=' + installedRecord
+          })
+        },
+        maintainedListClick(e) {
+          console.log(e)
+          let maintainedRecord = JSON.stringify(e)
+          wepy.navigateTo({
+            url: '/pages/eventing_maintain_info?machineDetail=' + maintainedRecord
+          })
+        },
+        repairedListClick(e) {
+          console.log(e)
+          let repairedRecord = JSON.stringify(e)
+          wepy.navigateTo({
+            url: '/pages/eventing_repair_info?machineDetail=' + repairedRecord
+          })
+        },
+        deliveredListClick(e) {
+          console.log(e)
+          let deliveredRecord = JSON.stringify(e)
+          wepy.navigateTo({
+            url: '/pages/eventing_repair_info?machineDetail=' + deliveredRecord
+          })
         }
 
       }
 
       onLoad() {
-        this.list = []
         let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let customerName = wepy.getStorageSync(ACCOUNT)
         this.getInstallRecordList(customerName, 2, jwtAuthorization)
-        // this.getMaintainRecordList(customerName, 3, jwtAuthorization)
-        this.getRepairRecordList(customerName, 5, jwtAuthorization)
+        this.getMaintainRecordList(customerName, 3, jwtAuthorization)
+        this.getRepairRecordList(customerName, 3, jwtAuthorization)
+        this.getDeliverList(customerName, 2, jwtAuthorization)
       };
 
-      async getInstallRecordList(customerName, status, jwtAuthorization) {
+      async getInstallRecordList(customerName, installStatus, jwtAuthorization) {
         const installRecordListJson = await api.getInstallRecordList({
           query: {
-            installStatus: status,
+            installStatus: installStatus,
             installRecordCustomerName: customerName
           },
           header: {Authorization: jwtAuthorization}
         })
-        console.log('installRecordListJson:')
+        console.log('installRecordListJson: ')
         console.log(installRecordListJson)
         console.log(installRecordListJson.data.data.list)
         console.log(installRecordListJson.data.data.list[1])
-        for (var i = 0; i < installRecordListJson.data.data.list.length; i++) {
-          this.list.push(installRecordListJson.data.data.list[i])
-        }
-        console.log(this.list)
+        this.installedList = installRecordListJson.data.data.list
 
         this.$apply()
       };
 
-      // async getMaintainRecordList(customerName, status, jwtAuthorization) {
-      //   const maintainRecordListJson = await api.getMaintainRecordList({
-      //     query: {
-      //       maintainStatus: status,
-      //       customerName: customerName
-      //     },
-      //     header: {Authorization: jwtAuthorization}
-      //   })
-      //   console.log('maintainRecordListJson:')
-      //   console.log(maintainRecordListJson)
-      //   console.log(maintainRecordListJson.data.data.list)
-      //   this.list.push(maintainRecordListJson.data.data.list)
-      //
-      //   this.$apply()
-      // };
+      async getMaintainRecordList(customerName, maintainStatus, jwtAuthorization) {
+        const maintainRecordListJson = await api.getMaintainRecordList({
+          query: {
+            maintainStatus: maintainStatus,
+            customerName: customerName
+          },
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log('maintainRecordListJson:')
+        console.log(maintainRecordListJson)
+        console.log(maintainRecordListJson.data.data.list)
+        this.maintainedList = maintainRecordListJson.data.data.list
 
-      async getRepairRecordList(customerName, status, jwtAuthorization) {
+        this.$apply()
+      };
+
+      async getRepairRecordList(customerName, repairStatus, jwtAuthorization) {
         const repairRecordListJson = await api.getRepairRecordList({
           query: {
-            repairStatus: status,
+            repairStatus: repairStatus,
             repairRecordCustomerName: customerName
           },
           header: {Authorization: jwtAuthorization}
@@ -143,10 +176,23 @@
         console.log('repairRecordListJson: ')
         console.log(repairRecordListJson)
         console.log(repairRecordListJson.data.data.list)
-        for (var i = 0; i < repairRecordListJson.data.data.list.length; i++) {
-          this.list.push(repairRecordListJson.data.data.list[i])
-        }
-        console.log(this.list)
+        this.repairedList = repairRecordListJson.data.data.list
+
+        this.$apply()
+      };
+
+      async getDeliverList(customerName, partsStatus, jwtAuthorization) {
+        const repairRecordListJson = await api.getRepairRecordList({
+          query: {
+            partsStatus: partsStatus,
+            repairRecordCustomerName: customerName
+          },
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log('repairRecordListJson: ')
+        console.log(repairRecordListJson)
+        console.log(repairRecordListJson.data.data.list)
+        this.deliveredList = repairRecordListJson.data.data.list
 
         this.$apply()
       }
