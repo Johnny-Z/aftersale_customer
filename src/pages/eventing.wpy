@@ -182,7 +182,7 @@
       };
 
       async getDeliverList(customerName, partsStatus, jwtAuthorization) {
-        const repairRecordListJson = await api.getRepairRecordList({
+        const deliverListJson = await api.getRepairRecordList({
           query: {
             partsStatus: partsStatus,
             repairRecordCustomerName: customerName
@@ -190,9 +190,9 @@
           header: {Authorization: jwtAuthorization}
         })
         console.log('repairRecordListJson: ')
-        console.log(repairRecordListJson)
-        console.log(repairRecordListJson.data.data.list)
-        this.deliveredList = repairRecordListJson.data.data.list
+        console.log(deliverListJson)
+        console.log(deliverListJson.data.data.list)
+        this.deliveredList = deliverListJson.data.data.list
 
         this.$apply()
       }

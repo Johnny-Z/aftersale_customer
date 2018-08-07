@@ -89,9 +89,9 @@
     }
     .record_list {
        background: #fff;
-       padding: 15rpx;
+       padding: 10rpx;
        display: flex;
-       margin-bottom: 15rpx;
+       margin-bottom: 5rpx;
        .info {
            padding: 5rpx;
            color: #000000;

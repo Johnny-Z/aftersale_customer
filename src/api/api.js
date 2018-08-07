@@ -18,6 +18,7 @@ const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machi
 const getInstallRecordList = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
 const getMaintainRecordList = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
 const getRepairRecordList = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
+const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/customer/feedback/add')
 
 // 微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
@@ -121,6 +122,7 @@ export default {
   getInstallRecordList,
   getMaintainRecordList,
   getRepairRecordList,
+  uploadRepairFeedback,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,

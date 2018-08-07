@@ -16,11 +16,11 @@
     </view>
     <view class="title_vw">故障描述</view>
     <view class="line_vw">
-        <view>文字：</view>
-        <textarea class="pre_machine_error_in" placeholder="请输入机器故障详情" auto-height/>
+        <view>文字描述：</view>
     </view>
+    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" auto-height/>
     <view class="line_vw">
-      <view>语音：</view>
+      <view>语音描述：</view>
       <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
     </view>
     <view class="line_vw">
@@ -62,7 +62,9 @@
         }
     }
     .pre_machine_error_in {
-        background: #EBEBEB;
+        background: #ffffff;
+        width: 100%;
+        padding: 20rpx;
     }
     .single_btn {
         margin-left: 25rpx;

@@ -44,13 +44,13 @@
     <view class="title_vw">客户反馈</view>
     <view class="line_vw">
         <text>评价：</text>
-        <text>下拉选择框</text>
+        <text>{{machineDetail.repairFeedbackCustomerMark}}</text>
     </view>
     <view class="line_vw">
         <text>意见/建议：</text>
     </view>
     <view class="line_vw">
-        <text>暂无</text>
+        <text>{{machineDetail.repairFeedbackCustomerSuggestion}}</text>
     </view>
     <button class="double_btn" size="mini" type="primary">提交</button>
     <button class="double_btn" size="mini">返回</button>

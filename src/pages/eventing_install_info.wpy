@@ -22,18 +22,32 @@
         <text>{{machineDetail.installActualTime}}</text>
     </view>
     <view class="title_vw">客户反馈</view>
-    <view class="line_vw">
-        <text>评价：</text>
-        <text>{{machineDetail.installChargePersonPhone}}</text>
+    <view wx:if="{{isExistFeedback}}">
+        <view class="line_vw">
+            <text>评价：</text>
+            <text>{{machineDetail.installFeedbackCustomerMark}}</text>
+        </view>
+        <view class="line_vw">
+            <text>意见/建议：</text>
+        </view>
+        <view class="line_vw">
+            <text>{{machineDetail.installFeedbackCustomerSuggestion}}</text>
+        </view>
     </view>
-    <view class="line_vw">
-        <text>意见/建议：</text>
+    <view wx:else>
+        <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
+            <view class="line_vw">
+                评价：
+                <view class="line_picker">{{mark[index]}}</view>
+            </view>
+        </picker>
+        <view class="line_vw">
+            <text>意见/建议：</text>
+        </view>
+        <textarea @input="bindSuggestionInput" class="textarea" style="height: 3em" placeholder="输入你的意见/建议"></textarea>
+        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+        <button class="double_btn" size="mini" >返回</button>
     </view>
-    <view class="line_vw">
-        <text>暂无</text>
-    </view>
-    <button class="double_btn" size="mini" type="primary">提交</button>
-    <button class="double_btn" size="mini" >返回</button>
 </template>
 <style lang="less">
     .line_vw {
@@ -42,6 +56,14 @@
         .line_half_vw {
             width: 50%;
         }
+    }
+    .line_picker {
+        background: #EEC591;
+    }
+    .textarea {
+        width: 100%;
+        padding: 20rpx;
+        background-color: #fff;
     }
     .title_vw {
         padding: 15rpx;
@@ -57,6 +79,10 @@
 <script>
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
+    import api from '@/api/api'
+    import {
+        AUTHORIZATION
+    } from '@/utils/constant'
 
     export default class EventingInstallInfo extends wepy.page {
       config = {
@@ -67,10 +93,44 @@
       }
       data = {
         machineDetail: {},
-        nameplate: ''
-
+        isExistFeedback: false,
+        repairCustomerFeedback: {
+          customerMark: '',
+          customerSuggestion: '',
+          customerRepairResult: ''
+        },
+        mark: ['非常满意', '满意', '一般', '差评'],
+        index: 0,
+        customerSuggestion: ''
       };
-      methods = {};
+      methods = {
+        bindPickerChange: function (e) {
+          console.log('picker发送选择改变，携带值为 ', e.detail.value)
+          this.index = e.detail.value
+        },
+        bindSuggestionInput: function(e) {
+          console.log(e.detail.value)
+          this.customerSuggestion = e.detail.value
+        },
+        async bindUploadFeedback() {
+          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+          this.repairCustomerFeedback.customerMark = this.index
+          this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
+          let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
+          const uploadFeedbackJson = await api.uploadRepairFeedback({
+            query: {
+              repairCustomerFeedback: repairCustomerFeedbackJson,
+              repairRecordId: this.machineDetail.id
+            },
+            header: {Authorization: jwtAuthorization}
+          })
+          console.log('uploadFeedbackJson:')
+          console.log(uploadFeedbackJson)
+          console.log(uploadFeedbackJson.data.data)
+
+          this.$apply()
+        }
+      };
 
       events = {};
 
