@@ -45,13 +45,19 @@
     <view wx:if="{{isExistFeedback}}">
         <view class="line_vw">
         <text>评价：</text>
-        <text>{{machineDetail.repairFeedbackCustomerMark}}</text>
+        <text>{{machineDetail.repairFeedbackCustomerMark.empty? '暂无':machineDetail.repairFeedbackCustomerMark}}</text>
     </view>
     <view class="line_vw">
-        <text>意见/建议： {{machineDetail.repairFeedbackCustomerSuggestion}}</text>
+        <text>意见/建议： {{machineDetail.repairFeedbackCustomerSuggestion.empty? '暂无':machineDetail.repairFeedbackCustomerSuggestion}}</text>
     </view>
     </view>
     <view wx:else>
+        <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+            <view class="line_vw">
+                结果：
+                <view class="line_picker">{{resultMark[resultIndex]}}</view>
+            </view>
+        </picker>
         <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
             <view class="line_vw">
                 评价：
@@ -63,8 +69,12 @@
         </view>
         <textarea @input="bindSuggestionInput" class="textarea" style="height: 3em" placeholder="输入你的意见/建议"></textarea>
         <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-        <button class="double_btn" size="mini" >返回</button>
+        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
     </view>
+    <view wx:if="{{isSendBack}}">
+        <view class="title_vw">零件回厂信息</view>
+    </view>
+
 </template>
 <style lang="less">
     .title_vw {
@@ -134,9 +144,12 @@
           customerSuggestion: '',
           customerRepairResult: 'Fixed_OK'
         },
+        resultMark: ['完成', '未修完'],
+        resultIndex: 0,
         mark: ['非常满意', '满意', '一般', '差评'],
         index: 0,
-        customerSuggestion: ''
+        customerSuggestion: '',
+        isSendBack: false
       };
       methods = {
         voicePlay() {
@@ -177,8 +190,12 @@
             urls: self.data.previewImageArr
           })
         },
-        bindPickerChange: function (e) {
+        bindResultPickerChange: function (e) {
           console.log('picker发送选择改变，携带值为 ', e.detail.value)
+          this.resultIndex = e.detail.value
+        },
+        bindPickerChange: function (e) {
+          console.log('picker发送选择改变，携带值为', e.detail.value)
           this.index = e.detail.value
         },
         bindSuggestionInput: function(e) {
@@ -189,19 +206,39 @@
           let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
           this.repairCustomerFeedback.customerMark = this.index
           this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
+          if (this.resultIndex === 0) {
+            this.repairCustomerFeedback.customerRepairResult = 'Fixed_OK'
+          } else {
+            this.repairCustomerFeedback.customerRepairResult = 'Fixed_NG'
+          }
           let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
-          const uploadFeedbackJson = await api.uploadRepairFeedback({
+          const repairFeedbackJson = await api.uploadRepairFeedback({
             query: {
               repairCustomerFeedback: repairCustomerFeedbackJson,
               repairRecordId: this.machineDetail.id
             },
             header: {Authorization: jwtAuthorization}
           })
-          console.log('uploadFeedbackJson:')
-          console.log(uploadFeedbackJson)
-          console.log(uploadFeedbackJson.data.code)
-
-          this.$apply()
+          console.log('repairFeedbackJson:')
+          console.log(repairFeedbackJson)
+          console.log(repairFeedbackJson.data.code)
+          if (repairFeedbackJson.data.code === 200) {
+            wepy.showToast({
+              title: '上传成功',
+              icon: 'success',
+              duration: 2000
+            })
+            wepy.navigateBack()
+          } else {
+            wepy.showToast({
+              title: '上传失败',
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        },
+        bindNavigateBack() {
+          wepy.navigateBack()
         }
       };
 
@@ -213,6 +250,13 @@
         console.log(this.machineDetail)
         if (this.machineDetail.customerFeedback > 0) {
           this.isExistFeedback = true
+        } else {
+          this.isExistFeedback = false
+        }
+        if (this.machineDetail.partsStatus === '1') {
+          this.isSendBack = false
+        } else {
+          this.isSendBack = true
         }
       };
 

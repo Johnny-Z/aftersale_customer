@@ -25,10 +25,10 @@
     <view wx:if="{{isExistFeedback}}">
         <view class="line_vw">
             <text>评价：</text>
-            <text>{{machineDetail.installFeedbackCustomerMark}}</text>
+            <text>{{machineDetail.installFeedbackCustomerMark.empty? '暂无':machineDetail.installFeedbackCustomerMark}}</text>
         </view>
         <view class="line_vw">
-            <text>意见/建议： {{machineDetail.installFeedbackCustomerSuggestion}}</text>
+            <text>意见/建议： {{machineDetail.installFeedbackCustomerSuggestion.empty? '暂无':machineDetail.installFeedbackCustomerSuggestion}}</text>
         </view>
     </view>
     <view wx:else>
@@ -43,7 +43,7 @@
         </view>
         <textarea @input="bindSuggestionInput" class="textarea" style="height: 3em" placeholder="输入你的意见/建议"></textarea>
         <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-        <button class="double_btn" size="mini" >返回</button>
+        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
     </view>
 </template>
 <style lang="less">
@@ -123,8 +123,23 @@
           console.log('uploadInstallFeedbackJson:')
           console.log(installFeedbackJson)
           console.log(installFeedbackJson.data.code)
-
-          this.$apply()
+          if (installFeedbackJson.data.code === 200) {
+            wepy.showToast({
+              title: '上传成功',
+              icon: 'success',
+              duration: 2000
+            })
+            wepy.navigateBack()
+          } else {
+            wepy.showToast({
+              title: '上传失败',
+              icon: 'none',
+              duration: 3000
+            })
+          }
+        },
+        bindNavigateBack() {
+          wepy.navigateBack()
         }
       };
 
