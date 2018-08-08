@@ -28,10 +28,7 @@
             <text>{{machineDetail.installFeedbackCustomerMark}}</text>
         </view>
         <view class="line_vw">
-            <text>意见/建议：</text>
-        </view>
-        <view class="line_vw">
-            <text>{{machineDetail.installFeedbackCustomerSuggestion}}</text>
+            <text>意见/建议： {{machineDetail.installFeedbackCustomerSuggestion}}</text>
         </view>
     </view>
     <view wx:else>
@@ -94,10 +91,9 @@
       data = {
         machineDetail: {},
         isExistFeedback: false,
-        repairCustomerFeedback: {
+        installCustomerFeedback: {
           customerMark: '',
-          customerSuggestion: '',
-          customerRepairResult: ''
+          customerSuggestion: ''
         },
         mark: ['非常满意', '满意', '一般', '差评'],
         index: 0,
@@ -114,19 +110,19 @@
         },
         async bindUploadFeedback() {
           let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-          this.repairCustomerFeedback.customerMark = this.index
-          this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
-          let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
-          const uploadFeedbackJson = await api.uploadRepairFeedback({
+          this.installCustomerFeedback.customerMark = this.index
+          this.installCustomerFeedback.customerSuggestion = this.customerSuggestion
+          let installCustomerFeedbackJson = JSON.stringify(this.installCustomerFeedback)
+          const installFeedbackJson = await api.uploadInstallFeedback({
             query: {
-              repairCustomerFeedback: repairCustomerFeedbackJson,
-              repairRecordId: this.machineDetail.id
+              installCustomerFeedback1: installCustomerFeedbackJson,
+              installRecordId: this.machineDetail.id
             },
             header: {Authorization: jwtAuthorization}
           })
-          console.log('uploadFeedbackJson:')
-          console.log(uploadFeedbackJson)
-          console.log(uploadFeedbackJson.data.data)
+          console.log('uploadInstallFeedbackJson:')
+          console.log(installFeedbackJson)
+          console.log(installFeedbackJson.data.code)
 
           this.$apply()
         }
@@ -138,6 +134,9 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+        if (this.machineDetail.customerFeedback > 0) {
+          this.isExistFeedback = true
+        }
       };
 
         // Other properties

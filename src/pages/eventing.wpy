@@ -189,7 +189,7 @@
           },
           header: {Authorization: jwtAuthorization}
         })
-        console.log('repairRecordListJson: ')
+        console.log('deliverListJson: ')
         console.log(deliverListJson)
         console.log(deliverListJson.data.data.list)
         this.deliveredList = deliverListJson.data.data.list

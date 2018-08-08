@@ -18,18 +18,29 @@
         <text>{{machineDetail.maintainDateActual}}</text>
     </view>
     <view class="title_vw">客户反馈</view>
-    <view class="line_vw">
+    <view wx:if="{{isExistFeedback}}">
+        <view class="line_vw">
         <text>评价：</text>
         <text>{{machineDetail.maintainFeedbackCustomerMark}}</text>
+        </view>
+        <view class="line_vw">
+            <text>意见/建议： {{machineDetail.maintainFeedbackCustomerSuggestion}}</text>
+        </view>
     </view>
-    <view class="line_vw">
-        <text>意见/建议：</text>
+    <view wx:else>
+        <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
+            <view class="line_vw">
+                评价：
+                <view class="line_picker">{{mark[index]}}</view>
+            </view>
+        </picker>
+        <view class="line_vw">
+            <text>意见/建议：</text>
+        </view>
+        <textarea @input="bindSuggestionInput" class="textarea" style="height: 3em" placeholder="输入你的意见/建议"></textarea>
+        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+        <button class="double_btn" size="mini" >返回</button>
     </view>
-    <view class="line_vw">
-        <text>{{machineDetail.maintainFeedbackCustomerSuggestion}}</text>
-    </view>
-    <button class="double_btn" size="mini" type="primary">提交</button>
-    <button class="double_btn" size="mini" >返回</button>
 </template>
 <style lang="less">
     .title_vw {
@@ -53,6 +64,10 @@
 <script>
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
+    import api from '@/api/api'
+    import {
+        AUTHORIZATION
+    } from '@/utils/constant'
 
     export default class EventingMaintainInfo extends wepy.page {
       config = {
@@ -62,10 +77,44 @@
         machinedetails: MachineDetails
       }
       data = {
-        machineDetail: {
+        machineDetail: {},
+        isExistFeedback: false,
+        maintainCustomerFeedback: {
+          customerMark: '',
+          customerSuggestion: ''
+        },
+        mark: ['非常满意', '满意', '一般', '差评'],
+        index: 0,
+        customerSuggestion: ''
+      };
+      methods = {
+        bindPickerChange: function (e) {
+          console.log('picker发送选择改变，携带值为 ', e.detail.value)
+          this.index = e.detail.value
+        },
+        bindSuggestionInput: function(e) {
+          console.log(e.detail.value)
+          this.customerSuggestion = e.detail.value
+        },
+        async bindUploadFeedback() {
+          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+          this.maintainCustomerFeedback.customerMark = this.index
+          this.maintainCustomerFeedback.customerSuggestion = this.customerSuggestion
+          let maintainCustomerFeedbackJson = JSON.stringify(this.maintainCustomerFeedback)
+          const maintainFeedbackJson = await api.uploadMaintainFeedback({
+            query: {
+              maintainCustomerFeedback1: maintainCustomerFeedbackJson,
+              maintainRecordId: this.machineDetail.id
+            },
+            header: {Authorization: jwtAuthorization}
+          })
+          console.log('uploadMaintainFeedbackJson:')
+          console.log(maintainFeedbackJson)
+          console.log(maintainFeedbackJson.data.code)
+
+          this.$apply()
         }
       };
-      methods = {};
 
       events = {};
 
@@ -73,6 +122,9 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+        if (this.machineDetail.customerFeedback > 0) {
+          this.isExistFeedback = true
+        }
       };
 
         // Other properties

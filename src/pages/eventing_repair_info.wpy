@@ -42,18 +42,29 @@
         <text>{{machineDetail.repairEndTime}}</text>
     </view>
     <view class="title_vw">客户反馈</view>
-    <view class="line_vw">
+    <view wx:if="{{isExistFeedback}}">
+        <view class="line_vw">
         <text>评价：</text>
         <text>{{machineDetail.repairFeedbackCustomerMark}}</text>
     </view>
     <view class="line_vw">
-        <text>意见/建议：</text>
+        <text>意见/建议： {{machineDetail.repairFeedbackCustomerSuggestion}}</text>
     </view>
-    <view class="line_vw">
-        <text>{{machineDetail.repairFeedbackCustomerSuggestion}}</text>
     </view>
-    <button class="double_btn" size="mini" type="primary">提交</button>
-    <button class="double_btn" size="mini">返回</button>
+    <view wx:else>
+        <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
+            <view class="line_vw">
+                评价：
+                <view class="line_picker">{{mark[index]}}</view>
+            </view>
+        </picker>
+        <view class="line_vw">
+            <text>意见/建议：</text>
+        </view>
+        <textarea @input="bindSuggestionInput" class="textarea" style="height: 3em" placeholder="输入你的意见/建议"></textarea>
+        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+        <button class="double_btn" size="mini" >返回</button>
+    </view>
 </template>
 <style lang="less">
     .title_vw {
@@ -70,6 +81,14 @@
             width: 50%;
             height: 60%
         }
+    }
+    .line_picker {
+        background: #EEC591;
+    }
+    .textarea {
+        width: 100%;
+        padding: 20rpx;
+        background-color: #fff;
     }
     .single_btn {
         margin-left: 25rpx;
@@ -92,6 +111,10 @@
 <script>
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
+    import api from '@/api/api'
+    import {
+        AUTHORIZATION
+    } from '@/utils/constant'
 
     export default class EventingRepairInfo extends wepy.page {
       config = {
@@ -101,11 +124,19 @@
         machinedetails: MachineDetails
       }
       data = {
-        machineDetail: {
-        },
+        machineDetail: {},
         logo: '/images/icon_eventing.png',
         isSpeaking: false,
-        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg']
+        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        isExistFeedback: false,
+        repairCustomerFeedback: {
+          customerMark: 0,
+          customerSuggestion: '',
+          customerRepairResult: 'Fixed_OK'
+        },
+        mark: ['非常满意', '满意', '一般', '差评'],
+        index: 0,
+        customerSuggestion: ''
       };
       methods = {
         voicePlay() {
@@ -145,6 +176,32 @@
             current: e.currentTarget.dataset.src,
             urls: self.data.previewImageArr
           })
+        },
+        bindPickerChange: function (e) {
+          console.log('picker发送选择改变，携带值为 ', e.detail.value)
+          this.index = e.detail.value
+        },
+        bindSuggestionInput: function(e) {
+          console.log(e.detail.value)
+          this.customerSuggestion = e.detail.value
+        },
+        async bindUploadFeedback() {
+          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+          this.repairCustomerFeedback.customerMark = this.index
+          this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
+          let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
+          const uploadFeedbackJson = await api.uploadRepairFeedback({
+            query: {
+              repairCustomerFeedback: repairCustomerFeedbackJson,
+              repairRecordId: this.machineDetail.id
+            },
+            header: {Authorization: jwtAuthorization}
+          })
+          console.log('uploadFeedbackJson:')
+          console.log(uploadFeedbackJson)
+          console.log(uploadFeedbackJson.data.code)
+
+          this.$apply()
         }
       };
 
@@ -154,6 +211,9 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+        if (this.machineDetail.customerFeedback > 0) {
+          this.isExistFeedback = true
+        }
       };
 
         // Other properties
