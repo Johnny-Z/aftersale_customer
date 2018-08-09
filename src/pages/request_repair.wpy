@@ -58,7 +58,7 @@
       <view>语音描述：</view>
       <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
     </view>
-    <button wx:if="{{hasRecorded}}" disabled="{{isPlaying}}" loading="{{isPlaying}}" @tap="playRecord">播放语音</button>
+    <button wx:if="{{hasRecorded}}" class="single_big_btn" disabled="{{isPlaying}}" loading="{{isPlaying}}" @tap="playRecord">播放语音</button>
     <view class="line_vw">
         <text>故障照片：</text>
         <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
@@ -104,6 +104,10 @@
     .single_btn {
         margin-left: 25rpx;
         width: 50%;
+    }
+    .single_big_btn {
+        margin-left: 25rpx;
+        margin-right: 25rpx;
     }
     .nameplate_image {
         margin-left: 2.5%;
