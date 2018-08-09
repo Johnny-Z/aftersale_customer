@@ -1,7 +1,6 @@
 <template>
-    <machinedetails wx:if="{{isOldMachine}}" :machine.sync="machineDetail"></machinedetails>
-    <view wx:else >
-        <view class="title_vw">机器信息</view>
+    <view class="title_vw">机器信息</view>
+    <view wx:if="{{isOldMachine}}">
         <view class="line_vw">
             <text>机器编号：</text>
             <input class="nameplate_in" placeholder="请输入机器编号"/>
@@ -14,7 +13,43 @@
             <image class="nameplate_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
         </view>
     </view>
-    <view class="title_vw">故障描述</view>
+    <view wx:else class="mathine_details">
+        <view class="line_vw">
+            <text>机器编号：</text>
+            <text class="nameplate_tx">{{machineDetail.nameplate.empty? '暂无':machineDetail.nameplate}}</text>
+        </view>
+        <view class="line_vw" >
+            <view class="line_half_vw">
+                <text>机型：</text>
+                <text class="machine_type_tx">{{machineDetail.machineType.empty? '暂无':machineDetail.machineType}}</text>
+            </view>
+            <view class="line_half_vw">
+                <text>针数：</text>
+                <text class="needle_num_tx">{{machineDetail.needleNum.empty? '暂无':machineDetail.needleNum}}</text>
+            </view>
+        </view>
+        <view class="line_vw">
+            <view class="line_half_vw">
+                <text>头数：</text>
+                <text class="head_num_tx">{{machineDetail.headNum.empty? '暂无':machineDetail.headNum}}</text>
+            </view>
+            <view class="line_half_vw">
+                <text>头距：</text>
+                <text class="head_distance_tx">{{machineDetail.headDistance.empty? '暂无':machineDetail.headDistance}}</text>
+            </view>
+        </view>
+        <view class="line_vw" >
+            <view class="line_half_vw">
+                <text>x行距：</text>
+                <text class="x_distance_tx">{{machineDetail.xDistance.empty? '暂无':machineDetail.xDistance}}</text>
+            </view>
+            <view class="line_half_vw">
+                <text>y行距：</text>
+                <text class="y_distance_tx">{{machineDetail.yDistance.empty? '暂无':machineDetail.yDistance}}</text>
+            </view>
+        </view>
+    </view>
+    <view class="title_vw">故障内容</view>
     <view class="line_vw">
         <view>文字描述：</view>
     </view>
@@ -23,6 +58,7 @@
       <view>语音描述：</view>
       <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
     </view>
+    <button wx:if="{{hasRecorded}}" disabled="{{isPlaying}}" loading="{{isPlaying}}" @tap="playRecord">播放语音</button>
     <view class="line_vw">
         <text>故障照片：</text>
         <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
@@ -63,7 +99,6 @@
     }
     .pre_machine_error_in {
         background: #ffffff;
-        width: 100%;
         padding: 20rpx;
     }
     .single_btn {
@@ -95,9 +130,12 @@
       data = {
         recordBtnVal: '按住 说话',
         machineDetail: {},
+        recordTempSrc: '',
         previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
         isOldMachine: false,
-        isRecording: false
+        isRecording: false,
+        hasRecorded: false,
+        isPlaying: false
       };
       methods = {
         async previewImage() {
@@ -121,17 +159,63 @@
           console.log('手指anxia了...')
           this.isRecording = true
           this.recordBtnVal = '松开 结束'
+          const recorderManager = wepy.getRecorderManager()
+          recorderManager.start({format: 'mp3'})
+          recorderManager.onStart(() => {
+            console.log('recorder start')
+          })
+          recorderManager.onPause(() => {
+            console.log('recorder pause')
+          })
+          recorderManager.onStop((res) => {
+            console.log('recorder stop', res)
+            this.recordTempSrc = res.tempFilePath
+            this.hasRecorded = true
+            this.$apply()
+          })
         },
         touchup() {
           console.log('手指抬起了...')
           this.isRecording = false
           this.recordBtnVal = '按住 说话'
+          wepy.getRecorderManager().stop()
+        },
+        playRecord() {
+          console.log('anniu按下了...', this.recordTempSrc)
+          this.isPlaying = true
+          const innerAudioContextRecord = wepy.createInnerAudioContext()
+          innerAudioContextRecord.autoplay = true
+          innerAudioContextRecord.src = this.recordTempSrc
+          innerAudioContextRecord.onPlay(() => {
+            console.log('开始播放')
+          })
+          innerAudioContextRecord.onPause(() => {
+            console.log('pause了')
+            this.isPlaying = false
+            this.$apply()
+          })
+          innerAudioContextRecord.onStop(() => {
+            console.log('stop了')
+            this.isPlaying = false
+            this.$apply()
+          })
+          innerAudioContextRecord.onError((res) => {
+            console.log(res)
+            console.log(res.errCode)
+            this.isPlaying = false
+            this.$apply()
+          })
+          innerAudioContextRecord.onEnded(() => {
+            console.log('bo完了')
+            this.isPlaying = false
+            this.$apply()
+          })
         }
       };
 
       events = {};
 
-      onLoad(options) {
+      async onLoad(options) {
         console.log('request_repair onLoad: ')
         console.log(options)
         if (options.empty) {
@@ -140,6 +224,10 @@
           this.isOldMachine = false
           this.machineDetail = JSON.parse(options.machineDetail)
           console.log(this.machineDetail)
+        }
+        let res = await wepy.getSetting()
+        if (!res.authSetting['scope.record']) {
+          wepy.authorize({scope: 'scope.record'})
         }
       };
 
