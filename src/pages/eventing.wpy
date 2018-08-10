@@ -72,7 +72,8 @@
     } from '@/utils/constant'
     export default class Eventing extends wepy.page {
       config = {
-        navigationBarTitleText: '事件列表'
+        navigationBarTitleText: '事件列表',
+        enablePullDownRefresh: true
       }
       components = {
       }
@@ -124,13 +125,24 @@
       }
 
       onLoad() {
+      };
+      onPullDownRefresh() {
         let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let customerName = wepy.getStorageSync(ACCOUNT)
         this.getInstallRecordList(customerName, 2, jwtAuthorization)
         this.getMaintainRecordList(customerName, 3, jwtAuthorization)
         this.getRepairRecordList(customerName, 3, jwtAuthorization)
         this.getDeliverList(customerName, 2, jwtAuthorization)
-      };
+        console.log('xiala刷新:')
+      }
+      onShow() {
+        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+        let customerName = wepy.getStorageSync(ACCOUNT)
+        this.getInstallRecordList(customerName, 2, jwtAuthorization)
+        this.getMaintainRecordList(customerName, 3, jwtAuthorization)
+        this.getRepairRecordList(customerName, 3, jwtAuthorization)
+        this.getDeliverList(customerName, 2, jwtAuthorization)
+      }
 
       async getInstallRecordList(customerName, installStatus, jwtAuthorization) {
         const installRecordListJson = await api.getInstallRecordList({
@@ -195,6 +207,7 @@
         this.deliveredList = deliverListJson.data.data.list
 
         this.$apply()
+        wepy.stopPullDownRefresh()
       }
     }
 
