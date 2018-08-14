@@ -51,9 +51,10 @@
     </view>
     <view class="title_vw">故障内容</view>
     <view class="line_vw">
-        <view>文字描述：</view>
+        文字描述：
+        <input class="nameplate_in" placeholder="故障概述" @input="bindKeyInput"/>
     </view>
-    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" auto-height/>
+    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" auto-height @input="bindSuggestionInput"/>
     <view class="line_vw">
       <view>语音描述：</view>
       <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
@@ -69,17 +70,17 @@
     <view class="title_vw">联系方式</view>
     <view class="line_vw">
         <text>联系人：</text>
-        <input class="nameplate_in" placeholder="请联系人姓名"/>
+        <input class="nameplate_in" placeholder="请联系人姓名" @input="bindKeyInput"/>
     </view>
     <view class="line_vw">
         <text>电话：</text>
-        <input class="nameplate_in" placeholder="请输入联系电话"/>
+        <input class="nameplate_in" placeholder="请输入联系电话" @input="bindKeyInput"/>
     </view>
     <view class="line_vw">
         <text>地址：</text>
-        <input class="nameplate_in" placeholder="请输入详细地址"/>
+        <input class="nameplate_in" placeholder="请输入详细地址" @input="bindKeyInput"/>
     </view>
-    <button class="single_btn" size="mini" type="primary">提交</button>
+    <button class="single_btn" size="mini" type="primary" @tap="uploadMachineInfo">提交</button>
 </template>
 <style lang="less">
     .title_vw {
@@ -123,6 +124,10 @@
 <script>
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
+    import api from '@/api/api'
+    import {
+        AUTHORIZATION
+    } from '@/utils/constant'
 
     export default class RequestRepair extends wepy.page {
       config = {
@@ -143,7 +148,7 @@
       };
       methods = {
         async previewImage() {
-          let res = await wepy.chooseImage({count: 8})
+          let res = await wepy.chooseImage({count: 3})
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
             this.previewImageArr = tempFilePaths
@@ -214,6 +219,20 @@
             this.isPlaying = false
             this.$apply()
           })
+        },
+        async uploadMachineInfo() {
+          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+
+          const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
+            query: {
+              repairRequestInfo: this.previewImageArr,
+              fileOfNameplate: this.previewImageArr,
+              fileOfVoice: this.recordTempSrc,
+              filesOfRepairRequestPicture: this.previewImageArr
+            },
+            header: {Authorization: jwtAuthorization}
+          })
+          console.log(uploadRepairRequestInfoJson)
         }
       };
 
@@ -234,7 +253,5 @@
           wepy.authorize({scope: 'scope.record'})
         }
       };
-
-        // Other properties
     }
 </script>

@@ -21,6 +21,7 @@ const getRepairRecordList = (params) => wxRequest(params, apiMall + '/repair/rec
 const uploadInstallFeedback = (params) => wxRequest(params, apiMall + '/install/customer/feedback/add')
 const uploadMaintainFeedback = (params) => wxRequest(params, apiMall + '/maintain/customer/feedback/add')
 const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/customer/feedback/add')
+const uploadRepairRequestInfo = (params) => wxRequest(params, apiMall + '/repair/request/info/add')
 
 // 微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
@@ -127,6 +128,7 @@ export default {
   uploadInstallFeedback,
   uploadMaintainFeedback,
   uploadRepairFeedback,
+  uploadRepairRequestInfo,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,
