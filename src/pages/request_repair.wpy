@@ -7,10 +7,10 @@
         </view>
         <view class="line_vw">
             <text>铭牌照片：</text>
-            <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
+            <button class="single_btn" @tap="previewNameplateImage" size="mini" type="primary">点击拍照/选图</button>
         </view>
         <view>
-            <image class="nameplate_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+            <image class="nameplate_image" mode="aspectFill" wx:for="{{nameplateImage}}" @tap="changeNameplatePreview" data-src="{{item}}" src="{{item}}"></image>
         </view>
     </view>
     <view wx:else class="mathine_details">
@@ -52,9 +52,9 @@
     <view class="title_vw">故障内容</view>
     <view class="line_vw">
         文字描述：
-        <input class="nameplate_in" placeholder="故障概述" @input="bindKeyInput"/>
+        <input class="nameplate_in" placeholder="故障概述" @input="bindTitleInput"/>
     </view>
-    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" auto-height @input="bindSuggestionInput"/>
+    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" auto-height @input="bindContentInput"/>
     <view class="line_vw">
       <view>语音描述：</view>
       <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
@@ -74,11 +74,11 @@
     </view>
     <view class="line_vw">
         <text>电话：</text>
-        <input class="nameplate_in" placeholder="请输入联系电话" @input="bindKeyInput"/>
+        <text>{{customerPhone}}</text>
     </view>
     <view class="line_vw">
         <text>地址：</text>
-        <input class="nameplate_in" placeholder="请输入详细地址" @input="bindKeyInput"/>
+        <text>{{customerAddress}}</text>
     </view>
     <button class="single_btn" size="mini" type="primary" @tap="uploadMachineInfo">提交</button>
 </template>
@@ -137,22 +137,62 @@
         machinedetails: MachineDetails
       }
       data = {
-        recordBtnVal: '按住 说话',
         machineDetail: {},
+        nameplateImage: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        titleInput: '',
+        contentInput: '',
+        recordBtnVal: '按住 说话',
         recordTempSrc: '',
-        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        previewImageArr: [],
         isOldMachine: false,
         isRecording: false,
         hasRecorded: false,
-        isPlaying: false
+        isPlaying: false,
+        customerPhone: '暂无',
+        customerAddress: '暂无',
+        repairRequestInfo: {
+          id: '',
+          nameplatePicture: '',
+          voice: '',
+          pictures: '',
+          nameplate: '',
+          repairTitle: '',
+          content: '',
+          customer: '1'
+        }
       };
       methods = {
+        async previewNameplateImage() {
+          let res = await wepy.chooseImage({count: 1})
+          if (res.errMsg === 'chooseImage:ok') {
+            let tempFilePaths = res.tempFilePaths
+            this.nameplateImage = tempFilePaths
+            console.log('srcsssssssssssssssssssssss')
+            console.log(tempFilePaths)
+            this.$apply()
+          }
+        },
+        changeNameplatePreview(e) {
+          var self = this
+          wepy.previewImage({
+            current: e.currentTarget.dataset.src,
+            urls: self.data.nameplateImage
+          })
+        },
+        bindTitleInput(e) {
+          console.log(e.detail.value)
+          this.repairRequestInfo.repairTitle = e.detail.value
+        },
+        bindContentInput(e) {
+          console.log(e.detail.value)
+          this.repairRequestInfo.content = e.detail.value
+        },
         async previewImage() {
           let res = await wepy.chooseImage({count: 3})
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
             this.previewImageArr = tempFilePaths
-            console.log('srcsssssssssssssssssssssssss')
+            console.log('srcssssssssssssssssssssssss')
             console.log(tempFilePaths)
             this.$apply()
           }
@@ -177,7 +217,7 @@
             console.log('recorder pause')
           })
           recorderManager.onStop((res) => {
-            console.log('recorder stop', res)
+            console.log('recorder stop ', res)
             this.recordTempSrc = res.tempFilePath
             this.hasRecorded = true
             this.$apply()
@@ -222,17 +262,18 @@
         },
         async uploadMachineInfo() {
           let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-
+          this.repairRequestInfo.nameplate = this.machineDetail.nameplate
+          let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
           const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
             query: {
-              repairRequestInfo: this.previewImageArr,
-              fileOfNameplate: this.previewImageArr,
+              repairRequestInfo: repairRequestInfoJson,
+              fileOfNameplate: this.nameplateImage,
               fileOfVoice: this.recordTempSrc,
               filesOfRepairRequestPicture: this.previewImageArr
             },
             header: {Authorization: jwtAuthorization}
           })
-          console.log(uploadRepairRequestInfoJson)
+          console.log('上传结果： ', uploadRepairRequestInfoJson)
         }
       };
 
