@@ -291,25 +291,26 @@
         }
       }
       async addRepairRequestSrc(repairRequestInfoJson, jwtAuthorization) {
-          let deleteJson = await api.uploadRepairRequestFiles({
-              query: {
-                  filePath: this.repairRequestInfo.id,
-                  name:
-                  data:
-      },
+        let deleteJson = await api.uploadRepairRequestFiles({
+          query: {
+            filePath: this.repairRequestInfo.id,
+            name: 'key',
+            data: {repairRequestInfo: repairRequestInfoJson}
+          },
           header: {Authorization: jwtAuthorization}
-      })
-          if (deleteJson!=200) {
-
-          }
-          wepy.showModal({
-          title: '上传出错，请重新上传！',
-          content: '网络错误',
-          showCancel: false,
-          confirmColor: '#007aff',
-          success: function() {
-          }
         })
+        if (deleteJson !== 200) {
+
+        } else {
+          wepy.showModal({
+            title: '上传出错，请重新上传！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+            }
+          })
+        }
       }
       events = {};
 
