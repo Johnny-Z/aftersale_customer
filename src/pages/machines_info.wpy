@@ -167,14 +167,13 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
-        this.getInstallRecordList(this.machineDetail.nameplate)
-        this.getMaintainRecordList(this.machineDetail.nameplate)
-        this.getRepairRecordList(this.machineDetail.nameplate)
+        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+        this.getInstallRecordList(this.machineDetail.nameplate, jwtAuthorization)
+        this.getMaintainRecordList(this.machineDetail.nameplate, jwtAuthorization)
+        this.getRepairRecordList(this.machineDetail.nameplate, jwtAuthorization)
       };
 
-      async getInstallRecordList(nameplate) {
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-
+      async getInstallRecordList(nameplate, jwtAuthorization) {
         const installRecordListJson = await api.getInstallRecordList({
           query: {nameplate: nameplate},
           header: {Authorization: jwtAuthorization}
@@ -187,9 +186,7 @@
         this.$apply()
       };
 
-      async getMaintainRecordList(nameplate) {
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-
+      async getMaintainRecordList(nameplate, jwtAuthorization) {
         const maintainRecordListJson = await api.getMaintainRecordList({
           query: {nameplate: nameplate},
           header: {Authorization: jwtAuthorization}
@@ -202,9 +199,7 @@
         this.$apply()
       };
 
-      async getRepairRecordList(nameplate) {
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-
+      async getRepairRecordList(nameplate, jwtAuthorization) {
         const repairRecordListJson = await api.getRepairRecordList({
           query: {nameplate: nameplate},
           header: {Authorization: jwtAuthorization}

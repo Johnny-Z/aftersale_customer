@@ -8,6 +8,9 @@
     <view>{{machineDetail.installInfo}}</view>
     <view>调试项2：</view>
     <view class="line_vw">
+        <text>调试结果：{{machineDetail.installResult}}</text>
+    </view>
+    <view class="line_vw">
         <view class="line_half_vw">
             <text>调试安装人：</text>
             <text>{{machineDetail.installChargePersonName}}</text>

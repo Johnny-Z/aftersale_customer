@@ -12,7 +12,7 @@
     <view class="line_vw">
         <text>照片：</text>
     </view>
-    <image class="pre_repair_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="title_vw">维修详情</view>
     <view class="line_vw">
         <text>故障部位：{{machineDetail.maintainInfo}}</text>
@@ -26,7 +26,7 @@
     <view class="line_vw">
         <text>照片：</text>
     </view>
-    <image class="repair_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>维修人：</text>
@@ -131,7 +131,9 @@
         machineDetail: {},
         logo: '/images/icon_eventing.png',
         isSpeaking: false,
-        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        preRepairVoiceSrc: 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E061FF02C31F716658E5C81F5594D561F2E88B854E81CAAB7806D5E4F103E55D33C16F3FAC506D1AB172DE8600B37E43FAD&fromtag=46',
+        repairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
         isExistFeedback: false,
         repairCustomerFeedback: {
           customerMark: 0,
@@ -149,7 +151,7 @@
           this.isSpeaking = true
           const innerAudioContext = wepy.createInnerAudioContext()
           innerAudioContext.autoplay = true
-          innerAudioContext.src = 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E061FF02C31F716658E5C81F5594D561F2E88B854E81CAAB7806D5E4F103E55D33C16F3FAC506D1AB172DE8600B37E43FAD&fromtag=46'
+          innerAudioContext.src = this.preRepairVoiceSrc
           innerAudioContext.onPlay(() => {
             console.log('开始播放')
           })
@@ -231,6 +233,8 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+        this.preRepairImageArr = this.machineDetail.repairRequestPictures
+        this.preRepairVoiceSrc = this.machineDetail.repairRequestVoice
         if (this.machineDetail.customerFeedback > 0) {
           this.isExistFeedback = true
         } else {

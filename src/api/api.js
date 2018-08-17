@@ -1,5 +1,6 @@
 import {
-  wxRequest
+  wxRequest,
+  wxUploadFile
 } from '@/utils/wxRequest'
 
 let env = '-test' // -dev 或者 -test
@@ -22,6 +23,7 @@ const uploadInstallFeedback = (params) => wxRequest(params, apiMall + '/install/
 const uploadMaintainFeedback = (params) => wxRequest(params, apiMall + '/maintain/customer/feedback/add')
 const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/customer/feedback/add')
 const uploadRepairRequestInfo = (params) => wxRequest(params, apiMall + '/repair/request/info/add')
+const uploadRepairRequestFiles = (params) => wxUploadFile(params, apiMall + '/repair/request/info/update')
 
 // 微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
@@ -129,6 +131,7 @@ export default {
   uploadMaintainFeedback,
   uploadRepairFeedback,
   uploadRepairRequestInfo,
+  uploadRepairRequestFiles,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,
