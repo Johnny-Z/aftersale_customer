@@ -144,6 +144,7 @@
         recordBtnVal: '按住 说话',
         recordTempSrc: '',
         previewImageArr: [],
+        count: 0,
         isOldMachine: false,
         isRecording: false,
         hasRecorded: false,
@@ -158,8 +159,10 @@
           nameplate: '',
           repairTitle: '',
           content: '',
-          customer: 0,
-          createTime: ''
+          customer: 2,
+          createTime: '',
+          uploadFilesAmount: '',
+          alreadyUploadedFilesNumber: '0'
         }
       };
       methods = {
@@ -195,6 +198,7 @@
             this.previewImageArr = tempFilePaths
             console.log('srcssssssssssssssssssssssss')
             console.log(tempFilePaths)
+            console.log(this.previewImageArr.length)
             this.$apply()
           }
         },
@@ -264,6 +268,7 @@
         uploadMachineInfo() {
           let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
           this.repairRequestInfo.nameplate = this.machineDetail.nameplate
+          this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 1
           let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
           this.addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization)
         }
@@ -279,7 +284,7 @@
         if (uploadRepairRequestInfoJson.data.code === 200) {
           this.repairRequestInfo.id = uploadRepairRequestInfoJson.data.data
           repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
-          this.addRepairRequestSrc(repairRequestInfoJson, jwtAuthorization)
+          this.addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization)
         } else {
           wepy.showModal({
             title: '上传出错，请重新上传！',
@@ -290,17 +295,25 @@
           })
         }
       }
-      async addRepairRequestSrc(repairRequestInfoJson, jwtAuthorization) {
-        let deleteJson = await api.uploadRepairRequestFiles({
+      async addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization) {
+        let updateVoiceSrcJson = await api.uploadRepairRequestFiles({
           query: {
-            filePath: this.repairRequestInfo.id,
-            name: 'key',
-            data: {repairRequestInfo: repairRequestInfoJson}
+            filePath: this.recordTempSrc,
+            name: 'file',
+            data: {
+              repairRequestInfo: repairRequestInfoJson,
+              fileType: 'FILE_TYPE_REPAIR_REQUEST_VOICE',
+              fileNumber: 1
+            }
           },
           header: {Authorization: jwtAuthorization}
         })
-        if (deleteJson !== 200) {
-
+        console.log('update结果： ', updateVoiceSrcJson)
+        let returnVoiceSrcData = JSON.parse(updateVoiceSrcJson.data)
+        if (returnVoiceSrcData.code === 200) {
+          repairRequestInfoJson = JSON.stringify(returnVoiceSrcData.data)
+          console.log('return结果： ', repairRequestInfoJson)
+          this.addRepairImageSrc(repairRequestInfoJson, jwtAuthorization, this.count)
         } else {
           wepy.showModal({
             title: '上传出错，请重新上传！',
@@ -312,6 +325,50 @@
           })
         }
       }
+      async addRepairImageSrc(repairRequestInfoJson, jwtAuthorization, count) {
+        let updateImageSrcJson = await api.uploadRepairRequestFiles({
+          query: {
+            filePath: this.previewImageArr[count],
+            name: 'file',
+            data: {
+              repairRequestInfo: repairRequestInfoJson,
+              fileType: 'FILE_TYPE_REPAIR_REQUEST_IMAGE',
+              fileNumber: count + 1
+            }
+          },
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log('update结果： ', updateImageSrcJson)
+        let returnImageSrcData = JSON.parse(updateImageSrcJson.data)
+        if (returnImageSrcData.code === 200) {
+          console.log('count的值： ', count)
+          if (count >= this.previewImageArr.length - 1) {
+            wepy.showModal({
+              title: '上传成功！',
+              content: '报修成功！',
+              showCancel: false,
+              confirmColor: '#007aff',
+              success: function () {
+              }
+            })
+          } else {
+            count++
+            repairRequestInfoJson = JSON.stringify(returnImageSrcData.data)
+            console.log('return结果： ', repairRequestInfoJson)
+            this.addRepairImageSrc(repairRequestInfoJson, jwtAuthorization, count)
+          }
+        } else {
+          wepy.showModal({
+            title: '上传出错，请重新上传！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+            }
+          })
+        }
+      }
+
       events = {};
 
       async onLoad(options) {

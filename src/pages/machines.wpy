@@ -1,5 +1,28 @@
 <!--积分规则-->
 <style lang="less">
+  .pos {
+    background: #fff;
+    top: 0rpx;
+    left: 0;
+    right: 0;
+    .search_content {
+      background: rgba(0, 0, 0, 0.1);
+      border: 1px solid #efefee;
+      .icon-search,
+      .search_input {
+        color: #efefee;
+      }
+    }
+    .message {
+      display: block;
+      text-align: center;
+      margin-left: 20rpx;
+    }
+    .doc {
+      font-size: 16rpx;
+      display: block;
+    }
+  }
   .machines_list {
     background: #fff;
     padding: 15rpx;
@@ -30,6 +53,14 @@
   }
 </style>
 <template>
+  <view class="pos">
+    <view class="search_read_only">
+      <navigator class="search_content" open-type="navigate" url="/pages/machines_info">
+        <icon class="searchcion" size='20' type='search'></icon>
+        <view class="search_input">搜索商品</view>
+      </navigator>
+    </view>
+  </view>
   <view class="machines_list" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
     <image class="machine_img" src="{{logo}}"></image>
     <view class="info">
