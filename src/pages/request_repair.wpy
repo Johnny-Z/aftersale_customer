@@ -3,7 +3,7 @@
     <view wx:if="{{isOldMachine}}">
         <view class="line_vw">
             <text>机器编号：</text>
-            <input class="nameplate_in" placeholder="请输入机器编号"/>
+            <input class="nameplate_in" placeholder="请输入机器编号" @input="bindNameplateInput"/>
         </view>
         <view class="line_vw">
             <text>铭牌照片：</text>
@@ -139,6 +139,7 @@
       data = {
         machineDetail: {},
         nameplateImage: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        oldNameplateInput: '',
         titleInput: '',
         contentInput: '',
         recordBtnVal: '按住 说话',
@@ -166,12 +167,16 @@
         }
       };
       methods = {
+        bindNameplateInput(e) {
+          console.log(e.detail.value)
+          this.oldNameplateInput = e.detail.value
+        },
         async previewNameplateImage() {
           let res = await wepy.chooseImage({count: 1})
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
             this.nameplateImage = tempFilePaths
-            console.log('srcsssssssssssssssssssssss')
+            console.log('nameplate image src: ')
             console.log(tempFilePaths)
             this.$apply()
           }
@@ -196,7 +201,7 @@
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
             this.previewImageArr = tempFilePaths
-            console.log('srcssssssssssssssssssssssss')
+            console.log('preview image src: ')
             console.log(tempFilePaths)
             console.log(this.previewImageArr.length)
             this.$apply()
@@ -267,10 +272,18 @@
         },
         uploadMachineInfo() {
           let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-          this.repairRequestInfo.nameplate = this.machineDetail.nameplate
-          this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 1
-          let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
-          this.addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization)
+          if (this.isOldMachine) {
+            console.log('老机器报修： ')
+            this.repairRequestInfo.nameplate = this.oldNameplateInput
+            this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 2
+            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+            this.addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization)
+          } else {
+            this.repairRequestInfo.nameplate = this.machineDetail.nameplate
+            this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 1
+            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+            this.addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization)
+          }
         }
       };
       async addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization) {
@@ -284,7 +297,11 @@
         if (uploadRepairRequestInfoJson.data.code === 200) {
           this.repairRequestInfo.id = uploadRepairRequestInfoJson.data.data
           repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
-          this.addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization)
+          if (this.isOldMachine) {
+            this.addRepairNameplateSrc(repairRequestInfoJson, jwtAuthorization)
+          } else {
+            this.addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization)
+          }
         } else {
           wepy.showModal({
             title: '上传出错，请重新上传！',
@@ -292,6 +309,36 @@
             showCancel: false,
             confirmColor: '#007aff',
             success: function() {}
+          })
+        }
+      }
+      async addRepairNameplateSrc(repairRequestInfoJson, jwtAuthorization) {
+        let updateNameplaceSrcJson = await api.uploadRepairRequestFiles({
+          query: {
+            filePath: this.nameplateImage[0],
+            name: 'file',
+            data: {
+              repairRequestInfo: repairRequestInfoJson,
+              fileType: 'FILE_TYPE_REPAIR_REQUEST_NAMEPLATE_IMAGE',
+              fileNumber: 1
+            }
+          },
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log('update结果： ', updateNameplaceSrcJson)
+        let returnNameplateSrcData = JSON.parse(updateNameplaceSrcJson.data)
+        if (returnNameplateSrcData.code === 200) {
+          repairRequestInfoJson = JSON.stringify(returnNameplateSrcData.data)
+          console.log('return结果： ', repairRequestInfoJson)
+          this.addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization)
+        } else {
+          wepy.showModal({
+            title: '上传出错，请重新上传！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+            }
           })
         }
       }
