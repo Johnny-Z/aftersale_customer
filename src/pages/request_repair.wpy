@@ -68,17 +68,19 @@
         <image class="machine_error_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
     </view>
     <view class="title_vw">联系方式</view>
-    <view class="line_vw">
-        <text>联系人：</text>
-        <input class="nameplate_in" placeholder="请联系人姓名" @input="bindKeyInput"/>
-    </view>
+    <picker @change="bindPickerChange" value="{{index}}" range="{{customerListArr}}">
+        <view class="line_vw">
+            联系人：
+            <view class="line_picker">{{customerListArr[index]}}</view>
+        </view>
+    </picker>
     <view class="line_vw">
         <text>电话：</text>
-        <text>{{customerPhone}}</text>
+        <text>{{customerList[index].phone}}</text>
     </view>
     <view class="line_vw">
         <text>地址：</text>
-        <text>{{customerAddress}}</text>
+        <text>{{customerList[index].address}}</text>
     </view>
     <button class="single_btn" size="mini" type="primary" @tap="uploadMachineInfo">提交</button>
 </template>
@@ -120,13 +122,19 @@
         width: 30%;
         height: 200rpx;
     }
+    .line_picker {
+         background: #EEC591;
+     }
 </style>
 <script>
+    /* eslint-disable no-undef */
+
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
     import {
-        AUTHORIZATION
+        AUTHORIZATION,
+        USER_ID
     } from '@/utils/constant'
 
     export default class RequestRepair extends wepy.page {
@@ -138,6 +146,9 @@
       }
       data = {
         machineDetail: {},
+        customerList: [],
+        customerListArr: [],
+        index: 0,
         nameplateImage: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
         oldNameplateInput: '',
         titleInput: '',
@@ -160,7 +171,7 @@
           nameplate: '',
           repairTitle: '',
           content: '',
-          customer: 2,
+          customer: 0,
           createTime: '',
           uploadFilesAmount: '',
           alreadyUploadedFilesNumber: '0'
@@ -270,8 +281,14 @@
             this.$apply()
           })
         },
+        bindPickerChange: function (e) {
+          console.log('picker发送选择改变，携带值为', e.detail.value)
+          this.index = e.detail.value
+          this.$apply()
+        },
         uploadMachineInfo() {
           let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+          this.repairRequestInfo.customer = this.customerList[this.index].id
           if (this.isOldMachine) {
             console.log('老机器报修： ')
             this.repairRequestInfo.nameplate = this.oldNameplateInput
@@ -282,6 +299,7 @@
             this.repairRequestInfo.nameplate = this.machineDetail.nameplate
             this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 1
             let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+            console.log('上传xinxi： ', repairRequestInfoJson)
             this.addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization)
           }
         }
@@ -390,12 +408,13 @@
         if (returnImageSrcData.code === 200) {
           console.log('count的值： ', count)
           if (count >= this.previewImageArr.length - 1) {
-            wepy.showModal({
+            wx.showModal({
               title: '上传成功！',
               content: '报修成功！',
               showCancel: false,
               confirmColor: '#007aff',
               success: function () {
+                wepy.navigateBack()
               }
             })
           } else {
@@ -428,10 +447,61 @@
           this.machineDetail = JSON.parse(options.machineDetail)
           console.log(this.machineDetail)
         }
+        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+        let userId = wepy.getStorageSync(USER_ID)
+        this.getCustomerList(jwtAuthorization, userId)
         let res = await wepy.getSetting()
         if (!res.authSetting['scope.record']) {
           wepy.authorize({scope: 'scope.record'})
         }
       };
+      async getCustomerList(jwtAuthorization, userId) {
+        let getCustomerCompanyJson = await api.getUserDetail({
+          query: {
+            id: userId
+          },
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log(getCustomerCompanyJson)
+        if (getCustomerCompanyJson.data.code !== 200) {
+          wx.showModal({
+            title: '获取联系人列表出错！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function (res) {
+              console.log('用户点击确定', res)
+              wepy.navigateBack()
+            }
+          })
+        } else {
+          let getCustomerListJson = await api.getCustomerListByCompany({
+            query: {
+              roleId: 6,
+              customerCompany: getCustomerCompanyJson.data.data.customerCompany
+            },
+            header: {Authorization: jwtAuthorization}
+          })
+          console.log(getCustomerListJson)
+          if (getCustomerListJson.data.code !== 200) {
+            wx.showModal({
+              title: '获取联系人列表出错！',
+              content: '网络错误',
+              showCancel: false,
+              confirmColor: '#007aff',
+              success: function () {
+                wepy.navigateBack()
+              }
+            })
+          } else {
+            this.customerList = getCustomerListJson.data.data.list
+            for (var i = 0; i < this.customerList.length; i++) {
+              this.customerListArr = this.customerListArr.concat(this.customerList[i].account)
+            }
+            console.log(this.customerListArr)
+            this.$apply()
+          }
+        }
+      }
     }
 </script>

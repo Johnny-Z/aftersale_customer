@@ -30,3 +30,8 @@ export const AUTHORIZATION = 'Authorization'
  * @type {String}
  */
 export const ACCOUNT = 'account'
+/**
+ * 用户id
+ * @type {String}
+ */
+export const USER_ID = 'user_id'

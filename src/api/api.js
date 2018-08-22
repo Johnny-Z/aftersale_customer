@@ -14,6 +14,8 @@ const apiMall = 'http://192.168.43.223:8080'
  * @return {[type]}        [description]
  */
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2')
+const getUserDetail = (params) => wxRequest(params, apiMall + '/user/detail')
+const getCustomerListByCompany = (params) => wxRequest(params, apiMall + '/user/getUsersByType')
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
 const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
 const getInstallRecordList = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
@@ -122,6 +124,8 @@ const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mal
 const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list')
 
 export default {
+  getUserDetail,
+  getCustomerListByCompany,
   getMachineList,
   getMachineListByCustomer,
   getInstallRecordList,
