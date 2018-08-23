@@ -105,7 +105,6 @@ export default class Authorize extends wepy.page {
     }
   }
   async onGotUserInfo(e) {
-    let authorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWNjb3VudE5vbkV4cGlyZWRcIjp0cnVlLFwiYWNjb3VudE5vbkxvY2tlZFwiOnRydWUsXCJhZGRyZXNzXCI6XCLlrqLmiLflnLDlnYBhZG1pbjExMVwiLFwiYWdlbnRcIjowLFwiYXV0aG9yaXRpZXNcIjpbXSxcImNyZWF0ZVRpbWVcIjoxNTMxMjc0NjIzMDAwLFwiY3JlZGVudGlhbHNOb25FeHBpcmVkXCI6dHJ1ZSxcImN1c3RvbWVyQ29tcGFueVwiOjAsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6MSxcIm5hbWVcIjpcImFkbWluXCIsXCJwYXNzd29yZFwiOlwic2luc2ltXCIsXCJwaG9uZVwiOlwiMTM1NjY2Njc3NzdcIixcInJvbGVJZFwiOjEsXCJ1c2VybmFtZVwiOlwiYWRtaW5cIixcInZhbGlkXCI6XCIxXCIsXCJ3ZWNoYXRVbmlvbklkXCI6XCJ3ZWNoYXQyMjJcIn0iLCJleHAiOjE1MzcwODA3NDB9.FmU391_rnn1_qRwU5bUGNUw7GvI0zUVjXd1g0jq3RiddsweJQLYpnTDscNisuXYuSZblQrQxAVd3j9hpmfkZ4g'
     if (e.detail.errMsg === 'getUserInfo:ok') {
       let res = await wepy.login()
       console.log('ongetuserinfo:')
@@ -120,8 +119,7 @@ export default class Authorize extends wepy.page {
           query: {
             jsCode: res.code,
             nickName: e.detail.userInfo.nickName
-          },
-          header: {Authorization: authorization}
+          }
         })
         console.log('get session resoult: ' + rlt.data.result)
         if (rlt.data.result) {

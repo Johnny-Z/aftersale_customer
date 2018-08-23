@@ -133,7 +133,6 @@
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
     import {
-        AUTHORIZATION,
         USER_ID
     } from '@/utils/constant'
 
@@ -287,38 +286,36 @@
           this.$apply()
         },
         uploadMachineInfo() {
-          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
           this.repairRequestInfo.customer = this.customerList[this.index].id
           if (this.isOldMachine) {
             console.log('老机器报修： ')
             this.repairRequestInfo.nameplate = this.oldNameplateInput
             this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 2
             let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
-            this.addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization)
+            this.addRepairRequestInfo(repairRequestInfoJson)
           } else {
             this.repairRequestInfo.nameplate = this.machineDetail.nameplate
             this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 1
             let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
             console.log('上传xinxi： ', repairRequestInfoJson)
-            this.addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization)
+            this.addRepairRequestInfo(repairRequestInfoJson)
           }
         }
       };
-      async addRepairRequestInfo(repairRequestInfoJson, jwtAuthorization) {
+      async addRepairRequestInfo(repairRequestInfoJson) {
         const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
           query: {
             repairRequestInfo: repairRequestInfoJson
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('上传结果： ', uploadRepairRequestInfoJson)
         if (uploadRepairRequestInfoJson.data.code === 200) {
           this.repairRequestInfo.id = uploadRepairRequestInfoJson.data.data
           repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
           if (this.isOldMachine) {
-            this.addRepairNameplateSrc(repairRequestInfoJson, jwtAuthorization)
+            this.addRepairNameplateSrc(repairRequestInfoJson)
           } else {
-            this.addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization)
+            this.addRepairVoiceSrc(repairRequestInfoJson)
           }
         } else {
           wepy.showModal({
@@ -330,7 +327,7 @@
           })
         }
       }
-      async addRepairNameplateSrc(repairRequestInfoJson, jwtAuthorization) {
+      async addRepairNameplateSrc(repairRequestInfoJson) {
         let updateNameplaceSrcJson = await api.uploadRepairRequestFiles({
           query: {
             filePath: this.nameplateImage[0],
@@ -340,15 +337,14 @@
               fileType: 'FILE_TYPE_REPAIR_REQUEST_NAMEPLATE_IMAGE',
               fileNumber: 1
             }
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('update结果： ', updateNameplaceSrcJson)
         let returnNameplateSrcData = JSON.parse(updateNameplaceSrcJson.data)
         if (returnNameplateSrcData.code === 200) {
           repairRequestInfoJson = JSON.stringify(returnNameplateSrcData.data)
           console.log('return结果： ', repairRequestInfoJson)
-          this.addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization)
+          this.addRepairVoiceSrc(repairRequestInfoJson)
         } else {
           wepy.showModal({
             title: '上传出错，请重新上传！',
@@ -360,7 +356,7 @@
           })
         }
       }
-      async addRepairVoiceSrc(repairRequestInfoJson, jwtAuthorization) {
+      async addRepairVoiceSrc(repairRequestInfoJson) {
         let updateVoiceSrcJson = await api.uploadRepairRequestFiles({
           query: {
             filePath: this.recordTempSrc,
@@ -370,15 +366,14 @@
               fileType: 'FILE_TYPE_REPAIR_REQUEST_VOICE',
               fileNumber: 1
             }
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('update结果： ', updateVoiceSrcJson)
         let returnVoiceSrcData = JSON.parse(updateVoiceSrcJson.data)
         if (returnVoiceSrcData.code === 200) {
           repairRequestInfoJson = JSON.stringify(returnVoiceSrcData.data)
           console.log('return结果： ', repairRequestInfoJson)
-          this.addRepairImageSrc(repairRequestInfoJson, jwtAuthorization, this.count)
+          this.addRepairImageSrc(repairRequestInfoJson, this.count)
         } else {
           wepy.showModal({
             title: '上传出错，请重新上传！',
@@ -390,7 +385,7 @@
           })
         }
       }
-      async addRepairImageSrc(repairRequestInfoJson, jwtAuthorization, count) {
+      async addRepairImageSrc(repairRequestInfoJson, count) {
         let updateImageSrcJson = await api.uploadRepairRequestFiles({
           query: {
             filePath: this.previewImageArr[count],
@@ -400,8 +395,7 @@
               fileType: 'FILE_TYPE_REPAIR_REQUEST_IMAGE',
               fileNumber: count + 1
             }
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('update结果： ', updateImageSrcJson)
         let returnImageSrcData = JSON.parse(updateImageSrcJson.data)
@@ -421,7 +415,7 @@
             count++
             repairRequestInfoJson = JSON.stringify(returnImageSrcData.data)
             console.log('return结果： ', repairRequestInfoJson)
-            this.addRepairImageSrc(repairRequestInfoJson, jwtAuthorization, count)
+            this.addRepairImageSrc(repairRequestInfoJson, count)
           }
         } else {
           wepy.showModal({
@@ -447,20 +441,18 @@
           this.machineDetail = JSON.parse(options.machineDetail)
           console.log(this.machineDetail)
         }
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let userId = wepy.getStorageSync(USER_ID)
-        this.getCustomerList(jwtAuthorization, userId)
+        this.getCustomerList(userId)
         let res = await wepy.getSetting()
         if (!res.authSetting['scope.record']) {
           wepy.authorize({scope: 'scope.record'})
         }
       };
-      async getCustomerList(jwtAuthorization, userId) {
+      async getCustomerList(userId) {
         let getCustomerCompanyJson = await api.getUserDetail({
           query: {
             id: userId
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log(getCustomerCompanyJson)
         if (getCustomerCompanyJson.data.code !== 200) {
@@ -479,8 +471,7 @@
             query: {
               roleId: 6,
               customerCompany: getCustomerCompanyJson.data.data.customerCompany
-            },
-            header: {Authorization: jwtAuthorization}
+            }
           })
           console.log(getCustomerListJson)
           if (getCustomerListJson.data.code !== 200) {

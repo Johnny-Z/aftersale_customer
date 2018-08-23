@@ -10,7 +10,7 @@
       border: 1px solid #efefee;
       .icon-search,
       .search_input {
-        color: #efefee;
+        color: #000000;
       }
     }
     .message {
@@ -57,7 +57,7 @@
     <view class="search_read_only">
       <navigator class="search_content" open-type="navigate" url="/pages/machines_info">
         <icon class="searchcion" size='20' type='search'></icon>
-        <view class="search_input">搜索商品</view>
+        <view class="search_input">搜索机器编号/机器报修</view>
       </navigator>
     </view>
   </view>
@@ -74,7 +74,6 @@
     import wepy from 'wepy'
     import api from '@/api/api'
     import {
-        AUTHORIZATION,
         ACCOUNT
     } from '@/utils/constant'
 
@@ -117,12 +116,10 @@
       }
 
       async getMachineList() {
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let userAccount = wepy.getStorageSync(ACCOUNT)
 
         const machineListJson = await api.getMachineListByCustomer({
-          query: {account: userAccount},
-          header: {Authorization: jwtAuthorization}
+          query: {account: userAccount}
         })
         console.log('machineListJson:')
         console.log(machineListJson)

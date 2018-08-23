@@ -108,9 +108,6 @@
 <script>
     import wepy from 'wepy'
     import api from '@/api/api'
-    import {
-        AUTHORIZATION
-    } from '@/utils/constant'
     import MachineDetails from '../components/machine_details'
 
     export default class MachinesInfo extends wepy.page {
@@ -167,16 +164,14 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
-        this.getInstallRecordList(this.machineDetail.nameplate, jwtAuthorization)
-        this.getMaintainRecordList(this.machineDetail.nameplate, jwtAuthorization)
-        this.getRepairRecordList(this.machineDetail.nameplate, jwtAuthorization)
+        this.getInstallRecordList(this.machineDetail.nameplate)
+        this.getMaintainRecordList(this.machineDetail.nameplate)
+        this.getRepairRecordList(this.machineDetail.nameplate)
       };
 
-      async getInstallRecordList(nameplate, jwtAuthorization) {
+      async getInstallRecordList(nameplate) {
         const installRecordListJson = await api.getInstallRecordList({
-          query: {nameplate: nameplate},
-          header: {Authorization: jwtAuthorization}
+          query: {nameplate: nameplate}
         })
         console.log('installRecordListJson:')
         console.log(installRecordListJson)
@@ -186,10 +181,9 @@
         this.$apply()
       };
 
-      async getMaintainRecordList(nameplate, jwtAuthorization) {
+      async getMaintainRecordList(nameplate) {
         const maintainRecordListJson = await api.getMaintainRecordList({
-          query: {nameplate: nameplate},
-          header: {Authorization: jwtAuthorization}
+          query: {nameplate: nameplate}
         })
         console.log('maintainRecordListJson:')
         console.log(maintainRecordListJson)
@@ -199,10 +193,9 @@
         this.$apply()
       };
 
-      async getRepairRecordList(nameplate, jwtAuthorization) {
+      async getRepairRecordList(nameplate) {
         const repairRecordListJson = await api.getRepairRecordList({
-          query: {nameplate: nameplate},
-          header: {Authorization: jwtAuthorization}
+          query: {nameplate: nameplate}
         })
         console.log('repairRecordListJson:')
         console.log(repairRecordListJson)

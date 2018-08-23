@@ -67,7 +67,6 @@
     import wepy from 'wepy'
     import api from '@/api/api'
     import {
-        AUTHORIZATION,
         ACCOUNT
     } from '@/utils/constant'
     export default class Eventing extends wepy.page {
@@ -127,30 +126,27 @@
       onLoad() {
       };
       onPullDownRefresh() {
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let customerName = wepy.getStorageSync(ACCOUNT)
-        this.getInstallRecordList(customerName, 2, jwtAuthorization)
-        this.getMaintainRecordList(customerName, 3, jwtAuthorization)
-        this.getRepairRecordList(customerName, 3, jwtAuthorization)
-        this.getDeliverList(customerName, 2, jwtAuthorization)
+        this.getInstallRecordList(customerName, 2)
+        this.getMaintainRecordList(customerName, 3)
+        this.getRepairRecordList(customerName, 3)
+        this.getDeliverList(customerName, 2)
         console.log('xiala刷新:')
       }
       onShow() {
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let customerName = wepy.getStorageSync(ACCOUNT)
-        this.getInstallRecordList(customerName, 2, jwtAuthorization)
-        this.getMaintainRecordList(customerName, 3, jwtAuthorization)
-        this.getRepairRecordList(customerName, 3, jwtAuthorization)
-        this.getDeliverList(customerName, 2, jwtAuthorization)
+        this.getInstallRecordList(customerName, 2)
+        this.getMaintainRecordList(customerName, 3)
+        this.getRepairRecordList(customerName, 3)
+        this.getDeliverList(customerName, 2)
       }
 
-      async getInstallRecordList(customerName, installStatus, jwtAuthorization) {
+      async getInstallRecordList(customerName, installStatus) {
         const installRecordListJson = await api.getInstallRecordList({
           query: {
             installStatus: installStatus,
             installRecordCustomerName: customerName
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('installRecordListJson: ')
         console.log(installRecordListJson)
@@ -161,13 +157,12 @@
         this.$apply()
       };
 
-      async getMaintainRecordList(customerName, maintainStatus, jwtAuthorization) {
+      async getMaintainRecordList(customerName, maintainStatus) {
         const maintainRecordListJson = await api.getMaintainRecordList({
           query: {
             maintainStatus: maintainStatus,
             customerName: customerName
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('maintainRecordListJson:')
         console.log(maintainRecordListJson)
@@ -177,13 +172,12 @@
         this.$apply()
       };
 
-      async getRepairRecordList(customerName, repairStatus, jwtAuthorization) {
+      async getRepairRecordList(customerName, repairStatus) {
         const repairRecordListJson = await api.getRepairRecordList({
           query: {
             repairStatus: repairStatus,
             repairRecordCustomerName: customerName
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('repairRecordListJson: ')
         console.log(repairRecordListJson)
@@ -193,13 +187,12 @@
         this.$apply()
       };
 
-      async getDeliverList(customerName, partsStatus, jwtAuthorization) {
+      async getDeliverList(customerName, partsStatus) {
         const deliverListJson = await api.getRepairRecordList({
           query: {
             partsStatus: partsStatus,
             repairRecordCustomerName: customerName
-          },
-          header: {Authorization: jwtAuthorization}
+          }
         })
         console.log('deliverListJson: ')
         console.log(deliverListJson)
