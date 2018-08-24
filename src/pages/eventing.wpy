@@ -190,7 +190,7 @@
       async getDeliverList(customerName) {
         const deliverListJson = await api.getRepairRecordList({
           query: {
-            repairRecordCustomerName: customerName
+            userName: customerName
           }
         })
         console.log('deliverListJson: ')
