@@ -187,10 +187,9 @@
         this.$apply()
       };
 
-      async getDeliverList(customerName, partsStatus) {
+      async getDeliverList(customerName) {
         const deliverListJson = await api.getRepairRecordList({
           query: {
-            partsStatus: partsStatus,
             repairRecordCustomerName: customerName
           }
         })

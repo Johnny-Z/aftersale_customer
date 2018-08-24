@@ -19,6 +19,7 @@ export default class extends wepy.app {
       'pages/machines',
       'pages/machines_info',
       'pages/request_repair',
+      'pages/search',
       'pages/index'
     ],
     window: {

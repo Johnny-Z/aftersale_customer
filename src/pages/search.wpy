@@ -1,63 +1,60 @@
 <!--积分规则-->
 <style lang="less">
-  .pos {
-    background: #fff;
-    width: 100%;
-    .search_content {
-      background: rgba(0, 0, 0, 0.1);
-      border: 1px solid #efefee;
-      margin-bottom: 10rpx;
-      width: 100%;
-      .search_input {
-        color: #000000;
-      }
-    }
-  }
-  .machines_list {
-    background: #fff;
-    padding: 15rpx;
+  .search {
+    align-items: center;
     display: flex;
-    margin-top: 15rpx;
-    .machine_img {
-      width: 10%;
-      height: 70rpx;
-    }
-    .info {
-      padding: 5rpx;
-      color: #000000;
-      font-size: 26rpx;
-      line-height: 35rpx;
+    margin: 0 auto;
+    width: 100%;
+    background: #fff;
+    .serch_content {
       display: flex;
       align-items: center;
-        .nameplate_tx {
-            font-weight: bold;
-            font-size: 36rpx;
-        }
+      border-radius: 300rpx;
+      color: #333;
+      width: 560rpx;
+      margin-left: 20rpx;
+      margin-bottom: 10rpx;
+      background: #efefef;
+      padding: 5rpx 12rpx;
+      height: 65rpx;
+      .search_input {
+        font-size: 28rpx;
+        width: 100%;
+      }
     }
-    .item {
-      background: #fff;
-      padding: 15rpx;
-      display: flex;
-      margin-top: 15rpx;
+    .icon-search {
+      font-size: 40rpx;
+    }
+    .btn {
+      width: 120rpx;
+      height: 65rpx;
+      font-size: 28rpx;
+      line-height: 65rpx;
+      margin-left: 20rpx;
+      padding-left: 5rpx;
+      padding-right: 5rpx;
+    }
+    .btn_search {
+      color: #fff;
+      background: #e2413c;
+    }
+    .icon-del {
+      height: 60rpx;
+      line-height: 60rpx;
+      width: 60rpx;
+      font-size: 40rpx;
     }
   }
 </style>
 <template>
-  <view class="pos">
-    <view class="search_read_only">
-      <navigator class="search_content" open-type="navigate" url="/pages/search">
-        <icon class="searchcion" size='20' type='search'></icon>
-        <view class="search_input">搜索机器编号/机器报修</view>
-      </navigator>
+  <view class="search">
+    <view class="serch_content">
+      <icon class="searchcion" size='20' type='search'></icon>
+      <input type="text" name="search_input" bindinput="searchInput" class="search_input" focus="true" value="{{search_input_value}}" confirm-type="search" placeholder="搜索商品" />
+      <icon wx:if="{{search_input_value!=''}}" @tap="delText" class="searchcion" size='20' type='clear'></icon>
     </view>
-  </view>
-  <view class="machines_list" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
-    <image class="machine_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.nameplate}}: </view>
-      <view>{{item.machineType}}: {{item.status}} : </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
-    </view>
+    <button class="btn btn_cancel" @tap="goBack()" wx:if="{{search_input_value==''}}">取消</button>
+    <button class="btn btn_search" @tap="search()" wx:else>搜索</button>
   </view>
 </template>
 <script>
@@ -67,9 +64,9 @@
         ACCOUNT
     } from '@/utils/constant'
 
-    export default class Machines extends wepy.page {
+    export default class Search extends wepy.page {
       config = {
-        navigationBarTitleText: '机器列表',
+        navigationBarTitleText: '搜索',
         enablePullDownRefresh: true
       }
       data = {
