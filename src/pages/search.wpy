@@ -17,20 +17,22 @@
       background: #efefef;
       padding: 5rpx 12rpx;
       height: 65rpx;
+      .searchcion {
+        margin-left: 10rpx;
+        margin-right: 10rpx;
+      }
       .search_input {
         font-size: 28rpx;
         width: 100%;
       }
-    }
-    .icon-search {
-      font-size: 40rpx;
     }
     .btn {
       width: 120rpx;
       height: 65rpx;
       font-size: 28rpx;
       line-height: 65rpx;
-      margin-left: 20rpx;
+      margin-left: 10rpx;
+      margin-bottom: 10rpx;
       padding-left: 5rpx;
       padding-right: 5rpx;
     }
@@ -38,11 +40,27 @@
       color: #fff;
       background: #e2413c;
     }
-    .icon-del {
-      height: 60rpx;
-      line-height: 60rpx;
-      width: 60rpx;
-      font-size: 40rpx;
+  }
+  .info {
+    padding: 20rpx 5rpx;
+    .content{
+      color: #000000;
+      font-size: 26rpx;
+      line-height: 65rpx;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      .nameplate_tx {
+        font-weight: bold;
+        font-size: 36rpx;
+      }
+    }
+  }
+  .repair_start {
+    margin: 200rpx 20rpx;
+    .repair_button {
+      background: #1AAD19;
+      font-size: 32rpx;
     }
   }
 </style>
@@ -50,14 +68,23 @@
   <view class="search">
     <view class="serch_content">
       <icon class="searchcion" size='20' type='search'></icon>
-      <input type="text" name="search_input" bindinput="searchInput" class="search_input" focus="true" value="{{search_input_value}}" confirm-type="search" placeholder="搜索商品" />
-      <icon wx:if="{{search_input_value!=''}}" @tap="delText" class="searchcion" size='20' type='clear'></icon>
+      <input type="text" name="search_input" @input="searchInput" class="search_input" focus="true" value="{{searchInputValue}}" confirm-type="search" placeholder="搜索机器编号/机器报修" focus="true"/>
+      <icon wx:if="{{searchInputValue!=''}}" @tap="delText" class="searchcion" size='20' type='clear'></icon>
     </view>
-    <button class="btn btn_cancel" @tap="goBack()" wx:if="{{search_input_value==''}}">取消</button>
+    <button class="btn btn_cancel" @tap="goBack()" wx:if="{{searchInputValue==''}}">取消</button>
     <button class="btn btn_search" @tap="search()" wx:else>搜索</button>
+  </view>
+  <view class="info" wx:if="{{isExistMachine}}">
+    <view class="content" @tap="bindMachineClick()">
+      <view class="nameplate_tx">{{machineInfo.nameplate}}: </view>
+      <view>{{machineInfo.machineType}}: {{machineInfo.status}} : </view>
+      <view>{{machineInfo.needleNum}}/{{machineInfo.headNum}}/{{machineInfo.headDistance}}/{{machineInfo.xDistance}}/{{machineInfo.yDistance}} </view>
+    </view>
   </view>
 </template>
 <script>
+    /* eslint-disable no-undef */
+
     import wepy from 'wepy'
     import api from '@/api/api'
     import {
@@ -66,12 +93,12 @@
 
     export default class Search extends wepy.page {
       config = {
-        navigationBarTitleText: '搜索',
-        enablePullDownRefresh: true
+        navigationBarTitleText: '搜索'
       }
       data = {
-        list: [],
-        logo: '/images/icon_machine_list.png'
+        searchInputValue: '',
+        isExistMachine: false,
+        machineInfo: {}
       }
 
       events = {
@@ -82,39 +109,88 @@
       }
 
       methods = {
-        listItemClick(e) {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-          console.log(e)
-          let machines = JSON.stringify(e)
+        searchInput(e) {
+          this.searchInputValue = e.detail.value
+          this.$apply()
+        },
+        goBack() {
+          wepy.navigateBack({
+            delta: 1 // 回退前 delta(默认为1) 页面
+          })
+        },
+        search() {
+          this.searchByNameplate(this.searchInputValue)
+        },
+        delText() {
+          this.searchInputValue = ''
+          this.$apply()
+        },
+        bindMachineClick() {
+          let machines = JSON.stringify(this.machineInfo)
           wepy.navigateTo({
             url: '/pages/machines_info?machineDetail=' + machines
           })
         }
       }
 
-      onLoad() {
-      }
-      onPullDownRefresh() {
-        this.getMachineList()
-        console.log('xiala刷新:')
-      }
-      onShow() {
-        this.getMachineList()
-      }
-
-      async getMachineList() {
+      async searchByNameplate(searchInputValue) {
         let userAccount = wepy.getStorageSync(ACCOUNT)
-
-        const machineListJson = await api.getMachineListByCustomer({
-          query: {account: userAccount}
+        const searchResultJson = await api.searchMachineByNameplate({
+          query: {
+            userAccount: userAccount,
+            nameplate: searchInputValue
+          }
         })
-        console.log('machineListJson:')
-        console.log(machineListJson)
-        console.log(machineListJson.data.data.list)
-        this.list = machineListJson.data.data.list
+        console.log('searchResultJson:')
+        console.log(searchResultJson)
+        console.log(searchResultJson.data.message)
+        console.log(searchResultJson.data.code)
+        if (searchResultJson.data.code === 200) {
+          this.isExistMachine = true
+          this.machineInfo = searchResultJson.data.data
+          this.$apply()
+        } else if (searchResultJson.data.message === 'oldMachine') {
+          this.isExistMachine = false
+          this.$apply()
+          wx.showModal({
+            title: '请确认是否发起机器报修？',
+            content: '未找到该机器编号',
+            showCancel: true,
+            confirmColor: '#007aff',
+            success: function () {
+              wepy.navigateTo({
+                url: '/pages/request_repair?machineDetail=0'
+              })
+            }
+          })
+        } else if (searchResultJson.data.message === 'notYourMachine') {
+          this.isExistMachine = false
+          this.$apply()
+          wx.showModal({
+            title: '错误：未找到该机器编号！',
+            content: '请输入正确的机器编号',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+            }
+          })
+        } else {
+          this.isExistMachine = false
+          this.$apply()
+          wx.showModal({
+            title: '错误：获取信息失败！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+            }
+          })
+        }
 
         this.$apply()
-        wepy.stopPullDownRefresh()
+      }
+
+      onLoad() {
       }
     }
 

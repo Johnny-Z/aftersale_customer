@@ -1,16 +1,29 @@
 <!--积分规则-->
 <style lang="less">
   .pos {
+    align-items: center;
+    display: flex;
+    margin: 0 auto;
     background: #fff;
-    width: 100%;
-    .search_content {
-      background: rgba(0, 0, 0, 0.1);
-      border: 1px solid #efefee;
-      margin-bottom: 10rpx;
-      width: 100%;
-      .search_input {
-        color: #000000;
-      }
+    .search_read_only {
+        display: flex;
+        align-items: center;
+        border-radius: 300rpx;
+        color: #333;
+        margin-left: 20rpx;
+        background: #efefef;
+        padding: 5rpx 12rpx;
+        height: 55rpx;
+        border: 1px solid #efefee;
+        margin-bottom: 10rpx;
+        width: 90%;
+        .searchcion {
+            margin-left: 10rpx;
+            margin-right: 10rpx;
+        }
+        .search_input {
+            color: #000000;
+        }
     }
   }
   .machines_list {
@@ -44,11 +57,9 @@
 </style>
 <template>
   <view class="pos">
-    <view class="search_read_only">
-      <navigator class="search_content" open-type="navigate" url="/pages/search">
+    <view class="search_read_only" @tap="searchClick">
         <icon class="searchcion" size='20' type='search'></icon>
         <view class="search_input">搜索机器编号/机器报修</view>
-      </navigator>
     </view>
   </view>
   <view class="machines_list" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
@@ -85,6 +96,12 @@
       }
 
       methods = {
+        searchClick() {
+          let listJson = JSON.stringify(this.list)
+          wepy.navigateTo({
+            url: '/pages/search?list=' + listJson
+          })
+        },
         listItemClick(e) {
           console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
           console.log(e)
@@ -97,10 +114,12 @@
 
       onLoad() {
       }
+
       onPullDownRefresh() {
         this.getMachineList()
         console.log('xiala刷新:')
       }
+
       onShow() {
         this.getMachineList()
       }

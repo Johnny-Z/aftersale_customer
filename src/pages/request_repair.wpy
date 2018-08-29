@@ -148,7 +148,7 @@
         customerList: [],
         customerListArr: [],
         index: 0,
-        nameplateImage: ['http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        nameplateImage: [],
         oldNameplateInput: '',
         titleInput: '',
         contentInput: '',
@@ -434,7 +434,7 @@
       async onLoad(options) {
         console.log('request_repair onLoad: ')
         console.log(options)
-        if (options.empty) {
+        if (options.machineDetail === '0') {
           this.isOldMachine = true
         } else {
           this.isOldMachine = false
@@ -447,6 +447,7 @@
         if (!res.authSetting['scope.record']) {
           wepy.authorize({scope: 'scope.record'})
         }
+        this.$apply()
       };
       async getCustomerList(userId) {
         let getCustomerCompanyJson = await api.getUserDetail({
