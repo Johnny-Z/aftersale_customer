@@ -16,6 +16,7 @@ export default class extends wepy.app {
       'pages/eventing_install_info',
       'pages/eventing_maintain_info',
       'pages/eventing_repair_info',
+      'pages/eventing_deliver_info',
       'pages/machines',
       'pages/machines_info',
       'pages/request_repair',

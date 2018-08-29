@@ -54,7 +54,7 @@
       <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
     </view>
   </view>
-  <view class="eventing_list" wx:for="{{deliveredList}}" wx:key="item" @tap="deliveredListClick({{item}})">
+  <view class="eventing_list" wx:for="{{deliverList}}" wx:key="item" @tap="deliverListClick({{item}})">
     <image class="eventing_img" src="{{logo}}"></image>
     <view class="info">
       <view class="nameplate_tx">{{item.machineNameplate}} </view>
@@ -80,7 +80,7 @@
         installedList: [],
         maintainedList: [],
         repairedList: [],
-        deliveredList: [],
+        deliverList: [],
         logo: '/images/icon_eventing.png'
       }
 
@@ -113,11 +113,11 @@
             url: '/pages/eventing_repair_info?machineDetail=' + repairedRecord
           })
         },
-        deliveredListClick(e) {
+        deliverListClick(e) {
           console.log(e)
           let deliveredRecord = JSON.stringify(e)
           wepy.navigateTo({
-            url: '/pages/eventing_repair_info?machineDetail=' + deliveredRecord
+            url: '/pages/eventing_deliver_info?machineDetail=' + deliveredRecord
           })
         }
 
@@ -125,20 +125,22 @@
 
       onLoad() {
       };
+
+      // 下拉刷新
       onPullDownRefresh() {
         let customerName = wepy.getStorageSync(ACCOUNT)
         this.getInstallRecordList(customerName, 2)
         this.getMaintainRecordList(customerName, 3)
         this.getRepairRecordList(customerName, 3)
-        this.getDeliverList(customerName, 2)
-        console.log('xiala刷新:')
+        this.getDeliverList(customerName)
       }
+
       onShow() {
         let customerName = wepy.getStorageSync(ACCOUNT)
         this.getInstallRecordList(customerName, 2)
         this.getMaintainRecordList(customerName, 3)
         this.getRepairRecordList(customerName, 3)
-        this.getDeliverList(customerName, 2)
+        this.getDeliverList(customerName)
       }
 
       async getInstallRecordList(customerName, installStatus) {
@@ -188,7 +190,7 @@
       };
 
       async getDeliverList(customerName) {
-        const deliverListJson = await api.getRepairRecordList({
+        const deliverListJson = await api.getPartDeliverList({
           query: {
             userName: customerName
           }
@@ -196,8 +198,22 @@
         console.log('deliverListJson: ')
         console.log(deliverListJson)
         console.log(deliverListJson.data.data.list)
-        this.deliveredList = deliverListJson.data.data.list
-
+        let tempList = deliverListJson.data.data.list
+        this.deliverList = []
+        this.deliverList.push(tempList[0])
+        for (var i = 1; i < tempList.length; i++) {
+          var isRepeated = false
+          for (var j = 0; j < i; j++) {
+            if (tempList[i].id === tempList[j].id) {
+              isRepeated = true
+              break
+            }
+          }
+          if (!isRepeated) {
+            this.deliverList.push(tempList[i])
+          }
+        }
+        console.log(this.deliverList)
         this.$apply()
         wepy.stopPullDownRefresh()
       }

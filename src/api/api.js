@@ -20,7 +20,8 @@ const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
 const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
 const getInstallRecordList = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
 const getMaintainRecordList = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
-const getRepairRecordList = (params) => wxRequest(params, apiMall + '/parts/info/getPartsInfoTaskByUserName')
+const getRepairRecordList = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
+const getPartDeliverList = (params) => wxRequest(params, apiMall + '/parts/info/getPartsInfoTaskByUserName')
 const uploadInstallFeedback = (params) => wxRequest(params, apiMall + '/install/customer/feedback/add')
 const uploadMaintainFeedback = (params) => wxRequest(params, apiMall + '/maintain/customer/feedback/add')
 const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/customer/feedback/add')
@@ -134,6 +135,7 @@ export default {
   getInstallRecordList,
   getMaintainRecordList,
   getRepairRecordList,
+  getPartDeliverList,
   uploadInstallFeedback,
   uploadMaintainFeedback,
   uploadRepairFeedback,
