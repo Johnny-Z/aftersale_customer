@@ -67,7 +67,10 @@
     import wepy from 'wepy'
     import api from '@/api/api'
     import {
-        ACCOUNT
+        ACCOUNT,
+        REPAIR_STATUS_REPAIR_OK,
+        MAINTAIN_STATUS_FINISHED,
+        INSTALL_STATUS_FINISHED
     } from '@/utils/constant'
     export default class Eventing extends wepy.page {
       config = {
@@ -129,17 +132,17 @@
       // 下拉刷新
       onPullDownRefresh() {
         let customerName = wepy.getStorageSync(ACCOUNT)
-        this.getInstallRecordList(customerName, 2)
-        this.getMaintainRecordList(customerName, 3)
-        this.getRepairRecordList(customerName, 3)
+        this.getInstallRecordList(customerName, INSTALL_STATUS_FINISHED)
+        this.getMaintainRecordList(customerName, MAINTAIN_STATUS_FINISHED)
+        this.getRepairRecordList(customerName, REPAIR_STATUS_REPAIR_OK)
         this.getDeliverList(customerName)
       }
 
       onShow() {
         let customerName = wepy.getStorageSync(ACCOUNT)
-        this.getInstallRecordList(customerName, 2)
-        this.getMaintainRecordList(customerName, 3)
-        this.getRepairRecordList(customerName, 3)
+        this.getInstallRecordList(customerName, INSTALL_STATUS_FINISHED)
+        this.getMaintainRecordList(customerName, MAINTAIN_STATUS_FINISHED)
+        this.getRepairRecordList(customerName, REPAIR_STATUS_REPAIR_OK)
         this.getDeliverList(customerName)
       }
 

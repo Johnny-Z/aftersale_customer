@@ -41,11 +41,18 @@
         <text>维修日期：</text>
         <text>{{machineDetail.repairEndTime}}</text>
     </view>
-    <view wx:if="{{isSendBack}}">
-        <view class="title_vw">零件回厂信息</view>
-        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
+    <view class="title_vw">零件回厂信息</view>
+    <view class="eventing_list" wx:for="{{deliverList}}" wx:key="item" @tap="deliverListClick({{item}})">
+        <image class="eventing_img" src="{{logo}}"></image>
+        <view class="info">
+            <view class="nameplate_tx">{{item.machineNameplate}} </view>
+            <view>{{item.machineType}}: 部件待寄回 </view>
+            <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+        </view>
     </view>
+
+    <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+    <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
 
 </template>
 <style lang="less">
@@ -89,7 +96,7 @@
 
     export default class EventingDeliverInfo extends wepy.page {
       config = {
-        navigationBarTitleText: '维修评价'
+        navigationBarTitleText: '部件寄回'
       }
       components = {
         machinedetails: MachineDetails
