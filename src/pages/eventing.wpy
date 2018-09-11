@@ -202,6 +202,7 @@
         console.log(deliverListJson)
         console.log(deliverListJson.data.data.list)
         let tempList = deliverListJson.data.data.list
+          // 删除同recordId的重复记录
         this.deliverList = []
         this.deliverList.push(tempList[0])
         for (var i = 1; i < tempList.length; i++) {

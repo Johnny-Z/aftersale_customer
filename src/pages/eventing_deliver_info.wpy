@@ -12,7 +12,7 @@
     <view class="line_vw">
         <text>照片：</text>
     </view>
-    <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairPreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="title_vw">维修详情</view>
     <view class="line_vw">
         <text>故障部位：{{machineDetail.maintainInfo}}</text>
@@ -26,7 +26,7 @@
     <view class="line_vw">
         <text>照片：</text>
     </view>
-    <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>维修人：</text>
@@ -42,15 +42,21 @@
         <text>{{machineDetail.repairEndTime}}</text>
     </view>
     <view class="title_vw">零件回厂信息</view>
-    <view class="eventing_list" wx:for="{{deliverList}}" wx:key="item" @tap="deliverListClick({{item}})">
-        <image class="eventing_img" src="{{logo}}"></image>
-        <view class="info">
-            <view class="nameplate_tx">{{item.machineNameplate}} </view>
-            <view>{{item.machineType}}: 部件待寄回 </view>
-            <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
-        </view>
+    <view class="line_vw">
+        <text class="line_half_vw">配件名</text>
+        <text class="line_half_vw">快递单号</text>
     </view>
-
+    <view class="line_vw" wx:for="{{partList}}" wx:key="item" @tap='bindPartsNum({{index}})'>
+        <text class="line_half_vw">{{item.partsName}}</text>
+        <input class="line_half_input" type="text" @input="bindPartInput" placeholder="输入快递单号..." focus="true"/>
+    </view>
+    <view class="line_vw">
+        <text>快递照片：</text>
+        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
+    </view>
+    <view>
+        <image class="part_deliver_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
+    </view>
     <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
     <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
 
@@ -70,6 +76,11 @@
             width: 50%;
             height: 60%
         }
+        .line_half_input {
+            width: 50%;
+            height: 60%;
+            background-color: #efefef;
+        }
     }
     .single_btn {
         margin-left: 25rpx;
@@ -88,8 +99,15 @@
         width: 30%;
         height: 200rpx;
     }
+    .part_deliver_image {
+        margin-left: 2.5%;
+        width: 30%;
+        height: 200rpx;
+    }
 </style>
 <script>
+    /* eslint-disable no-undef */
+
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
@@ -107,7 +125,10 @@
         isSpeaking: false,
         preRepairImageArr: [],
         preRepairVoiceSrc: '',
-        repairImageArr: []
+        repairImageArr: [],
+        partList: [],
+        partIndex: [],
+        partsImageArr: []
       };
       methods = {
         voicePlay() {
@@ -141,20 +162,44 @@
             this.$apply()
           })
         },
-        changePreview(e) {
+        changePreRepairPreview(e) {
           var self = this
           wepy.previewImage({
             current: e.currentTarget.dataset.src,
-            urls: self.data.previewImageArr
+            urls: self.data.preRepairImageArr
           })
         },
-        bindPickerChange: function (e) {
-          console.log('picker发送选择改变，携带值为:', e.detail.value)
-          this.index = e.detail.value
+        changeRepairPreview(e) {
+          var self = this
+          wepy.previewImage({
+            current: e.currentTarget.dataset.src,
+            urls: self.data.repairImageArr
+          })
         },
-        bindSuggestionInput: function(e) {
+        changePartPreview(e) {
+          var self = this
+          wepy.previewImage({
+            current: e.currentTarget.dataset.src,
+            urls: self.data.partsImageArr
+          })
+        },
+          // get点击的行号
+        bindPartsNum(e) {
+          console.log(e)
+          this.partIndex = e
+        },
+          // 根据行号加入数据到数组中
+        bindPartInput(e) {
           console.log(e.detail.value)
-          this.customerSuggestion = e.detail.value
+          this.partList[this.partIndex].sendbackTrackingNumber = e.detail.value
+          console.log(this.partList)
+        },
+        async previewImage() {
+          let res = await wepy.chooseImage({count: 1})
+          if (res.errMsg === 'chooseImage:ok') {
+            this.partsImageArr = res.tempFilePaths
+            this.$apply()
+          }
         },
         async bindUploadFeedback() {
           this.repairCustomerFeedback.customerMark = this.index
@@ -208,6 +253,19 @@
           }
         })
         console.log(partsInfoJson)
+        if (partsInfoJson.data.code !== 200) {
+          wx.showModal({
+            title: '获取信息失败！',
+            content: '网络错误，请检查网络',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+              wepy.navigateBack()
+            }
+          })
+        } else {
+          this.partList = partsInfoJson.data.data.list
+        }
       }
 
         // Other properties

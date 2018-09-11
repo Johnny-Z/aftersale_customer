@@ -29,8 +29,7 @@
     </view>
     <view wx:else>
         <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
-            <view class="line_vw">
-                评价：
+            <view class="line_vw">评价：
                 <view class="line_picker">{{mark[index]}}</view>
             </view>
         </picker>

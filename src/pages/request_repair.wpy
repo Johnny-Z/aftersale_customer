@@ -50,11 +50,10 @@
         </view>
     </view>
     <view class="title_vw">故障内容</view>
-    <view class="line_vw">
-        文字描述：
+    <view class="line_vw">文字描述：
         <input class="nameplate_in" placeholder="故障概述" @input="bindTitleInput"/>
     </view>
-    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" auto-height @input="bindContentInput"/>
+    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" @input="bindContentInput"/>
     <view class="line_vw">
       <view>语音描述：</view>
       <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
@@ -69,8 +68,7 @@
     </view>
     <view class="title_vw">联系方式</view>
     <picker @change="bindPickerChange" value="{{index}}" range="{{customerListArr}}">
-        <view class="line_vw">
-            联系人：
+        <view class="line_vw">联系人：
             <view class="line_picker">{{customerListArr[index]}}</view>
         </view>
     </picker>
@@ -102,7 +100,8 @@
     }
     .pre_machine_error_in {
         background: #ffffff;
-        padding: 20rpx;
+        width: 90%;
+        margin-left: 20rpx;
     }
     .single_btn {
         margin-left: 25rpx;
@@ -127,7 +126,7 @@
      }
 </style>
 <script>
-    /* eslint-disable no-undef */
+    /* eslint-disable no-undef,eqeqeq */
 
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
@@ -450,6 +449,7 @@
         this.$apply()
       };
       async getCustomerList(userId) {
+          // 先获取对应公司id
         let getCustomerCompanyJson = await api.getUserDetail({
           query: {
             id: userId
@@ -468,6 +468,7 @@
             }
           })
         } else {
+            // 根据用户id和公司id获取联系人信息
           let getCustomerListJson = await api.getCustomerListByCompany({
             query: {
               roleId: 6,
@@ -475,10 +476,10 @@
             }
           })
           console.log(getCustomerListJson)
-          if (getCustomerListJson.data.code !== 200) {
+          if (getCustomerListJson.data.code !== 200 || getCustomerListJson.data.data.list.length < 1) {
             wx.showModal({
               title: '获取联系人列表出错！',
-              content: '网络错误',
+              content: '网络错误，请检查网络',
               showCancel: false,
               confirmColor: '#007aff',
               success: function () {

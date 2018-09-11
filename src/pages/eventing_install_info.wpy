@@ -36,8 +36,7 @@
     </view>
     <view wx:else>
         <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
-            <view class="line_vw">
-                评价：
+            <view class="line_vw">评价：
                 <view class="line_picker">{{mark[index]}}</view>
             </view>
         </picker>
@@ -61,8 +60,8 @@
         background: #EEC591;
     }
     .textarea {
-        width: 100%;
-        padding: 20rpx;
+        width: 90%;
+        margin-left: 20rpx;
         background-color: #fff;
     }
     .title_vw {
