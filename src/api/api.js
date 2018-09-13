@@ -7,6 +7,7 @@ let env = '-test' // -dev 或者 -test
 // const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'http://localhost:8080/'
 const apiMall = 'http://192.168.43.223:8080'
+const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
 
 const getUserDetail = (params) => wxRequest(params, apiMall + '/user/detail')
 const getCustomerListByCompany = (params) => wxRequest(params, apiMall + '/user/getUsersByType')
@@ -24,8 +25,10 @@ const getPartsSendBackInfo = (params) => wxRequest(params, apiMall + '/parts/inf
 const searchMachineByNameplate = (params) => wxRequest(params, apiMall + '/machine/selectByNameplateAndUserAccount')
 
 const uploadRepairRequestFiles = (params) => wxUploadFile(params, apiMall + '/repair/request/info/update')
+const uploadPartsInfoFiles = (params) => wxUploadFile(params, apiMall + '/parts/info/update')
 
 export default {
+  wxJsCode2Session,
   getUserDetail,
   getCustomerListByCompany,
   getMachineList,
@@ -40,5 +43,6 @@ export default {
   uploadRepairRequestInfo,
   getPartsSendBackInfo,
   searchMachineByNameplate,
-  uploadRepairRequestFiles
+  uploadRepairRequestFiles,
+  uploadPartsInfoFiles
 }

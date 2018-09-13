@@ -106,7 +106,7 @@
     }
 </style>
 <script>
-    /* eslint-disable no-undef */
+    /* eslint-disable no-undef,eqeqeq */
 
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
@@ -201,32 +201,44 @@
             this.$apply()
           }
         },
-        async bindUploadFeedback() {
-          this.repairCustomerFeedback.customerMark = this.index
-          this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
-          let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
-          const repairFeedbackJson = await api.uploadRepairFeedback({
-            query: {
-              repairCustomerFeedback: repairCustomerFeedbackJson,
-              repairRecordId: this.machineDetail.id
+        bindUploadFeedback: async function () {
+          for (var i = 0; i < this.partList.length; i++) {
+            let strPartsInfo = JSON.stringify(this.partList[i])
+            const partsInfoFeedbackJson = await api.uploadPartsInfoFiles({
+              query: {
+                filePath: this.partsImageArr[0],
+                name: 'file',
+                data: {
+                  partsInfo: strPartsInfo
+                }
+              }
+            })
+            console.log('partsInfoFeedbackJson :')
+            console.log(partsInfoFeedbackJson)
+            console.log(partsInfoFeedbackJson.data.code)
+            if (partsInfoFeedbackJson.statusCode === 200) {
+              if (i == (this.partList.length - 1)) {
+                wx.showModal({
+                  title: '上传信息成功！',
+                  content: '快递信息上传成功！',
+                  showCancel: false,
+                  confirmColor: '#007aff',
+                  success: function () {
+                    wepy.navigateBack()
+                  }
+                })
+              }
+            } else {
+              wx.showModal({
+                title: '上传出错，请重新上传！',
+                content: '网络错误',
+                showCancel: false,
+                confirmColor: '#007aff',
+                success: function () {
+                }
+              })
+              break
             }
-          })
-          console.log('repairFeedbackJson :')
-          console.log(repairFeedbackJson)
-          console.log(repairFeedbackJson.data.code)
-          if (repairFeedbackJson.data.code === 200) {
-            wepy.showToast({
-              title: '上传成功',
-              icon: 'success',
-              duration: 2000
-            })
-            wepy.navigateBack()
-          } else {
-            wepy.showToast({
-              title: '上传失败',
-              icon: 'none',
-              duration: 2000
-            })
           }
         },
         bindNavigateBack() {
