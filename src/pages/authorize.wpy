@@ -2,10 +2,51 @@
   page {
     height: 100%;
   }
-
+  .title_name_tx {
+    font-family: PingFangSC-Semibold;
+    font-size: 38rpx;
+    color: #ADC7C7;
+    text-align: center;
+    line-height: 43rpx;
+  }
+  .login_view_column {
+    background: #FFFFFF;
+    border-radius: 26rpx;
+    margin-left: 24rpx;
+    margin-right: 24rpx;
+    margin-top: 20rpx;
+    padding-left: 70rpx;
+    padding-right: 70rpx;
+    display: flex;
+    flex-direction: column;
+    .login_view_row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      border-bottom: 1px solid #efefef;
+      padding-bottom: 20rpx;
+      padding-top: 70rpx;
+      .login_input {
+        font-family: PingFangSC-Regular;
+        font-size: 30rpx;
+        color: #3B403D;
+      }
+    }
+    .btn-authorize {
+      width: 100%;
+      background: #007474;
+      box-shadow: 0 6rpx 20rpx 0 rgba(0,116,116,0.20);
+      border-radius: 12rpx;
+      font-family: PingFangSC-Medium;
+      font-size: 34rpx;
+      color: #FFFFFF;
+      text-align: center;
+      margin-top: 86rpx;
+      margin-bottom: 56rpx;
+    }
+  }
   .authorize-contianer {
     height: 100%;
-    background: #fff;
     padding-top: 100rpx;
     .authorize-icon {
       width: 128rpx;
@@ -15,141 +56,120 @@
       margin: 0 auto;
       padding-bottom: 10rpx;
     }
-    .item_userid {
-      display: flex;
-      align-items: center;
-      margin: 1rpx 180rpx;
-      border-top: 1px solid #efefef;
-      border-bottom: 1px solid #efefef;
-      padding: 20rpx 20rpx;
-      .userid {
-        margin-right: 20rpx;
-      }
-      .input_id {
-        flex: 1;
-        input {
-          color: #333;
-        }
-      }
-    }
-    .item_password {
-      display: flex;
-      align-items: center;
-      margin: 1rpx 180rpx;
-      border-bottom: 1px solid #efefef;
-      padding: 20rpx 20rpx;
-      .user_password {
-        margin-right: 20rpx;
-      }
-      .input_pw {
-        flex: 1;
-        input {
-          color: #333;
-        }
-      }
-    }
-
-    .btn-authorize {
-      margin: 100rpx 100rpx;
-    }
   }
 
 </style>
 <template>
   <view class="authorize-contianer">
     <image class="authorize-icon" src="../images/authorize.png"></image>
-    <view class="item_userid">
-      <view class="userid">账号:</view>
-      <view class="input_id">
-        <input type="number" focus="true" placeholder="输入你的账号" />
+    <view class="title_name_tx">-客户端-</view>
+    <view class="login_view_column">
+      <view class="login_view_row">
+        <text class="login_input">账号:</text>
+        <input class="login_input" type="text" focus="true" @input="bindAccountInput" placeholder="输入你的账号"/>
       </view>
-    </view>
-    <view class="item_password">
-      <view class="user_password">密码:</view>
-      <view class="input_pw">
-          <input type="number" password="true" placeholder="输入你的密码"  />
+      <view class="login_view_row">
+        <texit class="login_input">密码:</texit>
+        <input class="login_input" type="text" password="true" @input="bindPasswordInput" placeholder="输入你的密码"/>
       </view>
-    </view>
-    <view class="btn-authorize">
-      <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权登录</button>
+      <button class="btn-authorize" lang="zh_CN" @tap="bindLogin">授权登录</button>
     </view>
   </view>
 </template>
 <script>
-import wepy from 'wepy'
-import api from '../api/api'
-import {
-    AUTHORIZATION,
-    ACCOUNT,
-    USER_ID,
-    SYSTEM_INFO,
-  USER_SPECICAL_INFO,
-  USER_INFO
-} from '../utils/constant'
-export default class Authorize extends wepy.page {
-  config = {
-    navigationBarTitleText: '授权登录'
-  }
-  async onLoad() {
-    let jwtAuthorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWNjb3VudE5vbkV4cGlyZWRcIjp0cnVlLFwiYWNjb3VudE5vbkxvY2tlZFwiOnRydWUsXCJhZGRyZXNzXCI6XCLlrqLmiLflnLDlnYBhZG1pbjExMVwiLFwiYWdlbnRcIjowLFwiYXV0aG9yaXRpZXNcIjpbXSxcImNyZWF0ZVRpbWVcIjoxNTMxMjc0NjIzMDAwLFwiY3JlZGVudGlhbHNOb25FeHBpcmVkXCI6dHJ1ZSxcImN1c3RvbWVyQ29tcGFueVwiOjAsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6MSxcIm5hbWVcIjpcImFkbWluXCIsXCJwYXNzd29yZFwiOlwic2luc2ltXCIsXCJwaG9uZVwiOlwiMTM1NjY2Njc3NzdcIixcInJvbGVJZFwiOjEsXCJ1c2VybmFtZVwiOlwiYWRtaW5cIixcInZhbGlkXCI6XCIxXCIsXCJ3ZWNoYXRVbmlvbklkXCI6XCJ3ZWNoYXQyMjJcIn0iLCJleHAiOjE1MzcwODA3NDB9.FmU391_rnn1_qRwU5bUGNUw7GvI0zUVjXd1g0jq3RiddsweJQLYpnTDscNisuXYuSZblQrQxAVd3j9hpmfkZ4g'
-    wepy.setStorageSync(AUTHORIZATION, jwtAuthorization)
-    wepy.setStorageSync(ACCOUNT, 'kehu1')
-    wepy.setStorageSync(USER_ID, '6')
-    let res = await wepy.getSetting()
-    console.log('authorize onLoad: ')
-    console.log(res)
-    if ((res.authSetting)['scope.userInfo']) {
-      wepy.switchTab({
-        url: '/pages/eventing'
-      })
-    }
-  }
-  async onGotUserInfo(e) {
-    if (e.detail.errMsg === 'getUserInfo:ok') {
-      let res = await wepy.login()
-      console.log('ongetuserinfo:')
-      console.log(res)
-      if (res.code) {
-        console.log(e)
-        console.log(e.detail.userInfo)
-        wepy.setStorageSync(USER_INFO, e.detail.userInfo)
-        let systemInfo = wepy.getSystemInfoSync()
-        wepy.setStorageSync(SYSTEM_INFO, systemInfo)
-        let rlt = await api.wxJsCode2Session({
-          query: {
-            jsCode: res.code,
-            nickName: e.detail.userInfo.nickName
-          }
-        })
-        console.log('get session resoult: ' + rlt.data.result)
-        if (rlt.data.result) {
-          let data = rlt.data
-          if (data.data.openid) {
-            wepy.setStorageSync(USER_SPECICAL_INFO, data.data)
-            wepy.switchTab({
-              url: '/pages/eventing'
-            })
-          }
-        } else {
-          let res = await wepy.showModal({
-            title: 'appid有误',
-            content: '授权失败'
-          })
-          if (res.confirm) {
-            wepy.switchTab({
-              url: '/pages/eventing'
-            })
-          }
+    /* eslint-disable no-undef,eqeqeq,indent */
+
+    import wepy from 'wepy'
+    import api from '@/api/api'
+    import tip from '@/utils/tip'
+    import {
+        AUTHORIZATION,
+        ACCOUNT,
+        USER_ID
+    } from '@/utils/constant'
+    export default class Authorize extends wepy.page {
+        config = {
+            navigationBarTitleText: '授权登录'
         }
-      }
+        data = {
+            account: 'repairPerson_lisi',
+            password: 'sinsim'
+        }
+        async onLoad() {
+            // let res = await wepy.login()
+            // console.log(res)
+            // if (res.code) {
+            //   console.log('get session resoult: ')
+            //   let rlt = await api.wxJsCode2Session({
+            //     query: {
+            //       js_code: res.code,
+            //     },
+            //   })
+            //   console.log('get session resoult: ' + rlt)
+            // }
+
+            // const FileSystemManager = wx.getFileSystemManager()
+            // FileSystemManager.mkdir({
+            //   dirPath: 'WeappFileCache/info.txt',
+            //   recursive: true,
+            //   success: function (e) {
+            //     console.log('success: ', e)
+            //   },
+            //   fail: function (e) {
+            //     console.log('fail: ', e)
+            //   },
+            //   complete: function (e) {
+            //     console.log('complete: ', e)
+            //   }
+            // })
+        }
+        methods = {
+            bindAccountInput(e) {
+                console.log(e.detail.value)
+                this.account = e.detail.value
+            },
+            bindPasswordInput(e) {
+                console.log(e.detail.value)
+                this.password = e.detail.value
+            },
+            async bindLogin() {
+                // let res = await wepy.login()
+                // console.log(res)
+                // if (res.code) {
+                //   console.log('get session resoult: ')
+                //   let rlt = await api.wxJsCode2Session({
+                //     query: {
+                //       account: this.account,
+                //       password: this.password,
+                //       jsCode: res.code
+                //     }
+                //   })
+                //   console.log('get session resoult: ' + rlt)
+                // }
+                let loginJson = await api.login({
+                    query: {
+                        account: this.account,
+                        password: this.password
+                    }
+                })
+                console.log('登入返回：', loginJson)
+                let authorization = loginJson.header.Authorization
+                let account = loginJson.data.account
+                let id = loginJson.data.id
+                if (loginJson.statusCode == 200) {
+                    wx.setStorageSync(AUTHORIZATION, authorization)
+                    wx.setStorageSync(ACCOUNT, account)
+                    wx.setStorageSync(USER_ID, id)
+                    wepy.switchTab({
+                        url: '/pages/eventing'
+                    })
+                } else {
+                    tip.confirm('网络错误，登陆失败')
+                }
+            }
+        }
+        events = {
+        }
     }
-  }
-  methods = {
-
-  }
-  events = {
-
-  }
-}
 
 </script>

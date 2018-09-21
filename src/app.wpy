@@ -25,16 +25,17 @@ export default class extends wepy.app {
     ],
     window: {
       backgroundTextStyle: 'light',
-      backgroundColor: '#ff6a3c',
-      navigationBarBackgroundColor: '#fff',
+      navigationBarBackgroundColor: '#007474',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'white',
+      enablePullDownRefresh: false,
+      backgroundColor: '#666666'
     },
     tabBar: {
-      color: '#999999',
-      selectedColor: '#ff6a3c',
+      color: '#ADC7C7',
+      selectedColor: '#007474',
       backgroundColor: '#ffffff',
-      borderStyle: 'black',
+      borderStyle: 'white',
       list: [{
         pagePath: 'pages/eventing',
         text: '事件',

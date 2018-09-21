@@ -14,17 +14,19 @@ export const USER_INFO = 'userInfo'
  * 系统信息
  * @type {String}
  */
-export const SYSTEM_INFO = 'systemInfo'
-
-export const ADDRESS_ID = 'addressId'
-
-export const SEL_CLASS_CODE = 'selClassCode'
+export const APIMALL = 'https://eservice-tech.cn'
 
 /**
  * JWT
  * @type {String}
  */
 export const AUTHORIZATION = 'Authorization'
+/**
+ * JWT error
+ * @type {String}
+ */
+export const JWT_ERROR_MESSAGE = 'JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.'
+export const NO_JWT_ERROR_MESSAGE = 'JWT String argument cannot be null or empty.'
 /**
  * 用户名
  * @type {String}
@@ -58,11 +60,11 @@ export const REPAIR_STATUS_REPAIR_OK = '7'
 export const REPAIR_STATUS_REPAIR_CUSTOMER_CONFIRMED = '8'
 /**
  保养状态
-  0：待分配，
-  1：已分配(但未接单）
-  2：已接受任务，
-  3：保养完成(客户未确认)，
-  4：已确认保养结果
+ 0：待分配，
+ 1：已分配(但未接单）
+ 2：已接受任务，
+ 3：保养完成(客户未确认)，
+ 4：已确认保养结果
  */
 export const MAINTAIN_STATUS_NOT_ASSIGN = '0'
 export const MAINTAIN_STATUS_ASSIGNED = '1'
@@ -82,3 +84,14 @@ export const INSTALL_STATUS_ASSIGNED = '1'
 export const INSTALL_STATUS_TASK_DOING = '2'
 export const INSTALL_STATUS_FINISHED = '3'
 export const INSTALL_STATUS_CONFIRMED = '4'
+/**
+ * 配件寄回状态，
+ * 1: 无需回寄，其他表示需要寄回
+ * 2：未寄回，
+ * 3：已寄回（待售后确认）
+ * 4：售后已确认
+ */
+export const PARTS_STATUS_NOT_NEED = '1'
+export const PARTS_STATUS_WAIT_FOR_SENDBACK = '2'
+export const PARTS_STATUS_ALREADY_SENDBACK = '3'
+export const PARTS_STATUS_AFTERSALE_CONFIRMED = '4'
