@@ -6,6 +6,7 @@ import {
 const apiMall = 'https://eservice-tech.cn'
 // const apiMall = 'http://localhost:8080/'
 // const apiMall = 'http://192.168.43.223:8080'
+const login = (params) => wxRequest(params, apiMall + '/api/login')
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
 
 const getUserDetail = (params) => wxRequest(params, apiMall + '/api/user/detail')
@@ -27,6 +28,7 @@ const uploadRepairRequestFiles = (params) => wxUploadFile(params, apiMall + '/ap
 const uploadPartsInfoFiles = (params) => wxUploadFile(params, apiMall + '/api/parts/info/update')
 
 export default {
+  login,
   wxJsCode2Session,
   getUserDetail,
   getCustomerListByCompany,
