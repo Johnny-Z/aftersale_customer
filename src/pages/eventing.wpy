@@ -202,22 +202,24 @@
         console.log(deliverListJson)
         console.log(deliverListJson.data.data.list)
         let tempList = deliverListJson.data.data.list
+        if (tempList.length > 0) {
           // 删除同recordId的重复记录
-        this.deliverList = []
-        this.deliverList.push(tempList[0])
-        for (var i = 1; i < tempList.length; i++) {
-          var isRepeated = false
-          for (var j = 0; j < i; j++) {
-            if (tempList[i].id === tempList[j].id) {
-              isRepeated = true
-              break
+          this.deliverList = []
+          this.deliverList.push(tempList[0])
+          for (var i = 1; i < tempList.length; i++) {
+            var isRepeated = false
+            for (var j = 0; j < i; j++) {
+              if (tempList[i].id === tempList[j].id) {
+                isRepeated = true
+                break
+              }
+            }
+            if (!isRepeated) {
+              this.deliverList.push(tempList[i])
             }
           }
-          if (!isRepeated) {
-            this.deliverList.push(tempList[i])
-          }
+          console.log(this.deliverList)
         }
-        console.log(this.deliverList)
         this.$apply()
         wepy.stopPullDownRefresh()
       }

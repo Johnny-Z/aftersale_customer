@@ -162,7 +162,6 @@
         customerPhone: '暂无',
         customerAddress: '暂无',
         repairRequestInfo: {
-          id: '',
           nameplatePicture: '',
           voice: '',
           pictures: '',
@@ -289,12 +288,12 @@
           if (this.isOldMachine) {
             console.log('老机器报修： ')
             this.repairRequestInfo.nameplate = this.oldNameplateInput
-            this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 2
+            this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 2).toString()
             let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
             this.addRepairRequestInfo(repairRequestInfoJson)
           } else {
             this.repairRequestInfo.nameplate = this.machineDetail.nameplate
-            this.repairRequestInfo.uploadFilesAmount = this.previewImageArr.length + 1
+            this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 1).toString()
             let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
             console.log('上传xinxi： ', repairRequestInfoJson)
             this.addRepairRequestInfo(repairRequestInfoJson)
@@ -302,6 +301,7 @@
         }
       };
       async addRepairRequestInfo(repairRequestInfoJson) {
+        console.log('lalallalal:', repairRequestInfoJson)
         const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
           query: {
             repairRequestInfo: repairRequestInfoJson
