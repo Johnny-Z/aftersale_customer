@@ -1,73 +1,49 @@
 <!--积分规则-->
 <style lang="less">
-  .pos {
-    align-items: center;
-    display: flex;
-    margin: 0 auto;
-    background: #fff;
+  .search_view {
+    background: #FFFFFF;
+    width: 100%;
+    height: 116rpx;
     .search_read_only {
-        display: flex;
-        align-items: center;
-        border-radius: 300rpx;
-        color: #333;
-        margin-left: 20rpx;
-        background: #efefef;
-        padding: 5rpx 12rpx;
-        height: 55rpx;
-        border: 1px solid #efefee;
-        margin-bottom: 10rpx;
-        width: 90%;
-        .searchcion {
-            margin-left: 10rpx;
-            margin-right: 10rpx;
-        }
-        .search_input {
-            color: #000000;
-        }
-    }
-  }
-  .machines_list {
-    background: #fff;
-    padding: 15rpx;
-    display: flex;
-    margin-top: 15rpx;
-    .machine_img {
-      width: 10%;
-      height: 70rpx;
-    }
-    .info {
-      padding: 5rpx;
-      color: #000000;
-      font-size: 26rpx;
-      line-height: 35rpx;
-      display: flex;
+      background: #F0F3F5;
+      border-radius: 100rpx;
       align-items: center;
-        .nameplate_tx {
-            font-weight: bold;
-            font-size: 36rpx;
-        }
-    }
-    .item {
-      background: #fff;
-      padding: 15rpx;
       display: flex;
-      margin-top: 15rpx;
+      flex-direction: row;
+      .search_icon {
+      }
+      .search_tx {
+        font-family: PingFangSC-Regular;
+        font-size: 28rpx;
+        color: #C7CECE;
+        letter-spacing: 0;
+        text-align: center;
+      }
     }
   }
 </style>
 <template>
-  <view class="pos">
+  <view class="search_view">
     <view class="search_read_only" @tap="searchClick">
-        <icon class="searchcion" size='20' type='search'></icon>
-        <view class="search_input">搜索机器编号/机器报修</view>
+        <icon class="search_icon" size='20' type='search'></icon>
+        <text class="search_tx">搜索机器编号/机器报修</text>
     </view>
   </view>
-  <view class="machines_list" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
-    <image class="machine_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.nameplate}}: </view>
-      <view>{{item.machineType}}: {{item.status}} : </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+  <view class="list_column">
+    <view class="list_view_row" wx:for="{{list}}" wx:key="item" @tap="listItemClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.nameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <button wx:if="{{item.status == 1}}" class="status_btn_short">初始化</button>
+        <button wx:elif="{{item.status == 2}}" class="status_btn_short">待安装</button>
+        <button wx:elif="{{item.status == 3}}" class="status_btn_short">正常</button>
+        <button wx:elif="{{item.status == 4}}" class="status_btn_short">待保养</button>
+        <button wx:elif="{{item.status == 5}}" class="status_btn_short">待修理</button>
+        <button wx:else class="status_btn_short">待审核</button>
+      </view>
     </view>
   </view>
 </template>
@@ -84,15 +60,10 @@
         enablePullDownRefresh: true
       }
       data = {
-        list: [],
-        logo: '/images/icon_machine_list.png'
+        list: []
       }
 
       events = {
-            // 'index-broadcast': (...args) => {
-            //   let $event = args[args.length - 1]
-            //   console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
-            // }
       }
 
       methods = {
@@ -103,8 +74,7 @@
           })
         },
         listItemClick(e) {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-          console.log(e)
+          console.log('点击：', e)
           let machines = JSON.stringify(e)
           wepy.navigateTo({
             url: '/pages/machines_info?machineDetail=' + machines
@@ -117,7 +87,7 @@
 
       onPullDownRefresh() {
         this.getMachineList()
-        console.log('xiala刷新:')
+        console.log('下拉刷新~')
       }
 
       onShow() {
@@ -130,9 +100,7 @@
         const machineListJson = await api.getMachineListByCustomer({
           query: {account: userAccount}
         })
-        console.log('machineListJson:')
-        console.log(machineListJson)
-        console.log(machineListJson.data.data.list)
+        console.log('机器列表:', machineListJson)
         this.list = machineListJson.data.data.list
 
         this.$apply()

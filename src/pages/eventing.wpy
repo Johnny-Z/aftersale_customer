@@ -30,36 +30,52 @@
   }
 </style>
 <template>
-  <view class="eventing_list" wx:for="{{installedList}}" wx:key="item" @tap="installedListClick({{item}})">
-    <image class="eventing_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.machineNameplate}} </view>
-      <view>{{item.machineType}}: 安装待评价 </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+  <view class="list_column">
+    <view class="list_view_row" wx:for="{{installedList}}" wx:key="item" @tap="installedListClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <button class="status_btn_long">安装待评价</button>
+      </view>
     </view>
   </view>
-  <view class="eventing_list" wx:for="{{maintainedList}}" wx:key="item" @tap="maintainedListClick({{item}})">
-    <image class="eventing_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.machineNameplate}} </view>
-      <view>{{item.machineType}}: 保养待评价 </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+  <view class="list_column">
+    <view class="list_view_row" wx:for="{{maintainedList}}" wx:key="item" @tap="maintainedListClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <button class="status_btn_long">保养待评价</button>
+      </view>
     </view>
   </view>
-  <view class="eventing_list" wx:for="{{repairedList}}" wx:key="item" @tap="repairedListClick({{item}})">
-    <image class="eventing_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.machineNameplate}} </view>
-      <view>{{item.machineType}}: 维修待评价 </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+  <view class="list_column">
+    <view class="list_view_row" wx:for="{{repairedList}}" wx:key="item" @tap="repairedListClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <button class="status_btn_long">维修待评价</button>
+      </view>
     </view>
   </view>
-  <view class="eventing_list" wx:for="{{deliverList}}" wx:key="item" @tap="deliverListClick({{item}})">
-    <image class="eventing_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.machineNameplate}} </view>
-      <view>{{item.machineType}}: 部件待寄回 </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+  <view class="list_column">
+    <view class="list_view_row" wx:for="{{deliverList}}" wx:key="item" @tap="deliverListClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <button class="status_btn_long">部件待寄回</button>
+      </view>
     </view>
   </view>
 </template>
@@ -83,15 +99,10 @@
         installedList: [],
         maintainedList: [],
         repairedList: [],
-        deliverList: [],
-        logo: '/images/icon_eventing.png'
+        deliverList: []
       }
 
       events = {
-            // 'index-broadcast': (...args) => {
-            //   let $event = args[args.length - 1]
-            //   console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
-            // }
       }
 
       methods = {
@@ -153,10 +164,7 @@
             installRecordCustomerName: customerName
           }
         })
-        console.log('installRecordListJson: ')
-        console.log(installRecordListJson)
-        console.log(installRecordListJson.data.data.list)
-        console.log(installRecordListJson.data.data.list[1])
+        console.log('安装: ', installRecordListJson)
         this.installedList = installRecordListJson.data.data.list
 
         this.$apply()
@@ -169,9 +177,7 @@
             customerName: customerName
           }
         })
-        console.log('maintainRecordListJson:')
-        console.log(maintainRecordListJson)
-        console.log(maintainRecordListJson.data.data.list)
+        console.log('保养:', maintainRecordListJson)
         this.maintainedList = maintainRecordListJson.data.data.list
 
         this.$apply()
@@ -184,9 +190,7 @@
             repairRecordCustomerName: customerName
           }
         })
-        console.log('repairRecordListJson: ')
-        console.log(repairRecordListJson)
-        console.log(repairRecordListJson.data.data.list)
+        console.log('维修: ', repairRecordListJson)
         this.repairedList = repairRecordListJson.data.data.list
 
         this.$apply()
@@ -198,9 +202,7 @@
             userName: customerName
           }
         })
-        console.log('deliverListJson: ')
-        console.log(deliverListJson)
-        console.log(deliverListJson.data.data.list)
+        console.log('配件: ', deliverListJson)
         let tempList = deliverListJson.data.data.list
         if (tempList.length > 0) {
           // 删除同recordId的重复记录

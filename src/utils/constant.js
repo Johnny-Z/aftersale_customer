@@ -38,6 +38,23 @@ export const ACCOUNT = 'account'
  */
 export const USER_ID = 'user_id'
 /**
+ * 机器状态
+ * 0：未绑定，
+ * 1：已绑定，
+ * 2：待安装，
+ * 3：正常工作状态（已安装、已保养，已维修），
+ * 4：待保养，
+ * 5：待修理，
+ * 6：待审核
+ */
+export const MACHINE_STATUS_UNBIND_TO_CUSTOMER = '0'
+export const MACHINE_STATUS_BOUND_TO_CUSTOMER = '1'
+export const MACHINE_STATUS_WAIT_FOR_INSTALL = '2'
+export const MACHINE_STATUS_IN_NORMAL = '3'
+export const MACHINE_STATUS_WAIT_FOR_MAINTAIN = '4'
+export const MACHINE_STATUS_WAIT_FOR_REPAIR = '5'
+export const MACHINE_STATUS_WAIT_FOR_CHECK = '6'
+/**
  * 维修状态
  * 0: 报修进行中（报修过程中，文件上传没完成等情况）
  * 1：未派单，
