@@ -28,35 +28,49 @@
       <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
     </view>
   </view>
-    <view class="title_vw">维修详情</view>
-    <view class="line_vw">
-        <text>故障部位：{{machineDetail.maintainInfo}}</text>
-    </view>
-    <view class="line_vw">
-        <text>问题描述：{{machineDetail.repairActualIssueDescription}}</text>
-    </view>
-    <view class="line_vw">
-        <text>处理方法：{{machineDetail.repairActualMethod}}</text>
-    </view>
-    <view class="line_vw">
-        <text>照片：</text>
-    </view>
-    <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>维修人：</text>
-            <text>{{machineDetail.repairChargePersonName}}</text>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">维修详情</text>
+            </view>
         </view>
-        <view class="line_half_vw">
-            <text>电话：</text>
-            <text>{{machineDetail.repairChargePersonPhone}}</text>
+        <view class="main_view">
+            <view class="view_row">
+                <text class="label_tx">故障部位：</text>
+                <text class="info_tx">{{machineDetail.maintainInfo}}</text>
+             </view>
+            <view class="view_row">
+                <text class="label_tx">问题描述：</text>
+                <text class="info_tx">{{machineDetail.repairActualIssueDescription}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">处理方法：</text>
+                <text class="info_tx">{{machineDetail.repairActualMethod}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">照片：</text>
+            </view>
+            <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
+            <view class="view_row">
+                <text class="label_tx">维修人：</text>
+                <text class="label_tx">{{machineDetail.repairChargePersonName}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">电话：</text>
+                <text class="label_tx">{{machineDetail.repairChargePersonPhone}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">维修日期：</text>
+                <text class="label_tx">{{machineDetail.repairEndTime}}</text>
+            </view>
         </view>
     </view>
-    <view class="line_vw">
-        <text>维修日期：</text>
-        <text>{{machineDetail.repairEndTime}}</text>
-    </view>
-    <view class="title_vw">零件回厂信息</view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">零件回厂信息</text>
+            </view>
+        </view>
     <view class="line_vw">
         <text class="line_half_vw">配件名</text>
         <text class="line_half_vw">快递单号</text>
@@ -71,6 +85,7 @@
     </view>
     <view>
         <image class="part_deliver_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
+    </view>
     </view>
     <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
     <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
