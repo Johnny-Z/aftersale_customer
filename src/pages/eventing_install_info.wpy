@@ -1,78 +1,164 @@
 <template>
     <machinedetails :machine.sync="machineDetail"></machinedetails>
-    <view class="line_vw">
-        <text>订单编号：</text>
-        <text class="nameplate_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
-    </view>
-    <view class="title_vw">调试详情</view>
-    <view>{{machineDetail.installInfo}}</view>
-    <view>调试项2：</view>
-    <view class="line_vw">
-        <text>调试结果：{{machineDetail.installResult}}</text>
-    </view>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>调试安装人：</text>
-            <text>{{machineDetail.installChargePersonName}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>电话：</text>
-            <text>{{machineDetail.installChargePersonPhone}}</text>
-        </view>
-    </view>
-    <view class="line_vw">
-        <text>调试安装日期：</text>
-        <text>{{machineDetail.installActualTime}}</text>
-    </view>
-    <view class="title_vw">客户反馈</view>
-    <view wx:if="{{isExistFeedback}}">
-        <view class="line_vw">
-            <text>评价：</text>
-            <text>{{machineDetail.installFeedbackCustomerMark.empty? '暂无':machineDetail.installFeedbackCustomerMark}}</text>
-        </view>
-        <view class="line_vw">
-            <text>意见/建议： {{machineDetail.installFeedbackCustomerSuggestion.empty? '暂无':machineDetail.installFeedbackCustomerSuggestion}}</text>
-        </view>
-    </view>
-    <view wx:else>
-        <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
-            <view class="line_vw">评价：
-                <view class="line_picker">{{mark[index]}}</view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">调试详情</text>
             </view>
-        </picker>
-        <view class="line_vw">
-            <text>意见/建议：</text>
         </view>
-        <textarea @input="bindSuggestionInput" class="textarea" style="height: 3em" placeholder="输入你的意见/建议"></textarea>
-        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
+        <view class="main_view">
+            <view class="view_row">
+                <text class="label_tx">订单编号：</text>
+                <text class="info_tx">{{machineDetail.orderNum? machineDetail.orderNum:'暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">安装人员：</text>
+                <text class="info_tx">{{machineDetail.installChargePersonName}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">联系电话：</text>
+                <text class="info_tx">{{machineDetail.installChargePersonPhone}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">安装日期：</text>
+                <text class="info_tx">{{machineDetail.installActualTime}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">调试结果：</text>
+                <text class="info_tx">{{machineDetail.installResult}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">调试记录：</text>
+            </view>
+            <view class="view_row" >
+                <text class="info_tx" >电源电压：</text>
+                <text class="info_tx" >A-{{installBasicItemList[0].install_value? installBasicItemList[0].install_value + 'V':'暂无'}}</text>
+                <text class="info_tx" >B-{{installBasicItemList[1].install_value? installBasicItemList[1].install_value + 'V':'暂无'}}</text>
+                <text class="info_tx" >C-{{installBasicItemList[2].install_value? installBasicItemList[2].install_value + 'V':'暂无'}}</text>
+            </view>
+            <view class="view_row" >
+                <text class="info_tx" >单相电压：</text>
+                <text class="info_tx" >{{installBasicItemList[3].install_value? installBasicItemList[3].install_value + 'V':'暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="info_tx" >接地情况：</text>
+                <text class="info_tx" >{{installBasicItemList[4].install_value? installBasicItemList[4].install_value:'暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="info_tx" >机器水平：</text>
+                <text class="info_tx" >{{installBasicItemList[5].install_value? installBasicItemList[5].install_value:'暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="info_tx" >台板支撑：</text>
+                <text class="info_tx" >{{installBasicItemList[6].install_value? installBasicItemList[6].install_value:'暂无'}}</text>
+            </view>
+        </view>
+    </view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <text class="title_tx_half1">调试内容</text>
+            <text class="title_tx_half2">调试状态</text>
+        </view>
+        <view class="main_view">
+            <view class="list_item_row" wx:for="{{installInfoList}}" wx:key="item" >
+                <view class="item_left" >
+                    <text class="content_tx">{{item.install_content}}</text>
+                </view>
+                <view class="item_right">
+                    <text wx:if="{{item.install_value == 1}}" class="info_tx">完成</text>
+                    <text wx:else class="info_tx" >待完成</text>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">客户反馈</text>
+            </view>
+        </view>
+        <view class="main_view" wx:if="{{isExistFeedback}}">
+            <view class="view_row">
+                <text class="label_tx">评价：</text>
+                <text class="info_tx">{{machineDetail.installFeedbackCustomerMark? machineDetail.installFeedbackCustomerMark:'暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">意见/建议：</text>
+                <text class="info_tx">{{machineDetail.installFeedbackCustomerSuggestion? machineDetail.installFeedbackCustomerSuggestion: '暂无'}}</text>
+            </view>
+        </view>
+        <view class="main_view" wx:else>
+            <view class="view_row">
+                <text class="label_tx">评价：</text>
+                <picker class="picker_view" @change="bindPickerChange" value="{{index}}" range="{{mark}}">
+                    <text class="picker_tx">{{mark[index]}}</text>
+                </picker>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">意见/建议：</text>
+                <text class="info_tx" @tap="showSuggestionInput">口口口</text>
+            </view>
+            <modal hidden="{{hiddenSuggestion}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
+                <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
+            </modal>
+            <text class="get_input_tx">{{customerSuggestion}}</text>
+            <button class="single_button" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+        </view>
     </view>
 </template>
 <style lang="less">
-    .line_vw {
-        margin: 20rpx;
+    page {
+        margin-bottom: 120rpx;
+    }
+    .title_tx_half1 {
+        width: 50%;
+        text-align: left;
+        font-family: PingFangSC-Medium;
+        font-size: 30rpx;
+        color: #3B403D;
+        letter-spacing: 0;
+    }
+    .title_tx_half2 {
+        width: 50%;
+        text-align: right;
+        font-family: PingFangSC-Medium;
+        font-size: 30rpx;
+        color: #3B403D;
+        letter-spacing: 0;
+    }
+    .list_item_row {
+        border-bottom: 1px solid #F0F3F5;
+        margin-top: 30rpx;
+        width: 100%;
         display: flex;
-        .line_half_vw {
-            width: 50%;
+        flex-direction: row;
+        align-items: center;
+        .item_left {
+            width: 70%;
+        }
+        .item_right {
+            width: 30%;
         }
     }
-    .line_picker {
-        background: #EEC591;
+    .content_tx {
+        font-family: PingFangSC-Regular;
+        font-size: 30rpx;
+        color: #3B403D;
+        letter-spacing: 0.2rpx;
+        line-height: 48rpx;
     }
-    .textarea {
-        width: 90%;
-        margin-left: 20rpx;
-        background-color: #fff;
-    }
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
-    }
-    .double_btn {
-        margin: 25rpx;
+    .picker_view {
+        width: 160rpx;
+        background: rgba(0,116,116,0.10);
+        border: 1rpx solid #007474;
+        border-radius: 10rpx;
+        text-align: center;
+        margin-left: 30rpx;
+        .picker_tx {
+            font-family: PingFangSC-Regular;
+            color: #007474;
+            letter-spacing: 0;
+        }
     }
 </style>
 <script>
@@ -90,18 +176,29 @@
       data = {
         machineDetail: {},
         isExistFeedback: false,
+        hiddenSuggestion: false,
         installCustomerFeedback: {
           customerMark: '',
           customerSuggestion: ''
         },
         mark: ['非常满意', '满意', '一般', '差评'],
         index: 0,
-        customerSuggestion: ''
+        customerSuggestion: '',
+        installInfoList: [],
+        installBasicItemList: []
       };
       methods = {
         bindPickerChange: function (e) {
           console.log('picker发送选择改变，携带值为 ', e.detail.value)
           this.index = e.detail.value
+        },
+        showSuggestionInput() {
+          this.hiddenSuggestion = false
+          this.$apply()
+        },
+        listenerSuggestion() {
+          this.hiddenSuggestion = true
+          this.$apply()
         },
         bindSuggestionInput: function(e) {
           console.log(e.detail.value)
@@ -149,6 +246,16 @@
         if (this.machineDetail.customerFeedback > 0) {
           this.isExistFeedback = true
         }
+        let tempInfoList = JSON.parse(this.machineDetail.installInfo)
+        for (var i = 0; i < tempInfoList.length; i++) {
+          if (tempInfoList[i].install_lib_name === '基础项') {
+            this.installBasicItemList = this.installBasicItemList.concat(tempInfoList[i])
+          } else {
+            this.installInfoList = this.installInfoList.concat(tempInfoList[i])
+          }
+        }
+        console.log('1111111', this.installInfoList)
+        console.log('1111111', this.installBasicItemList)
         this.$apply()
       };
 

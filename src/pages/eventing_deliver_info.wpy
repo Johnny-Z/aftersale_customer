@@ -53,15 +53,15 @@
             <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
             <view class="view_row">
                 <text class="label_tx">维修人：</text>
-                <text class="label_tx">{{machineDetail.repairChargePersonName}}</text>
+                <text class="info_tx">{{machineDetail.repairChargePersonName}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">电话：</text>
-                <text class="label_tx">{{machineDetail.repairChargePersonPhone}}</text>
+                <text class="info_tx">{{machineDetail.repairChargePersonPhone}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">维修日期：</text>
-                <text class="label_tx">{{machineDetail.repairEndTime}}</text>
+                <text class="info_tx">{{machineDetail.repairEndTime}}</text>
             </view>
         </view>
     </view>
@@ -71,24 +71,31 @@
                 <text class="title_tx">零件回厂信息</text>
             </view>
         </view>
-    <view class="line_vw">
-        <text class="line_half_vw">配件名</text>
-        <text class="line_half_vw">快递单号</text>
+        <view class="main_view">
+            <view class="view_row">
+                <view class="view_row_half">
+                    <text class="label_tx">配件名</text>
+                </view>
+                <view class="view_row_half">
+                    <text class="label_tx">快递单号</text>
+                </view>
+            </view>
+            <view class="view_row" wx:for="{{partList}}" wx:key="item" @tap='bindPartsNum({{index}})'>
+                <view class="view_row_half">
+                    <text class="label_tx">{{item.partsName}}</text>
+                </view>
+                <input class="line_half_input" type="text" @input="bindPartInput" placeholder="输入快递单号..." focus="true"/>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">快递照片：</text>
+                <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
+            </view>
+            <view>
+                <image class="part_deliver_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
+            </view>
+        </view>
     </view>
-    <view class="line_vw" wx:for="{{partList}}" wx:key="item" @tap='bindPartsNum({{index}})'>
-        <text class="line_half_vw">{{item.partsName}}</text>
-        <input class="line_half_input" type="text" @input="bindPartInput" placeholder="输入快递单号..." focus="true"/>
-    </view>
-    <view class="line_vw">
-        <text>快递照片：</text>
-        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
-    </view>
-    <view>
-        <image class="part_deliver_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
-    </view>
-    </view>
-    <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-    <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
+    <button class="single_button" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
 
 </template>
 <style lang="less">

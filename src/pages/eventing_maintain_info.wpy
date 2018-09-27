@@ -1,44 +1,76 @@
 <template>
     <machinedetails :machine.sync="machineDetail"></machinedetails>
-    <view class="title_vw">保养详情</view>
-    <view>{{machineDetail.maintainInfo}}</view>
-    <view>保养项2：</view>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>保养人：</text>
-            <text>{{machineDetail.maintainChargePersonName}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>电话：</text>
-            <text>{{machineDetail.maintainChargePersonPhone}}</text>
-        </view>
-    </view>
-    <view class="line_vw">
-        <text>保养日期：</text>
-        <text>{{machineDetail.maintainDateActual}}</text>
-    </view>
-    <view class="title_vw">客户反馈</view>
-    <view wx:if="{{isExistFeedback}}">
-        <view class="line_vw">
-        <text>评价：</text>
-        <text>{{machineDetail.maintainFeedbackCustomerMark.empty? '暂无':machineDetail.maintainFeedbackCustomerMark}}</text>
-        </view>
-        <view class="line_vw">
-            <text>意见/建议： {{machineDetail.maintainFeedbackCustomerSuggestion.empty? '暂无':machineDetail.maintainFeedbackCustomerSuggestion}}</text>
-        </view>
-    </view>
-    <view wx:else>
-        <picker @change="bindPickerChange" value="{{index}}" range="{{mark}}">
-            <view class="line_vw">评价：
-                <view class="line_picker">{{mark[index]}}</view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">保养详情</text>
             </view>
-        </picker>
-        <view class="line_vw">
-            <text>意见/建议：</text>
         </view>
-        <textarea @input="bindSuggestionInput" class="textarea" style="height: 3em" placeholder="输入你的意见/建议"></textarea>
-        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
+        <view class="main_view">
+            <view class="list_item_row" wx:for="{{maintainInfoList}}" wx:key="item" >
+                <view class="item_left">
+                    <text class="content_tx">{{item.content}}</text>
+                </view>
+                <view class="item_right">
+                    <text wx:if="{{item.checkValue == 1}}" class="info_tx">完成</text>
+                    <text wx:else class="info_tx" >待完成</text>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <text class="title_tx">保养建议</text>
+        </view>
+        <view class="main_view">
+            <text class="get_input_tx">{{machineDetail.maintainSuggestion}}</text>
+            <view class="view_row">
+                <text class="label_tx">保养人：</text>
+                <text class="info_tx">{{machineDetail.maintainChargePersonName}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">电话：</text>
+                <text class="info_tx">{{machineDetail.maintainChargePersonPhone}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">保养日期：</text>
+                <text class="info_tx">{{machineDetail.maintainDateActual}}</text>
+            </view>
+        </view>
+    </view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">客户反馈</text>
+            </view>
+        </view>
+        <view class="main_view" wx:if="{{isExistFeedback}}">
+            <view class="view_row">
+                <text class="label_tx">评价：</text>
+                <text class="info_tx">{{machineDetail.maintainFeedbackCustomerMark? machineDetail.maintainFeedbackCustomerMark:'暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">意见/建议：</text>
+                <text class="info_tx">{{machineDetail.maintainFeedbackCustomerSuggestion? machineDetail.maintainFeedbackCustomerSuggestion: '暂无'}}</text>
+            </view>
+        </view>
+        <view class="main_view" wx:else>
+            <view class="view_row">
+                <text class="label_tx">评价：</text>
+                <picker class="picker_view" @change="bindPickerChange" value="{{index}}" range="{{mark}}">
+                    <text class="picker_tx">{{mark[index]}}</text>
+                </picker>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">意见/建议：</text>
+                <text class="info_tx" @tap="showSuggestionInput">口口口</text>
+            </view>
+            <modal hidden="{{hiddenSuggestion}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
+                <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
+            </modal>
+            <text class="get_input_tx">{{customerSuggestion}}</text>
+            <button class="single_button" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+        </view>
     </view>
 </template>
 <style lang="less">
@@ -75,18 +107,28 @@
       data = {
         machineDetail: {},
         isExistFeedback: false,
+        hiddenSuggestion: false,
         maintainCustomerFeedback: {
           customerMark: '',
           customerSuggestion: ''
         },
         mark: ['非常满意', '满意', '一般', '差评'],
         index: 0,
-        customerSuggestion: ''
+        customerSuggestion: '',
+        maintainInfoList: []
       };
       methods = {
         bindPickerChange: function (e) {
           console.log('picker发送选择改变，携带值为 ', e.detail.value)
           this.index = e.detail.value
+        },
+        showSuggestionInput() {
+          this.hiddenSuggestion = false
+          this.$apply()
+        },
+        listenerSuggestion() {
+          this.hiddenSuggestion = true
+          this.$apply()
         },
         bindSuggestionInput: function(e) {
           console.log(e.detail.value)
@@ -133,6 +175,10 @@
         console.log(this.machineDetail)
         if (this.machineDetail.customerFeedback > 0) {
           this.isExistFeedback = true
+        }
+        let tempInfoList = JSON.parse(this.machineDetail.maintainInfo)
+        for (var i = 0; i < tempInfoList.length; i++) {
+          this.maintainInfoList = this.maintainInfoList.concat(tempInfoList[i].contentList)
         }
         this.$apply()
       };
