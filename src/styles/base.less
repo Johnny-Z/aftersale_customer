@@ -1,8 +1,3 @@
-view {
-  font-size: 30rpx;
-  color: #666;
-}
-
 page {
   background: #F0F3F5;
 }
@@ -44,7 +39,7 @@ radio .wx-radio-input.wx-radio-input-checked::before{
     background: #ffffff;
     box-shadow: 0 2rpx 7rpx 0 rgba(0,0,0,0.10);
     .view_column_left {
-      width: 50%;
+      width: 40%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -55,6 +50,7 @@ radio .wx-radio-input.wx-radio-input-checked::before{
         color: #3B403D;
         font-family: PingFangSC-Medium;
         letter-spacing: 0;
+        white-space: nowrap;// 单行显示
         padding-top: 30rpx;
         padding-bottom: 30rpx;
       }
@@ -62,11 +58,12 @@ radio .wx-radio-input.wx-radio-input-checked::before{
         font-size: 28rpx;
         color: #3B403D;
         font-family: PingFangSC-Regular;
+        white-space: nowrap;// 单行显示
         letter-spacing: 0;
       }
     }
     .view_column_right {
-      width: 50%;
+      width: 60%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -77,6 +74,7 @@ radio .wx-radio-input.wx-radio-input-checked::before{
         color: #858D8D;
         font-family: PingFangSC-Regular;
         letter-spacing: 0;
+        white-space: nowrap;// 单行显示
         padding-top: 32.5rpx;
         padding-bottom: 32.5rpx;
       }
@@ -122,15 +120,21 @@ radio .wx-radio-input.wx-radio-input-checked::before{
     display: flex;
     flex-direction: row;
     padding-bottom: 20rpx;
+    align-items: center;// 居中对齐
     .title_view_fir_part {
       display: flex;
       flex-direction: row;
+      align-items: center;// 居中对齐
       width: 80%;
     }
     .title_view_sec_part {
       width: 20%;
       text-align: right;
     }
+  }
+  .arrow_icon {
+    width: 18rpx;
+    height: 11rpx;
   }
   .title_tx {
     font-family: PingFangSC-Medium;
@@ -143,6 +147,16 @@ radio .wx-radio-input.wx-radio-input-checked::before{
     flex-direction: column;
     border-top: 1px solid #F0F3F5;
     padding-bottom: 30rpx;
+  }
+  .detail_icon {
+    width: 32rpx;
+    height: 34rpx;
+    margin-right: 12rpx;
+  }
+  .edit_icon {
+    width: 32rpx;
+    height: 34rpx;
+    margin-left: 12rpx;
   }
 }
 .view_row {
@@ -202,7 +216,25 @@ radio .wx-radio-input.wx-radio-input-checked::before{
   line-height: 48rpx;
   padding-top: 30rpx;
 }
-
+.photo_image {
+  margin-right: 20rpx;
+  margin-top: 20rpx;
+  width: 160rpx;
+  height: 160rpx;
+}
+.picker_view {
+  width: 160rpx;
+  background: rgba(0,116,116,0.10);
+  border: 1rpx solid #007474;
+  border-radius: 10rpx;
+  text-align: center;
+  margin-left: 30rpx;
+  .picker_tx {
+    font-family: PingFangSC-Regular;
+    color: #007474;
+    letter-spacing: 0;
+  }
+}
 .container {
   position: relative;
   background: #ffffff;
@@ -333,19 +365,4 @@ radio .wx-radio-input.wx-radio-input-checked::before{
 .type_empity {
   color: #333;
   border: 1px solid #cccccc;
-}
-
-.button {
-  font-size: 36rpx;
-  height: 95rpx;
-  line-height: 95rpx;
-  text-align: center;
-  margin: 0 auto;
-  width: 100%;
-  -moz-border-radius: 10rpx;
-  /* Firefox */
-  -webkit-border-radius: 10rpx;
-  /* Safari 和 Chrome */
-  border-radius: 10rpx;
-  /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
 }

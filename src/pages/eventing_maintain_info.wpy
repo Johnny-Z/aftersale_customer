@@ -63,17 +63,16 @@
             </view>
             <view class="view_row">
                 <text class="label_tx">意见/建议：</text>
-                <text class="info_tx" @tap="showSuggestionInput">口口口</text>
             </view>
-            <modal hidden="{{hiddenSuggestion}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
-                <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
-            </modal>
-            <text class="get_input_tx">{{customerSuggestion}}</text>
-            <button class="single_button" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+            <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
+            <button class="single_button" @tap="bindUploadFeedback">提交</button>
         </view>
     </view>
 </template>
 <style lang="less">
+    page {
+        margin-bottom: 120rpx;
+    }
     .title_vw {
         padding: 15rpx;
         font-size: large;
