@@ -3,14 +3,27 @@
   .search_view {
     background: #FFFFFF;
     width: 100%;
-    height: 116rpx;
-    .search_read_only {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #F0F3F5;
+    .search_input {
       background: #F0F3F5;
       border-radius: 100rpx;
-      align-items: center;
+      margin-left: 30rpx;
+      margin-right: 30rpx;
+      margin-top: 24rpx;
+      margin-bottom: 24rpx;
+      width: 100%;
+      height: 66rpx;
       display: flex;
       flex-direction: row;
+      align-items: center;
       .search_icon {
+        width: 29rpx;
+        height: 29rpx;
+        margin-left: 30rpx;
+        margin-right: 15rpx;
       }
       .search_tx {
         font-family: PingFangSC-Regular;
@@ -24,9 +37,9 @@
 </style>
 <template>
   <view class="search_view">
-    <view class="search_read_only" @tap="searchClick">
-        <icon class="search_icon" size='20' type='search'></icon>
-        <text class="search_tx">搜索机器编号/机器报修</text>
+    <view class="search_input" @tap="searchClick">
+      <image class="search_icon" src="../images/icon_search.png"></image>
+      <text class="search_tx">输入机器编号</text>
     </view>
   </view>
   <view class="list_column">
@@ -37,12 +50,13 @@
       </view>
       <view class="view_column_right">
         <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
-        <button wx:if="{{item.status == 1}}" class="status_btn_short">初始化</button>
-        <button wx:elif="{{item.status == 2}}" class="status_btn_short">待安装</button>
-        <button wx:elif="{{item.status == 3}}" class="status_btn_short">正常</button>
-        <button wx:elif="{{item.status == 4}}" class="status_btn_short">待保养</button>
-        <button wx:elif="{{item.status == 5}}" class="status_btn_short">待修理</button>
-        <button wx:else class="status_btn_short">待审核</button>
+        <button wx:if="{{item.status == 1}}" class="status_btn_color">初始化</button>
+        <button wx:elif="{{item.status == 2}}" class="status_btn_color">安装中</button>
+        <button wx:elif="{{item.status == 3}}" class="status_btn_light">正常</button>
+        <button wx:elif="{{item.status == 4}}" class="status_btn_color">保养中</button>
+        <button wx:elif="{{item.status == 5}}" class="status_btn_color">修理中</button>
+        <button wx:elif="{{item.status == 6}}" class="status_btn_color">审核中</button>
+        <button wx:else class="status_btn_color">{{item.status}}</button>
       </view>
     </view>
   </view>

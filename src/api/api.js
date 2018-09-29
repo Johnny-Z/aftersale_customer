@@ -1,4 +1,5 @@
 import {
+  wxLogin,
   wxRequest,
   wxUploadFile
 } from '@/utils/wxRequest'
@@ -7,8 +8,8 @@ const apiMall = 'https://eservice-tech.cn'
 // const apiMall = 'http://localhost:8080/'
 // const apiMall = 'http://192.168.43.223:8080'
 const login = (params) => wxRequest(params, apiMall + '/api/login')
-const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
-
+const autoLogin = (params) => wxRequest(params, apiMall + '/api/user/getUsersByJsCode')
+const wxJsCode2Session = (params) => wxLogin(params, apiMall + '/api/user/loginGetUnionIdAndSave')
 const getUserDetail = (params) => wxRequest(params, apiMall + '/api/user/detail')
 const getCustomerListByCompany = (params) => wxRequest(params, apiMall + '/api/user/getUsersByType')
 const getMachineList = (params) => wxRequest(params, apiMall + '/api/machine/list')
@@ -29,6 +30,7 @@ const uploadPartsInfoFiles = (params) => wxUploadFile(params, apiMall + '/api/pa
 
 export default {
   login,
+  autoLogin,
   wxJsCode2Session,
   getUserDetail,
   getCustomerListByCompany,

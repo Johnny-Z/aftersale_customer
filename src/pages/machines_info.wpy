@@ -125,8 +125,7 @@
       };
       methods = {
         installRecordClick(e) {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
-          console.log(e)
+          console.log('install list click: ', e)
           let installRecord = JSON.stringify(e)
           console.log(installRecord)
           wepy.navigateTo({
@@ -134,16 +133,14 @@
           })
         },
         maintainRecordClick(e) {
-          console.log('eeeeeeeeeeeeeeeee')
-          console.log(e)
+          console.log('maintain list click: ', e)
           let maintainRecord = JSON.stringify(e)
           wepy.navigateTo({
             url: '/pages/eventing_maintain_info?machineDetail=' + maintainRecord
           })
         },
         repairRecordClick(e) {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
-          console.log(e)
+          console.log('repair list click: ', e)
           let repairRecord = JSON.stringify(e)
           wepy.navigateTo({
             url: '/pages/eventing_repair_info?machineDetail=' + repairRecord
@@ -160,8 +157,7 @@
       events = {};
 
       onLoad(options) {
-        console.log('machines_info,onLoad: ')
-        console.log(options)
+        console.log('machines_info,onLoad: ', options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
         this.getInstallRecordList(this.machineDetail.nameplate)
@@ -173,8 +169,7 @@
         const installRecordListJson = await api.getInstallRecordList({
           query: {nameplate: nameplate}
         })
-        console.log('installRecordListJson:')
-        console.log(installRecordListJson)
+        console.log('installRecordListJson:', installRecordListJson)
         console.log(installRecordListJson.data.data.list)
         this.installRecordList = installRecordListJson.data.data.list
 
@@ -185,8 +180,7 @@
         const maintainRecordListJson = await api.getMaintainRecordList({
           query: {nameplate: nameplate}
         })
-        console.log('maintainRecordListJson:')
-        console.log(maintainRecordListJson)
+        console.log('maintainRecordListJson:', maintainRecordListJson)
         console.log(maintainRecordListJson.data.data.list)
         this.maintainRecordList = maintainRecordListJson.data.data.list
 
@@ -197,8 +191,7 @@
         const repairRecordListJson = await api.getRepairRecordList({
           query: {nameplate: nameplate}
         })
-        console.log('repairRecordListJson:')
-        console.log(repairRecordListJson)
+        console.log('repairRecordListJson:', repairRecordListJson)
         console.log(repairRecordListJson.data.data.list)
         this.repairRecordList = repairRecordListJson.data.data.list
 

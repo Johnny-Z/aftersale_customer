@@ -148,6 +148,7 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
 
     export default class EventingDeliverInfo extends wepy.page {
       config = {
@@ -255,25 +256,10 @@
             console.log(partsInfoFeedbackJson.data.code)
             if (partsInfoFeedbackJson.statusCode === 200) {
               if (i == (this.partList.length - 1)) {
-                wx.showModal({
-                  title: '上传信息成功！',
-                  content: '快递信息上传成功！',
-                  showCancel: false,
-                  confirmColor: '#007aff',
-                  success: function () {
-                    wepy.navigateBack()
-                  }
-                })
+                tip.confirm('快递信息上传成功！返回上一页！', 'BACK')
               }
             } else {
-              wx.showModal({
-                title: '上传出错，请重新上传！',
-                content: '网络错误',
-                showCancel: false,
-                confirmColor: '#007aff',
-                success: function () {
-                }
-              })
+              tip.confirm('出错！网络错误！')
               break
             }
           }
@@ -303,15 +289,7 @@
         })
         console.log(partsInfoJson)
         if (partsInfoJson.data.code !== 200) {
-          wx.showModal({
-            title: '获取信息失败！',
-            content: '网络错误，请检查网络',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-              wepy.navigateBack()
-            }
-          })
+          tip.confirm('获取信息出错，请检查网络！', 'BACK', '网络错误')
         } else {
           this.partList = partsInfoJson.data.data.list
         }

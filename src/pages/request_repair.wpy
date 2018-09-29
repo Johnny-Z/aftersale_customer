@@ -131,6 +131,7 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
     import {
         USER_ID
     } from '@/utils/constant'
@@ -317,13 +318,7 @@
             this.addRepairVoiceSrc(repairRequestInfoJson)
           }
         } else {
-          wepy.showModal({
-            title: '上传出错，请重新上传！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function() {}
-          })
+          tip.confirm('网络错误！提交出错，请重新提交！')
         }
       }
       async addRepairNameplateSrc(repairRequestInfoJson) {
@@ -345,14 +340,7 @@
           console.log('return结果： ', repairRequestInfoJson)
           this.addRepairVoiceSrc(repairRequestInfoJson)
         } else {
-          wepy.showModal({
-            title: '上传出错，请重新上传！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-            }
-          })
+          tip.confirm('网络错误！提交出错，请重新提交！')
         }
       }
       async addRepairVoiceSrc(repairRequestInfoJson) {
@@ -374,14 +362,7 @@
           console.log('return结果： ', repairRequestInfoJson)
           this.addRepairImageSrc(repairRequestInfoJson, this.count)
         } else {
-          wepy.showModal({
-            title: '上传出错，请重新上传！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-            }
-          })
+          tip.confirm('网络错误！提交出错，请重新提交！')
         }
       }
       async addRepairImageSrc(repairRequestInfoJson, count) {
@@ -401,15 +382,7 @@
         if (returnImageSrcData.code === 200) {
           console.log('count的值： ', count)
           if (count >= this.previewImageArr.length - 1) {
-            wx.showModal({
-              title: '上传成功！',
-              content: '报修成功！',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+            tip.confirm('报修成功！返回上一页！', 'BACK')
           } else {
             count++
             repairRequestInfoJson = JSON.stringify(returnImageSrcData.data)
@@ -417,14 +390,7 @@
             this.addRepairImageSrc(repairRequestInfoJson, count)
           }
         } else {
-          wepy.showModal({
-            title: '上传出错，请重新上传！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-            }
-          })
+          tip.confirm('网络错误！提交出错，请重新提交！')
         }
       }
 
@@ -457,16 +423,7 @@
         })
         console.log(getCustomerCompanyJson)
         if (getCustomerCompanyJson.data.code !== 200) {
-          wx.showModal({
-            title: '获取联系人列表出错！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function (res) {
-              console.log('用户点击确定', res)
-              wepy.navigateBack()
-            }
-          })
+          tip.confirm('网络错误！获取联系人信息出错！', 'BACK')
         } else {
             // 根据用户id和公司id获取联系人信息
           let getCustomerListJson = await api.getCustomerListByCompany({
@@ -477,15 +434,7 @@
           })
           console.log(getCustomerListJson)
           if (getCustomerListJson.data.code !== 200 || getCustomerListJson.data.data.list.length < 1) {
-            wx.showModal({
-              title: '获取联系人列表出错！',
-              content: '网络错误，请检查网络',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+            tip.confirm('网络错误！获取联系人信息出错！', 'BACK')
           } else {
             this.customerList = getCustomerListJson.data.data.list
             for (var i = 0; i < this.customerList.length; i++) {

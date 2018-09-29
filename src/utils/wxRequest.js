@@ -13,6 +13,20 @@ const TIMESTAMP = util.getCurrentTime()
 const SIGN = md5.hex_md5((TIMESTAMP).toLowerCase())
 const TOKEN_AUTHORIZATION = wepy.getStorageSync(AUTHORIZATION)
 
+const wxLogin = async(params = {}, url) => {
+  tip.loading()
+  let data = params.query || {}
+  data.sign = SIGN
+  data.time = TIMESTAMP
+  let res = await wepy.request({
+    url: url,
+    method: params.method || 'POST',
+    data: data,
+    header: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
+  tip.loaded()
+  return res
+}
 const wxRequest = async(params = {}, url) => {
   tip.loading()
   let data = params.query || {}
@@ -27,7 +41,7 @@ const wxRequest = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
+    tip.confirm('JWT错误', 'TOP')
   } else {
     return res
   }
@@ -46,7 +60,7 @@ const wxRequestRaw = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
+    tip.confirm('JWT错误', 'TOP')
   } else {
     return res
   }
@@ -66,13 +80,14 @@ const wxUploadFile = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
+    tip.confirm('JWT错误', 'TOP')
   } else {
     return res
   }
 }
 
 module.exports = {
+  wxLogin,
   wxRequest,
   wxRequestRaw,
   wxUploadFile

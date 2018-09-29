@@ -102,7 +102,7 @@
             <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
         </view>
     </view>
-    <button class="single_button" @tap="bindUploadFeedback" >提交</button>
+    <button wx:if="{{!isExistFeedback}}" class="single_button" @tap="bindUploadFeedback" >提交</button>
 </template>
 <style lang="less">
     page {
