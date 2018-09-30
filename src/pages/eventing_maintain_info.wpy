@@ -3,6 +3,7 @@
     <view class="detail_view_column">
         <view class="title_view">
             <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_maintain.png"></image>
                 <text class="title_tx">保养详情</text>
             </view>
         </view>
@@ -13,7 +14,7 @@
                 </view>
                 <view class="item_right">
                     <text wx:if="{{item.checkValue == 1}}" class="info_tx">完成</text>
-                    <text wx:else class="info_tx" >待完成</text>
+                    <text wx:else class="info_tx" >未完成</text>
                 </view>
             </view>
         </view>
@@ -41,6 +42,7 @@
     <view class="detail_view_column">
         <view class="title_view">
             <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_suggestion.png"></image>
                 <text class="title_tx">客户反馈</text>
             </view>
         </view>
@@ -65,30 +67,13 @@
                 <text class="label_tx">意见/建议：</text>
             </view>
             <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
-            <button class="single_button" @tap="bindUploadFeedback">提交</button>
         </view>
     </view>
+    <button wx:if="{{!isExistFeedback}}" class="single_button" @tap="bindUploadFeedback">提交</button>
 </template>
 <style lang="less">
     page {
         margin-bottom: 120rpx;
-    }
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
-    }
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        .line_half_vw {
-            width: 50%;
-        }
-    }
-    .double_btn {
-        margin: 25rpx;
     }
 </style>
 <script>
@@ -106,7 +91,6 @@
       data = {
         machineDetail: {},
         isExistFeedback: false,
-        hiddenSuggestion: false,
         maintainCustomerFeedback: {
           customerMark: '',
           customerSuggestion: ''
@@ -120,14 +104,6 @@
         bindPickerChange: function (e) {
           console.log('picker发送选择改变，携带值为 ', e.detail.value)
           this.index = e.detail.value
-        },
-        showSuggestionInput() {
-          this.hiddenSuggestion = false
-          this.$apply()
-        },
-        listenerSuggestion() {
-          this.hiddenSuggestion = true
-          this.$apply()
         },
         bindSuggestionInput: function(e) {
           console.log(e.detail.value)
@@ -160,9 +136,6 @@
               duration: 2000
             })
           }
-        },
-        bindNavigateBack() {
-          wepy.navigateBack()
         }
       };
 

@@ -1,129 +1,136 @@
 <template>
-    <view class="title_vw">机器信息</view>
-    <view wx:if="{{isOldMachine}}">
-        <view class="line_vw">
-            <text>机器编号：</text>
-            <input class="nameplate_in" placeholder="请输入机器编号" @input="bindNameplateInput"/>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_machine.png"></image>
+                <text class="title_tx">机器信息</text>
+            </view>
         </view>
-        <view class="line_vw">
-            <text>铭牌照片：</text>
-            <button class="single_btn" @tap="previewNameplateImage" size="mini" type="primary">点击拍照/选图</button>
+        <view wx:if="{{isOldMachine}}" class="main_view">
+            <view class="view_row">
+                <text class="label_tx">机器编号：</text>
+                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showNameplateInput"></image>
+            </view>
+            <modal hidden="{{hiddenNameplate}}" title="机器铭牌号" confirm-text="确定" no-cancel="true" @confirm="listenerNameplate" >
+                <textarea @input="bindNameplateInput" class="textareaInput" placeholder="请输入机器铭牌号"></textarea>
+            </modal>
+            <text class="get_input_tx">{{oldNameplateInput}}</text>
+            <view class="view_row">
+                <text class="label_tx">铭牌照片：</text>
+            </view>
+            <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewNameplateImage"></image>
+            <image class="photo_image" mode="aspectFill" wx:for="{{nameplateImage}}" @tap="changeNameplatePreview" data-src="{{item}}" src="{{item}}"></image>
         </view>
-        <view>
-            <image class="nameplate_image" mode="aspectFill" wx:for="{{nameplateImage}}" @tap="changeNameplatePreview" data-src="{{item}}" src="{{item}}"></image>
+        <view wx:else class="main_view">
+            <view class="view_row">
+                <text class="label_tx">机器编号：</text>
+                <text class="info_tx">{{machineDetail.nameplate? machineDetail.nameplate:'暂无'}}</text>
+            </view>
+            <view class="view_row" >
+                <view class="view_row_half">
+                    <text class="label_tx">机型：</text>
+                    <text class="info_tx">{{machineDetail.machineType? machineDetail.machineType:'暂无'}}</text>
+                </view>
+                <view class="view_row_half">
+                    <text class="label_tx">针数：</text>
+                    <text class="info_tx">{{machineDetail.needleNum? machineDetail.needleNum:'暂无'}}</text>
+                </view>
+            </view>
+            <view class="view_row">
+                <view class="view_row_half">
+                    <text class="label_tx">头数：</text>
+                    <text class="info_tx">{{machineDetail.headNum? machineDetail.headNum:'暂无'}}</text>
+                </view>
+                <view class="view_row_half">
+                    <text class="label_tx">头距：</text>
+                    <text class="info_tx">{{machineDetail.headDistance? machineDetail.headDistance:'暂无'}}</text>
+                </view>
+            </view>
+            <view class="view_row" >
+                <view class="view_row_half">
+                    <text class="label_tx">x行距：</text>
+                    <text class="info_tx">{{machineDetail.xDistance? machineDetail.xDistance:'暂无'}}</text>
+                </view>
+                <view class="view_row_half">
+                    <text class="label_tx">y行距：</text>
+                    <text class="info_tx">{{machineDetail.yDistance? machineDetail.yDistance:'暂无'}}</text>
+                </view>
+            </view>
         </view>
     </view>
-    <view wx:else class="mathine_details">
-        <view class="line_vw">
-            <text>机器编号：</text>
-            <text class="nameplate_tx">{{machineDetail.nameplate.empty? '暂无':machineDetail.nameplate}}</text>
-        </view>
-        <view class="line_vw" >
-            <view class="line_half_vw">
-                <text>机型：</text>
-                <text class="machine_type_tx">{{machineDetail.machineType.empty? '暂无':machineDetail.machineType}}</text>
-            </view>
-            <view class="line_half_vw">
-                <text>针数：</text>
-                <text class="needle_num_tx">{{machineDetail.needleNum.empty? '暂无':machineDetail.needleNum}}</text>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">语音描述</text>
             </view>
         </view>
-        <view class="line_vw">
-            <view class="line_half_vw">
-                <text>头数：</text>
-                <text class="head_num_tx">{{machineDetail.headNum.empty? '暂无':machineDetail.headNum}}</text>
-            </view>
-            <view class="line_half_vw">
-                <text>头距：</text>
-                <text class="head_distance_tx">{{machineDetail.headDistance.empty? '暂无':machineDetail.headDistance}}</text>
+        <view class="main_view">
+            <view class="view_row">
+                <view class="label_tx">语音：</view>
+                <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
             </view>
         </view>
-        <view class="line_vw" >
-            <view class="line_half_vw">
-                <text>x行距：</text>
-                <text class="x_distance_tx">{{machineDetail.xDistance.empty? '暂无':machineDetail.xDistance}}</text>
-            </view>
-            <view class="line_half_vw">
-                <text>y行距：</text>
-                <text class="y_distance_tx">{{machineDetail.yDistance.empty? '暂无':machineDetail.yDistance}}</text>
-            </view>
-        </view>
-    </view>
-    <view class="title_vw">故障内容</view>
-    <view class="line_vw">文字描述：
-        <input class="nameplate_in" placeholder="故障概述" @input="bindTitleInput"/>
-    </view>
-    <textarea class="pre_machine_error_in" style="height: 3em" placeholder="请输入机器故障详情" @input="bindContentInput"/>
-    <view class="line_vw">
-      <view>语音描述：</view>
-      <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
     </view>
     <button wx:if="{{hasRecorded}}" class="single_big_btn" disabled="{{isPlaying}}" loading="{{isPlaying}}" @tap="playRecord">播放语音</button>
-    <view class="line_vw">
-        <text>故障照片：</text>
-        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
-    </view>
-    <view>
-        <image class="machine_error_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
-    </view>
-    <view class="title_vw">联系方式</view>
-    <picker @change="bindPickerChange" value="{{index}}" range="{{customerListArr}}">
-        <view class="line_vw">联系人：
-            <view class="line_picker">{{customerListArr[index]}}</view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">图文描述</text>
+            </view>
         </view>
-    </picker>
-    <view class="line_vw">
-        <text>电话：</text>
-        <text>{{customerList[index].phone}}</text>
+        <view class="main_view">
+            <view class="view_row">
+                <text class="label_tx">问题概述：</text>
+                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showTitleInput"></image>
+            </view>
+            <modal hidden="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" >
+                <textarea @input="bindTitleInput" class="textareaInput" placeholder="请在此输入问题概述（不能为空）"></textarea>
+            </modal>
+            <text class="get_input_tx">{{repairRequestInfo.repairTitle}}</text>
+            <view class="view_row">
+                <text class="label_tx">具体描述：</text>
+                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showContentInput"></image>
+            </view>
+            <modal hidden="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" >
+                <textarea @input="bindContentInput" class="textareaInput" placeholder="请在此输入详细情况（不能为空）"></textarea>
+            </modal>
+            <text class="get_input_tx">{{repairRequestInfo.content}}</text>
+            <view class="view_row">
+                <text class="label_tx">故障照片：</text>
+            </view>
+            <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
+            <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+        </view>
     </view>
-    <view class="line_vw">
-        <text>地址：</text>
-        <text>{{customerList[index].address}}</text>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <text class="title_tx">联系方式</text>
+            </view>
+        </view>
+        <view class="main_view">
+            <view class="view_row">
+                <text class="label_tx">联系人：</text>
+                <picker class="picker_view" @change="bindPickerChange" value="{{index}}" range="{{customerListArr}}">
+                    <text class="picker_tx">{{customerListArr[index]}}</text>
+                </picker>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">电话：</text>
+                <text class="info_tx">{{customerList[index].phone? customerList[index].phone: '暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">地址：</text>
+                <text class="info_tx">{{customerList[index].address? customerList[index].address: '暂无'}}</text>
+            </view>
+        </view>
     </view>
-    <button class="single_btn" size="mini" type="primary" @tap="uploadMachineInfo">提交</button>
+    <button class="single_button" @tap="uploadMachineInfo">提交</button>
 </template>
 <style lang="less">
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
+    page {
+        margin-bottom: 120rpx;
     }
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        align-items: center;
-        .nameplate_in {
-            border-bottom: 1px solid #000000;
-        }
-    }
-    .pre_machine_error_in {
-        background: #ffffff;
-        width: 90%;
-        margin-left: 20rpx;
-    }
-    .single_btn {
-        margin-left: 25rpx;
-        width: 50%;
-    }
-    .single_big_btn {
-        margin-left: 25rpx;
-        margin-right: 25rpx;
-    }
-    .nameplate_image {
-        margin-left: 2.5%;
-        width: 30%;
-        height: 200rpx;
-    }
-    .machine_error_image {
-        margin-left: 2.5%;
-        width: 30%;
-        height: 200rpx;
-    }
-    .line_picker {
-         background: #EEC591;
-     }
 </style>
 <script>
     /* eslint-disable no-undef,eqeqeq */
@@ -144,6 +151,9 @@
         machinedetails: MachineDetails
       }
       data = {
+        hiddenNameplate: true,
+        hiddenTitle: true,
+        hiddenContent: true,
         machineDetail: {},
         customerList: [],
         customerListArr: [],
@@ -176,6 +186,14 @@
         }
       };
       methods = {
+        showNameplateInput() {
+          this.hiddenNameplate = false
+          this.$apply()
+        },
+        listenerNameplate() {
+          this.hiddenNameplate = true
+          this.$apply()
+        },
         bindNameplateInput(e) {
           console.log(e.detail.value)
           this.oldNameplateInput = e.detail.value
@@ -197,9 +215,25 @@
             urls: self.data.nameplateImage
           })
         },
+        showTitleInput() {
+          this.hiddenTitle = false
+          this.$apply()
+        },
+        listenerTitle() {
+          this.hiddenTitle = true
+          this.$apply()
+        },
         bindTitleInput(e) {
           console.log(e.detail.value)
           this.repairRequestInfo.repairTitle = e.detail.value
+        },
+        showContentInput() {
+          this.hiddenContent = false
+          this.$apply()
+        },
+        listenerContent() {
+          this.hiddenContent = true
+          this.$apply()
         },
         bindContentInput(e) {
           console.log(e.detail.value)
@@ -382,7 +416,7 @@
         if (returnImageSrcData.code === 200) {
           console.log('count的值： ', count)
           if (count >= this.previewImageArr.length - 1) {
-            tip.confirm('报修成功！返回上一页！', 'BACK')
+            tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK')
           } else {
             count++
             repairRequestInfoJson = JSON.stringify(returnImageSrcData.data)
@@ -434,7 +468,7 @@
           })
           console.log(getCustomerListJson)
           if (getCustomerListJson.data.code !== 200 || getCustomerListJson.data.data.list.length < 1) {
-            tip.confirm('网络错误！获取联系人信息出错！', 'BACK')
+            tip.confirm('网络错误！获取联系人信息出错！')
           } else {
             this.customerList = getCustomerListJson.data.data.list
             for (var i = 0; i < this.customerList.length; i++) {

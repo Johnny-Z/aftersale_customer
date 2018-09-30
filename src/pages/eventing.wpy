@@ -1,5 +1,18 @@
 <!--积分规则-->
 <style lang="less">
+  .status_btn_long {
+    background: #007474;
+    box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
+    border-radius: 10rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 28rpx;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: center;
+    margin-right: 0rpx;
+    width: 240rpx;
+    height: 70rpx;
+  }
 </style>
 <template>
   <view class="list_column">

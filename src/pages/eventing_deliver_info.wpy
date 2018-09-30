@@ -1,36 +1,40 @@
 <template>
-  <machinedetails :machine.sync="machineDetail"></machinedetails>
-  <view class="detail_view_column">
-    <view class="title_view">
-      <view class="title_view_fir_part">
-        <text class="title_tx">报修信息</text>
-      </view>
-      <view class="title_view_sec_part" @tap="bindIsShowRepair">
-        <text class="title_tx">V</text>
-      </view>
-    </view>
-    <view wx:if="{{isShowRepair}}" class="main_view">
-      <view class="view_row">
-        <text class="label_tx">标题：</text>
-        <text class="info_tx">{{machineDetail.repairRequestTitle}}</text>
-      </view>
-      <view class="view_row">
-        <text class="label_tx">描述：</text>
-        <text class="info_tx">{{machineDetail.repairRequestContent}}</text>
-      </view>
-      <view class="view_row">
-        <text class="label_tx">语音：</text>
-        <button class="info_tx" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
-      </view>
-      <view class="view_row">
-        <text class="label_tx">照片：</text>
-      </view>
-      <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-    </view>
-  </view>
+    <machinedetails :machine.sync="machineDetail"></machinedetails>
     <view class="detail_view_column">
         <view class="title_view">
             <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_request.png"></image>
+                <text class="title_tx">报修信息</text>
+            </view>
+            <view class="title_view_sec_part" @tap="bindIsShowRepair">
+                <image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
+                <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
+            </view>
+        </view>
+        <view wx:if="{{isShowRepair}}" class="main_view">
+            <view class="view_row">
+                <text class="label_tx">标题：</text>
+                <text class="info_tx">{{machineDetail.repairRequestTitle}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">描述：</text>
+                <text class="info_tx">{{machineDetail.repairRequestContent}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">语音：</text>
+                <button wx:if='{{isSpeaking}}' class="playing_btn" size="mini" loading="true">播放中...</button>
+                <button wx:else class="player_btn" size="mini" @tap="voicePlay">点击播放</button>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">照片：</text>
+            </view>
+            <image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairPreview" data-src="{{item}}" src="{{item}}"></image>
+        </view>
+    </view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_repair.png"></image>
                 <text class="title_tx">维修详情</text>
             </view>
         </view>
@@ -38,7 +42,7 @@
             <view class="view_row">
                 <text class="label_tx">故障部位：</text>
                 <text class="info_tx">{{machineDetail.maintainInfo}}</text>
-             </view>
+            </view>
             <view class="view_row">
                 <text class="label_tx">问题描述：</text>
                 <text class="info_tx">{{machineDetail.repairActualIssueDescription}}</text>
@@ -50,7 +54,7 @@
             <view class="view_row">
                 <text class="label_tx">照片：</text>
             </view>
-            <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
+            <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
             <view class="view_row">
                 <text class="label_tx">维修人：</text>
                 <text class="info_tx">{{machineDetail.repairChargePersonName}}</text>
@@ -84,62 +88,35 @@
                 <view class="view_row_half">
                     <text class="label_tx">{{item.partsName}}</text>
                 </view>
-                <input class="line_half_input" type="text" @input="bindPartInput" placeholder="输入快递单号..." focus="true"/>
+                <input class="view_row_half" type="text" @input="bindPartInput" placeholder="输入快递单号..." focus="true"/>
             </view>
             <view class="view_row">
                 <text class="label_tx">快递照片：</text>
-                <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
             </view>
-            <view>
-                <image class="part_deliver_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
-            </view>
+            <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
+            <image class="photo_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
         </view>
     </view>
-    <button class="single_button" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+    <button class="single_button" @tap="bindUploadFeedback">提交</button>
 
 </template>
 <style lang="less">
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
+    page {
+        margin-bottom: 120rpx;
     }
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        .line_half_vw {
-            width: 50%;
-            height: 60%
-        }
-        .line_half_input {
-            width: 50%;
-            height: 60%;
-            background-color: #efefef;
-        }
+    .player_btn {
+        width: 300rpx;
+        background: #007474;
+        color: #ffffff;
+        border-radius: 100rpx;
+        margin-left: 15rpx;
     }
-    .single_btn {
-        margin-left: 25rpx;
-        width: 50%;
-    }
-    .double_btn {
-        margin: 25rpx;
-    }
-    .pre_repair_image {
-        margin-left: 2.5%;
-        width: 30%;
-        height: 200rpx;
-    }
-    .repair_image {
-        margin-left: 2.5%;
-        width: 30%;
-        height: 200rpx;
-    }
-    .part_deliver_image {
-        margin-left: 2.5%;
-        width: 30%;
-        height: 200rpx;
+    .playing_btn {
+        width: 300rpx;
+        background: #007474;
+        color: #ffffff;
+        border-radius: 100rpx;
+        margin-left: 15rpx;
     }
 </style>
 <script>
@@ -232,14 +209,14 @@
           this.partList[this.partIndex].sendbackTrackingNumber = e.detail.value
           console.log(this.partList)
         },
-        async previewImage() {
+        async bindPreviewImage() {
           let res = await wepy.chooseImage({count: 1})
           if (res.errMsg === 'chooseImage:ok') {
             this.partsImageArr = res.tempFilePaths
             this.$apply()
           }
         },
-        bindUploadFeedback: async function () {
+        async bindUploadFeedback() {
           for (var i = 0; i < this.partList.length; i++) {
             let strPartsInfo = JSON.stringify(this.partList[i])
             const partsInfoFeedbackJson = await api.uploadPartsInfoFiles({

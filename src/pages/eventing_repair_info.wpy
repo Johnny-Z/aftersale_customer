@@ -238,9 +238,6 @@
               duration: 2000
             })
           }
-        },
-        bindNavigateBack() {
-          wepy.navigateBack()
         }
       };
 

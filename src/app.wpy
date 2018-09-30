@@ -18,8 +18,7 @@ export default class extends wepy.app {
       'pages/machines',
       'pages/machines_info',
       'pages/request_repair',
-      'pages/search',
-      'pages/index'
+      'pages/search'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -37,13 +36,18 @@ export default class extends wepy.app {
       list: [{
         pagePath: 'pages/eventing',
         text: '事件',
-        iconPath: 'images/icon_eventing.png',
-        selectedIconPath: 'images/icon_eventing_active.png'
+        iconPath: 'images/tab_btn_home_normal.png',
+        selectedIconPath: 'images/tab_btn_home_selected.png'
       }, {
         pagePath: 'pages/machines',
         text: '机器',
-        iconPath: 'images/icon_machine_list.png',
-        selectedIconPath: 'images/icon_machine_list_active.png'
+        iconPath: 'images/tab_btn_machine_normal.png',
+        selectedIconPath: 'images/tab_btn_machine_selected.png'
+      }, {
+        pagePath: 'pages/machines',
+        text: '我的',
+        iconPath: 'images/tab_btn_mine_normal.png',
+        selectedIconPath: 'images/tab_btn_mine_selected.png'
       }]
     }
   }

@@ -98,7 +98,7 @@
       navigationBarTitleText: '授权登录'
     }
     data = {
-      account: 'liuke',
+      account: '李客',
       password: 'sinsim',
       jcCode: ''
     }
@@ -161,7 +161,7 @@
             console.log('get session resoult: ', rlt)
             wx.setStorageSync(AUTHORIZATION, 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJ6aGFvcHVcIixcImFjY291bnROb25FeHBpcmVkXCI6dHJ1ZSxcImFjY291bnROb25Mb2NrZWRcIjp0cnVlLFwiYWRkcmVzc1wiOlwiXCIsXCJhZ2VudFwiOjAsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzIxMzQ0MjkwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiY3VzdG9tZXJDb21wYW55XCI6XCIxXCIsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6OCxcIm5hbWVcIjpcInpoYW9wdVwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzMTg4ODg4ODg4XCIsXCJyb2xlSWRcIjozLFwidXNlcm5hbWVcIjpcInpoYW9wdVwiLFwidmFsaWRcIjpcIjFcIn0iLCJleHAiOjE1NDA2OTgxNDZ9.70rPlMhSCZmozswaWrX1aut64Ga2aGSLk6ZchGy6DODEImcD_eSye_WVcgL0mJby9Rk2vwcVcg5HbdX_QBuX_g')
             wx.setStorageSync(ACCOUNT, this.account)
-            wx.setStorageSync(USER_ID, 8)
+            wx.setStorageSync(USER_ID, 6)
             if (rlt.data.code == 400) {
                 tip.confirm(rlt.data.message, 'TAB')
             } else if (rlt.data.code == 200) {

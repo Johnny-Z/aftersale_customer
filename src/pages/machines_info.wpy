@@ -1,108 +1,163 @@
 <template>
-    <view class="mathine_details">
-        <view class="title_vw">机器详情</view>
-        <view class="line_vw">
-            <text>机器编号：</text>
-            <text class="nameplate_tx">{{machineDetail.nameplate.empty? '暂无':machineDetail.nameplate}}</text>
-        </view>
-        <view class="line_vw" >
-            <view class="line_half_vw">
-                <text>机型：</text>
-                <text class="machine_type_tx">{{machineDetail.machineType.empty? '暂无':machineDetail.machineType}}</text>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_machine.png"></image>
+                <text class="title_tx">机器详情</text>
             </view>
-            <view class="line_half_vw">
-                <text>针数：</text>
-                <text class="needle_num_tx">{{machineDetail.needleNum.empty? '暂无':machineDetail.needleNum}}</text>
+            <view class="title_view_sec_part" @tap="bindIsShow">
+                <image wx:if="{{isShowMachine}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
+                <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
             </view>
         </view>
-        <view class="line_vw">
-            <view class="line_half_vw">
-                <text>头数：</text>
-                <text class="head_num_tx">{{machineDetail.headNum.empty? '暂无':machineDetail.headNum}}</text>
+        <view wx:if="{{isShowMachine}}" class="main_view">
+            <view class="view_row">
+                <text class="label_tx">机器编号：</text>
+                <text class="info_tx">{{machineDetail.nameplate? machineDetail.nameplate:'暂无'}}</text>
             </view>
-            <view class="line_half_vw">
-                <text>头距：</text>
-                <text class="head_distance_tx">{{machineDetail.headDistance.empty? '暂无':machineDetail.headDistance}}</text>
+            <view class="view_row" >
+                <view class="view_row_half">
+                    <text class="label_tx">机型：</text>
+                    <text class="info_tx">{{machineDetail.machineType? machineDetail.machineType:'暂无'}}</text>
+                </view>
+                <view class="view_row_half">
+                    <text class="label_tx">针数：</text>
+                    <text class="info_tx">{{machineDetail.needleNum? machineDetail.needleNum:'暂无'}}</text>
+                </view>
             </view>
-        </view>
-        <view class="line_vw" >
-            <view class="line_half_vw">
-                <text>x行距：</text>
-                <text class="x_distance_tx">{{machineDetail.xDistance.empty? '暂无':machineDetail.xDistance}}</text>
+            <view class="view_row">
+                <view class="view_row_half">
+                    <text class="label_tx">头数：</text>
+                    <text class="info_tx">{{machineDetail.headNum? machineDetail.headNum:'暂无'}}</text>
+                </view>
+                <view class="view_row_half">
+                    <text class="label_tx">头距：</text>
+                    <text class="info_tx">{{machineDetail.headDistance? machineDetail.headDistance:'暂无'}}</text>
+                </view>
             </view>
-            <view class="line_half_vw">
-                <text>y行距：</text>
-                <text class="y_distance_tx">{{machineDetail.yDistance.empty? '暂无':machineDetail.yDistance}}</text>
-            </view>
-        </view>
-    </view>
-    <view class="install_record">
-        <view class="title_vw">安装记录</view>
-        <view class="record_list" wx:for="{{installRecordList}}" wx:key="item" @tap="installRecordClick({{item}})">
-            <view class="info">
-                <view class="line_third_vw">{{item.createTime}}: </view>
-                <view class="line_third_vw">{{item.installChargePersonName}}: </view>
-                <view class="line_third_vw">{{item.installStatus}} </view>
-            </view>
-        </view>
-    </view>
-    <view class="maintain_record">
-        <view class="title_vw">保养记录</view>
-        <view class="record_list" wx:for="{{maintainRecordList}}" wx:key="item" @tap="maintainRecordClick({{item}})">
-            <view class="info">
-                <view class="line_third_vw">{{item.createTime}}: </view>
-                <view class="line_third_vw">{{item.installChargePersonName}}: </view>
-                <view class="line_third_vw">{{item.installStatus}} </view>
+            <view class="view_row" >
+                <view class="view_row_half">
+                    <text class="label_tx">x行距：</text>
+                    <text class="info_tx">{{machineDetail.xDistance? machineDetail.xDistance:'暂无'}}</text>
+                </view>
+                <view class="view_row_half">
+                    <text class="label_tx">y行距：</text>
+                    <text class="info_tx">{{machineDetail.yDistance? machineDetail.yDistance:'暂无'}}</text>
+                </view>
             </view>
         </view>
     </view>
-    <view class="repair_record">
-        <view class="title_vw">维修记录</view>
-        <view class="record_list" wx:for="{{repairRecordList}}" wx:key="item" @tap="repairRecordClick({{item}})">
-            <view class="info">
-                <view class="line_third_vw">{{item.createTime}}: </view>
-                <view class="line_third_vw">{{item.installChargePersonName}}: </view>
-                <view class="line_third_vw">{{item.installStatus}} </view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_install.png"></image>
+                <text class="title_tx">安装记录</text>
+            </view>
+        </view>
+        <view class="main_view">
+            <view class="line_vw_color">
+                <text class="line_fir_tx">时间</text>
+                <text class="line_sec_tx">负责人</text>
+                <text class="line_third_tx">状态</text>
+            </view>
+            <view class="list_column" wx:for="{{installRecordList}}" wx:key="item" @tap="installRecordClick({{item}})">
+                <view class="line_vw_light">
+                    <view class="line_fir_tx">{{item.createTime? item.createTime: '暂无'}}</view>
+                    <view class="line_sec_tx">{{item.installChargePersonName? item.installChargePersonName: '暂无'}}</view>
+                    <view class="line_third_tx" wx:if="{{item.installStatus == 3}}">待确认</view>
+                    <view class="line_third_tx" wx:elif="{{item.installStatus == 4}}">完成</view>
+                    <view class="line_third_tx" wx:else>待安装</view>
+                </view>
             </view>
         </view>
     </view>
-    <button class="single_btn" size="mini" type="primary" @tap="buttonClick">报修</button>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_maintain.png"></image>
+                <text class="title_tx">保养记录</text>
+            </view>
+        </view>
+        <view class="main_view">
+            <view class="line_vw_color">
+                <text class="line_fir_tx">时间</text>
+                <text class="line_sec_tx">负责人</text>
+                <text class="line_third_tx">状态</text>
+            </view>
+            <view class="list_column" wx:for="{{maintainRecordList}}" wx:key="item" @tap="maintainRecordClick({{item}})">
+                <view class="line_vw_light">
+                    <view class="line_fir_tx">{{item.createTime? item.createTime: '暂无'}}</view>
+                    <view class="line_sec_tx">{{item.maintainChargePersonName? item.maintainChargePersonName: '暂无'}}</view>
+                    <view class="line_third_tx" wx:if="{{item.maintainStatus == '3'}}">待确认</view>
+                    <view class="line_third_tx" wx:elif="{{item.maintainStatus == '4'}}">完成</view>
+                    <view class="line_third_tx" wx:else>待保养</view>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_repair.png"></image>
+                <text class="title_tx">维修记录</text>
+            </view>
+        </view>
+        <view class="main_view">
+            <view class="line_vw_color">
+                <text class="line_fir_tx">时间</text>
+                <text class="line_sec_tx">负责人</text>
+                <text class="line_third_tx">状态</text>
+            </view>
+            <view class="list_column" wx:for="{{repairRecordList}}" wx:key="item" @tap="repairRecordClick({{item}})">
+                <view class="line_vw_light">
+                    <view class="line_fir_tx">{{item.createTime? item.createTime: '暂无'}}</view>
+                    <view class="line_sec_tx">{{item.repairChargePersonName? item.repairChargePersonName: '暂无'}}</view>
+                    <view class="line_third_tx" wx:if="{{item.status == '7'}}">待确认</view>
+                    <view class="line_third_tx" wx:elif="{{item.status == '8'}}">完成</view>
+                    <view class="line_third_tx" wx:elif="{{item.status == '4'}}">失败</view>
+                    <view class="line_third_tx" wx:elif="{{item.status == '5'}}">失败</view>
+                    <view class="line_third_tx" wx:elif="{{item.status == '6'}}">失败</view>
+                    <view class="line_third_tx" wx:else>待维修</view>
+                </view>
+            </view>
+        </view>
+    </view>
+    <button class="single_button" @tap="buttonClick">报修</button>
 </template>
 <style lang="less">
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
-    }
-    .line_vw {
-        margin: 20rpx;
+    .line_vw_color {
         display: flex;
-        .line_half_vw {
-            width: 50%;
-        }
+        flex-direction: row;
+        background: #eeeeee;
+        padding: 12rpx;
+        align-items: center;// 居中对齐
+        font-family: PingFangSC-Regular;
+        font-size: 32rpx;
+        color: #001C00;
+        letter-spacing: 0;
     }
-    .single_btn {
-        margin: 25rpx;
-        width: 50%;
+    .line_vw_light {
+        display: flex;
+        flex-direction: row;
+        background: #ffffff;
+        padding-left: 12rpx;
+        padding-right: 12rpx;
+        padding-top: 30rpx;
+        padding-bottom: 30rpx;
+        border-top: 1px solid #F0F3F5;
+        align-items: center;// 居中对齐
+        font-family: PingFangSC-Regular;
+        font-size: 28rpx;
+        color: #001C00;
+        letter-spacing: 0;
     }
-    .record_list {
-       background: #fff;
-       padding: 10rpx;
-       display: flex;
-       margin-bottom: 5rpx;
-       .info {
-           padding: 5rpx;
-           color: #000000;
-           font-size: 26rpx;
-           line-height: 35rpx;
-           display: flex;
-           width:100%;
-           .line_third_vw {
-               width: 30%;
-           }
-       }
+    .line_fir_tx {
+        width: 40%;
+    }
+    .line_sec_tx {
+        width: 40%;
+    }
+    .line_third_tx {
     }
 </style>
 <script>
@@ -118,12 +173,17 @@
         machinedetails: MachineDetails
       }
       data = {
+        isShowMachine: false,
         machineDetail: {},
         installRecordList: [],
         maintainRecordList: [],
         repairRecordList: []
       };
       methods = {
+        bindIsShow() {
+          let isShow = this.isShowMachine
+          this.isShowMachine = !isShow
+        },
         installRecordClick(e) {
           console.log('install list click: ', e)
           let installRecord = JSON.stringify(e)

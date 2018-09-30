@@ -3,6 +3,7 @@
     <view class="detail_view_column">
         <view class="title_view">
             <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_install.png"></image>
                 <text class="title_tx">调试详情</text>
             </view>
         </view>
@@ -10,18 +11,6 @@
             <view class="view_row">
                 <text class="label_tx">订单编号：</text>
                 <text class="info_tx">{{machineDetail.orderNum? machineDetail.orderNum:'暂无'}}</text>
-            </view>
-            <view class="view_row">
-                <text class="label_tx">安装人员：</text>
-                <text class="info_tx">{{machineDetail.installChargePersonName}}</text>
-            </view>
-            <view class="view_row">
-                <text class="label_tx">联系电话：</text>
-                <text class="info_tx">{{machineDetail.installChargePersonPhone}}</text>
-            </view>
-            <view class="view_row">
-                <text class="label_tx">安装日期：</text>
-                <text class="info_tx">{{machineDetail.installActualTime}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">调试结果：</text>
@@ -52,6 +41,18 @@
                 <text class="info_tx" >台板支撑：</text>
                 <text class="info_tx" >{{installBasicItemList[6].install_value? installBasicItemList[6].install_value:'暂无'}}</text>
             </view>
+            <view class="view_row">
+                <text class="label_tx">安装人员：</text>
+                <text class="info_tx">{{machineDetail.installChargePersonName}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">联系电话：</text>
+                <text class="info_tx">{{machineDetail.installChargePersonPhone}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">安装日期：</text>
+                <text class="info_tx">{{machineDetail.installActualTime}}</text>
+            </view>
         </view>
     </view>
     <view class="detail_view_column">
@@ -66,7 +67,7 @@
                 </view>
                 <view class="item_right">
                     <text wx:if="{{item.install_value == 1}}" class="info_tx">完成</text>
-                    <text wx:else class="info_tx" >待完成</text>
+                    <text wx:else class="info_tx" >未完成</text>
                 </view>
             </view>
         </view>
@@ -74,6 +75,7 @@
     <view class="detail_view_column">
         <view class="title_view">
             <view class="title_view_fir_part">
+                <image class="detail_icon" src="../images/icon_detail_suggestion.png"></image>
                 <text class="title_tx">客户反馈</text>
             </view>
         </view>
@@ -96,15 +98,11 @@
             </view>
             <view class="view_row">
                 <text class="label_tx">意见/建议：</text>
-                <text class="info_tx" @tap="showSuggestionInput">口口口</text>
             </view>
-            <modal hidden="{{hiddenSuggestion}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
-                <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
-            </modal>
-            <text class="get_input_tx">{{customerSuggestion}}</text>
-            <button class="single_button" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+            <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
         </view>
     </view>
+    <button wx:if="{{!isExistFeedback}}" class="single_button" @tap="bindUploadFeedback">提交</button>
 </template>
 <style lang="less">
     page {
@@ -126,40 +124,6 @@
         color: #3B403D;
         letter-spacing: 0;
     }
-    .list_item_row {
-        border-bottom: 1px solid #F0F3F5;
-        margin-top: 30rpx;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        .item_left {
-            width: 70%;
-        }
-        .item_right {
-            width: 30%;
-        }
-    }
-    .content_tx {
-        font-family: PingFangSC-Regular;
-        font-size: 30rpx;
-        color: #3B403D;
-        letter-spacing: 0.2rpx;
-        line-height: 48rpx;
-    }
-    .picker_view {
-        width: 160rpx;
-        background: rgba(0,116,116,0.10);
-        border: 1rpx solid #007474;
-        border-radius: 10rpx;
-        text-align: center;
-        margin-left: 30rpx;
-        .picker_tx {
-            font-family: PingFangSC-Regular;
-            color: #007474;
-            letter-spacing: 0;
-        }
-    }
 </style>
 <script>
     import wepy from 'wepy'
@@ -176,7 +140,6 @@
       data = {
         machineDetail: {},
         isExistFeedback: false,
-        hiddenSuggestion: false,
         installCustomerFeedback: {
           customerMark: '',
           customerSuggestion: ''
@@ -191,14 +154,6 @@
         bindPickerChange: function (e) {
           console.log('picker发送选择改变，携带值为 ', e.detail.value)
           this.index = e.detail.value
-        },
-        showSuggestionInput() {
-          this.hiddenSuggestion = false
-          this.$apply()
-        },
-        listenerSuggestion() {
-          this.hiddenSuggestion = true
-          this.$apply()
         },
         bindSuggestionInput: function(e) {
           console.log(e.detail.value)
@@ -231,9 +186,6 @@
               duration: 3000
             })
           }
-        },
-        bindNavigateBack() {
-          wepy.navigateBack()
         }
       };
 
