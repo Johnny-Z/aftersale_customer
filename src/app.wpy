@@ -18,6 +18,10 @@ export default class extends wepy.app {
       'pages/machines',
       'pages/machines_info',
       'pages/request_repair',
+      'pages/mine',
+      'pages/change_password',
+      'pages/mine',
+      'pages/mine',
       'pages/search'
     ],
     window: {
@@ -44,7 +48,7 @@ export default class extends wepy.app {
         iconPath: 'images/tab_btn_machine_normal.png',
         selectedIconPath: 'images/tab_btn_machine_selected.png'
       }, {
-        pagePath: 'pages/machines',
+        pagePath: 'pages/mine',
         text: '我的',
         iconPath: 'images/tab_btn_mine_normal.png',
         selectedIconPath: 'images/tab_btn_mine_selected.png'
