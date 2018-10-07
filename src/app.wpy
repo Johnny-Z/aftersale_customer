@@ -20,8 +20,8 @@ export default class extends wepy.app {
       'pages/request_repair',
       'pages/mine',
       'pages/change_password',
-      'pages/mine',
-      'pages/mine',
+      'pages/change_contacts',
+      'pages/news',
       'pages/search'
     ],
     window: {
