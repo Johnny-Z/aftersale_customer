@@ -21,6 +21,7 @@ export default class extends wepy.app {
       'pages/mine',
       'pages/change_password',
       'pages/change_contacts',
+      'pages/contacts_info',
       'pages/news',
       'pages/search'
     ],
