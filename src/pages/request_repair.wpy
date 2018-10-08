@@ -65,13 +65,14 @@
             </view>
         </view>
         <view class="main_view">
-            <view class="view_row">
-                <view class="label_tx">语音：</view>
-                <button class="single_btn" size="mini" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'primary'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
+            <button class="record_btn" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'default'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
+            <view class="view_row" wx:if="{{hasRecorded}}">
+                <text class="label_tx">语音：</text>
+                <button wx:if='{{isPlaying}}' class="playing_btn" size="mini" loading="true">播放中...</button>
+                <button wx:else class="player_btn" size="mini" @tap="playRecord">点击播放</button>
             </view>
         </view>
     </view>
-    <button wx:if="{{hasRecorded}}" class="single_big_btn" disabled="{{isPlaying}}" loading="{{isPlaying}}" @tap="playRecord">播放语音</button>
     <view class="detail_view_column">
         <view class="title_view">
             <view class="title_view_fir_part">
@@ -130,6 +131,29 @@
 <style lang="less">
     page {
         margin-bottom: 120rpx;
+    }
+    .record_btn {
+        border-radius: 100rpx;
+    }
+    .record_img {
+        width: 42rpx;
+        height: 72rpx;
+        margin-left: 39rpx;
+    }
+    .player_btn {
+        width: 300rpx;
+        background: #007474;
+        color: #ffffff;
+        border-radius: 100rpx;
+        margin-left: 15rpx;
+    }
+    .playing_btn {
+        width: 300rpx;
+        opacity: 0.12;
+        background: #007474;
+        color: #ffffff;
+        border-radius: 100rpx;
+        margin-left: 15rpx;
     }
 </style>
 <script>
