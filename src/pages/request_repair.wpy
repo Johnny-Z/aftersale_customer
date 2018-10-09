@@ -133,7 +133,10 @@
         margin-bottom: 120rpx;
     }
     .record_btn {
+        width: 300rpx;
+        margin-top: 30rpx;
         border-radius: 100rpx;
+        border: 4rpx solid #ADC7C7;
     }
     .record_img {
         width: 42rpx;
@@ -141,18 +144,20 @@
         margin-left: 39rpx;
     }
     .player_btn {
-        width: 300rpx;
+        width: 500rpx;
+        opacity: 0.80;
         background: #007474;
         color: #ffffff;
         border-radius: 100rpx;
         margin-left: 15rpx;
     }
     .playing_btn {
-        width: 300rpx;
-        opacity: 0.12;
+        width: 500rpx;
+        opacity: 0.24;
         background: #007474;
         color: #ffffff;
         border-radius: 100rpx;
+        border: 2rpx solid #ADC7C7;
         margin-left: 15rpx;
     }
 </style>
@@ -284,7 +289,7 @@
         touchdown() {
           console.log('手指anxia了...')
           this.isRecording = true
-          this.recordBtnVal = '松开 结束'
+          this.recordBtnVal = '松开结束'
           const recorderManager = wepy.getRecorderManager()
           recorderManager.start({format: 'mp3'})
           recorderManager.onStart(() => {

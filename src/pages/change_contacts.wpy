@@ -1,73 +1,55 @@
 <style lang="less">
-  .menu_row_view {
+  .line_vw_color {
+    display: flex;
+    flex-direction: row;
+    background: #eeeeee;
+    padding: 12rpx;
+    align-items: center;// 居中对齐
+    font-family: PingFangSC-Regular;
+    font-size: 32rpx;
+    color: #001C00;
+    letter-spacing: 0;
+  }
+  .line_vw_light {
     display: flex;
     flex-direction: row;
     background: #ffffff;
-    padding-top: 37rpx;
-    padding-bottom: 37rpx;
-    padding-left: 27rpx;
-    padding-right: 30rpx;
-    border-bottom: 1px solid #F0F3F5;
+    padding-left: 12rpx;
+    padding-right: 12rpx;
+    padding-top: 30rpx;
+    padding-bottom: 30rpx;
+    border-top: 1px solid #F0F3F5;
     align-items: center;// 居中对齐
-    .menu_row_view_left {
-      display: flex;
-      flex-direction: row;
-      align-items: center;// 居中对齐
-      width: 90%;
-    }
-    .menu_row_view_right {
-      width: 10%;
-      text-align: right;
-    }
-    .menu_icon {
-      width: 30rpx;
-      height: 35rpx
-    }
-    .menu_tx {
-      font-family: PingFangSC-Regular;
-      font-size: 32rpx;
-      color: #3B403D;
-      letter-spacing: 0;
-      padding-left: 14rpx;
-    }
-    .right_icon {
-      width: 16rpx;
-      height: 28rpx
-    }
+    font-family: PingFangSC-Medium;
+    font-size: 30px;
+    color: #3B403D;
+    letter-spacing: 0;
+  }
+  .line_fir_tx {
+    width: 10%;
+  }
+  .line_sec_tx {
+    width: 25%;
+  }
+  .line_thi_tx {
+    width: 45%;
+  }
+  .line_fou_tx {
   }
 </style>
 <template>
-  <view class="menu_row_view" @tap="bindChangePassword">
-    <view class="menu_row_view_left">
-      <image class="menu_icon" src="../images/icon_mine_password.png"></image>
-      <text class="menu_tx">修改密码</text>
-    </view>
-    <view class="menu_row_view_right">
-      <image class="right_icon" src="../images/icon_arrow_right.png"></image>
-    </view>
+  <view class="line_vw_color">
+    <text class="line_fir_tx">No</text>
+    <text class="line_sec_tx">姓名</text>
+    <text class="line_thi_tx">手机号</text>
+    <text class="line_fou_tx">操作</text>
   </view>
-  <view class="menu_row_view" @tap="bindChangeContacts">
-    <view class="menu_row_view_left">
-      <image class="menu_icon" src="../images/icon_mine_mobile.png"></image>
-      <text class="menu_tx">联系人管理</text>
-    </view>
-    <view class="menu_row_view_right">
-      <image class="right_icon" src="../images/icon_arrow_right.png"></image>
-    </view>
-  </view>
-  <view class="menu_row_view" @tap="bindShowNews">
-    <view class="menu_row_view_left">
-      <image class="menu_icon" src="../images/icon_mine_news.png"></image>
-      <text class="menu_tx">我的消息</text>
-    </view>
-    <view class="menu_row_view_right">
-      <image class="right_icon" src="../images/icon_arrow_right.png"></image>
-    </view>
-  </view>
-  <view class="menu_row_view" @tap="bindExit">
-    <view class="menu_row_view_left">
-      <image class="menu_icon" src="../images/icon_mine_exit.png"></image>
-      <text class="menu_tx">退出登录</text>
+  <view class="list_column" wx:for="{{repairRecordList}}" wx:key="item" @tap="repairRecordClick({{item}})">
+    <view class="line_vw_light">
+      <text class="line_fir_tx">{{index + 1}}</text>
+      <text class="line_sec_tx">{{item.repairChargePersonName? item.repairChargePersonName: '暂无'}}</text>
+      <text class="line_thi_tx">{{item.repairChargePersonName? item.repairChargePersonName: '暂无'}}</text>
+      <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showContentInput"></image>
     </view>
   </view>
 </template>
