@@ -164,7 +164,7 @@
             wx.setStorageSync(USER_ID, 6)
             if (rlt.data.code == 400) {
                 tip.confirm(rlt.data.message, 'TAB')
-            } else if (rlt.data.code == 200) {
+            } else if (rlt.data.code == 500) {
                 let loginJson = await api.login({
                     query: {
                         account: this.account,
