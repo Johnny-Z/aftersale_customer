@@ -106,7 +106,7 @@
       let fs = wx.getFileSystemManager()
       let fsStat = fs.statSync(AUTHORIZATION_PATH, false)
       console.log(fsStat)
-      if (fsStat.stats.isDirectory()) {
+      if (fsStat.isFile()) {
           let res = await wepy.login()
           console.log(res)
           if (res.code) {
@@ -159,9 +159,9 @@
                 }
             })
             console.log('get session resoult: ', rlt)
-            wx.setStorageSync(AUTHORIZATION, 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJ6aGFvcHVcIixcImFjY291bnROb25FeHBpcmVkXCI6dHJ1ZSxcImFjY291bnROb25Mb2NrZWRcIjp0cnVlLFwiYWRkcmVzc1wiOlwiXCIsXCJhZ2VudFwiOjAsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzIxMzQ0MjkwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiY3VzdG9tZXJDb21wYW55XCI6XCIxXCIsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6OCxcIm5hbWVcIjpcInpoYW9wdVwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzMTg4ODg4ODg4XCIsXCJyb2xlSWRcIjozLFwidXNlcm5hbWVcIjpcInpoYW9wdVwiLFwidmFsaWRcIjpcIjFcIn0iLCJleHAiOjE1NDA2OTgxNDZ9.70rPlMhSCZmozswaWrX1aut64Ga2aGSLk6ZchGy6DODEImcD_eSye_WVcgL0mJby9Rk2vwcVcg5HbdX_QBuX_g')
-            wx.setStorageSync(ACCOUNT, this.account)
-            wx.setStorageSync(USER_ID, 6)
+            // wx.setStorageSync(AUTHORIZATION, 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJ6aGFvcHVcIixcImFjY291bnROb25FeHBpcmVkXCI6dHJ1ZSxcImFjY291bnROb25Mb2NrZWRcIjp0cnVlLFwiYWRkcmVzc1wiOlwiXCIsXCJhZ2VudFwiOjAsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzIxMzQ0MjkwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiY3VzdG9tZXJDb21wYW55XCI6XCIxXCIsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6OCxcIm5hbWVcIjpcInpoYW9wdVwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzMTg4ODg4ODg4XCIsXCJyb2xlSWRcIjozLFwidXNlcm5hbWVcIjpcInpoYW9wdVwiLFwidmFsaWRcIjpcIjFcIn0iLCJleHAiOjE1NDA2OTgxNDZ9.70rPlMhSCZmozswaWrX1aut64Ga2aGSLk6ZchGy6DODEImcD_eSye_WVcgL0mJby9Rk2vwcVcg5HbdX_QBuX_g')
+            // wx.setStorageSync(ACCOUNT, this.account)
+            // wx.setStorageSync(USER_ID, 6)
             if (rlt.data.code == 400) {
                 tip.confirm(rlt.data.message, 'TAB')
             } else if (rlt.data.code == 500) {
@@ -177,7 +177,7 @@
                     wx.setStorageSync(ACCOUNT, loginJson.data.account)
                     wx.setStorageSync(USER_ID, loginJson.data.id)
                     let fs = wx.getFileSystemManager()
-                    fs.writeFileSync(AUTHORIZATION_PATH, rlt.header.Authorization, 'utf8')
+                    fs.writeFileSync(AUTHORIZATION_PATH, loginJson.header.Authorization, 'utf8')
                     wepy.switchTab({
                         url: '/pages/eventing'
                     })
