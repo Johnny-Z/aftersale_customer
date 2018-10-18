@@ -138,7 +138,6 @@
       }
       data = {
         machineDetail: {},
-        logo: '/images/icon_eventing.png',
         isSpeaking: false,
         preRepairImageArr: [],
         preRepairVoiceSrc: '',
@@ -254,9 +253,25 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
-        this.preRepairImageArr = this.machineDetail.repairRequestPictures.split(',')
-        this.repairImageArr = this.machineDetail.afterResolvePictures.split(',')
-        this.preRepairVoiceSrc = this.machineDetail.repairRequestVoice
+        if (this.machineDetail.repairRequestPictures) {
+          let preRepairImageTmp = this.machineDetail.repairRequestPictures.split(',')
+          for (var i = 0; i < preRepairImageTmp.length; i++) {
+            let temp = preRepairImageTmp[i].split('/aftersale')
+            this.preRepairImageArr.push(APIMALL + temp[1])
+          }
+        }
+        if (this.machineDetail.afterResolvePictures) {
+          let repairImageTmp = this.machineDetail.afterResolvePictures.split(',')
+          for (var j = 0; j < repairImageTmp.length; j++) {
+            let temp1 = repairImageTmp[j].split('/aftersale')
+            this.repairImageArr.push(APIMALL + temp1[1])
+          }
+        }
+        if (this.machineDetail.repairRequestVoice) {
+          let temp2 = this.machineDetail.repairRequestVoice.split('/aftersale')
+          this.preRepairVoiceSrc = APIMALL + temp2[1]
+          console.log('声音：', this.preRepairVoiceSrc)
+        }
         this.getPartsInfo(this.machineDetail.id)
         this.$apply()
       };

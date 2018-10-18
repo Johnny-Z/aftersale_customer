@@ -145,7 +145,6 @@
       }
       data = {
         machineDetail: {},
-        logo: '/images/icon_eventing.png',
         isSpeaking: false,
         isShowRepair: false,
         preRepairImageArr: [],

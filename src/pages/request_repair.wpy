@@ -284,10 +284,9 @@
           }
         },
         changePreview(e) {
-          var self = this
           wepy.previewImage({
             current: e.currentTarget.dataset.src,
-            urls: self.data.previewImageArr
+            urls: this.previewImageArr
           })
         },
         touchdown() {
