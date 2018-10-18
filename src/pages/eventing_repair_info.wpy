@@ -28,7 +28,9 @@
             <view class="view_row">
                 <text class="label_tx">照片：</text>
             </view>
-            <image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairPreview" data-src="{{item}}" src="{{item}}"></image>
+            <view class="view_row">
+              <image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairPreview" data-src="{{item}}" src="{{item}}"></image>
+            </view>
         </view>
     </view>
     <view class="detail_view_column">
@@ -54,7 +56,9 @@
             <view class="view_row">
                 <text class="label_tx">照片：</text>
             </view>
-            <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+            <view class="view_row">
+              <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+            </view>
             <view class="view_row">
                 <text class="label_tx">维修人：</text>
                 <text class="info_tx">{{machineDetail.repairChargePersonName}}</text>
@@ -128,6 +132,9 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
+    import {
+        APIMALL
+    } from '@/utils/constant'
 
     export default class EventingRepairInfo extends wepy.page {
       config = {
@@ -247,10 +254,25 @@
       onLoad(options) {
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
-        console.log(this.machineDetail)
-        this.preRepairImageArr = this.machineDetail.repairRequestPictures.split(',')
-        this.repairImageArr = this.machineDetail.afterResolvePictures.split(',')
-        this.preRepairVoiceSrc = this.machineDetail.repairRequestVoice
+        if (this.machineDetail.repairRequestPictures) {
+          let preRepairImageTmp = this.machineDetail.repairRequestPictures.split(',')
+          for (var i = 0; i < preRepairImageTmp.length; i++) {
+            let temp = preRepairImageTmp[i].split('/aftersale')
+            this.preRepairImageArr.push(APIMALL + temp[1])
+          }
+        }
+        if (this.machineDetail.afterResolvePictures) {
+          let repairImageTmp = this.machineDetail.afterResolvePictures.split(',')
+          for (var j = 0; j < repairImageTmp.length; j++) {
+            let temp1 = repairImageTmp[j].split('/aftersale')
+            this.repairImageArr.push(APIMALL + temp1[1])
+          }
+        }
+        if (this.machineDetail.repairRequestVoice) {
+          let temp2 = this.machineDetail.repairRequestVoice.split('/aftersale')
+          this.preRepairVoiceSrc = APIMALL + temp2[1]
+          console.log('声音：', this.preRepairVoiceSrc)
+        }
         if (this.machineDetail.customerFeedback > 0) {
           this.isExistFeedback = true
         } else {

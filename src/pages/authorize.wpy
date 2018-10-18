@@ -98,43 +98,48 @@
       navigationBarTitleText: '授权登录'
     }
     data = {
-      account: '李客',
-      password: 'sinsim',
+      exit: 0,
+      account: '',
+      password: '',
       jcCode: ''
     }
-    async onLoad() {
-      let fs = wx.getFileSystemManager()
-      let fsStat = fs.statSync(AUTHORIZATION_PATH, false)
-      console.log(fsStat)
-      if (fsStat.isFile()) {
-          let res = await wepy.login()
-          console.log(res)
-          if (res.code) {
-              this.jcCode = res.code
-              console.log(this.jcCode)
-              let auth = fs.readFileSync(AUTHORIZATION_PATH, 'utf8')
-              console.log('auth: ', auth)
-              wx.setStorageSync(AUTHORIZATION, auth)
-              let loginJson = await api.autoLogin({
-                  query: {
-                      jsCode: this.jcCode
-                  }
-              })
-              console.log(loginJson)
-              if (loginJson.data.code == 400) {
-                  tip.confirm(rlt.data.message + '+onLoad')
-              } else if (loginJson.data.code == 200) {
-                  let userJson = JSON.parse(loginJson.data.data)
-                  wx.setStorageSync(ACCOUNT, userJson.account)
-                  wx.setStorageSync(USER_ID, userJson.id)
-                  wepy.switchTab({
-                      url: '/pages/eventing'
-                  })
-              }
-          } else {
-              tip.confirm('登陆失败')
-          }
-      }
+    async onLoad(options) {
+        console.log('start:', options)
+        if (!options.exit) {
+            let fs = wx.getFileSystemManager()
+            let fsStat = fs.statSync(AUTHORIZATION_PATH, false)
+            console.log(fsStat)
+            if (fsStat.isFile()) {
+                let res = await wepy.login()
+                console.log(res)
+                if (res.code) {
+                    this.jcCode = res.code
+                    console.log(this.jcCode)
+                    let auth = fs.readFileSync(AUTHORIZATION_PATH, 'utf8')
+                    console.log('auth: ', auth)
+                    wx.setStorageSync(AUTHORIZATION, auth)
+                    let loginJson = await api.autoLogin({
+                        query: {
+                            jsCode: this.jcCode
+                        }
+                    })
+                    console.log(loginJson)
+                    if (loginJson.data.code == 400) {
+                        tip.confirm(loginJson.data.message)
+                    } else if (loginJson.data.code == 200) {
+                        wx.setStorageSync(ACCOUNT, loginJson.data.data.account)
+                        wx.setStorageSync(USER_ID, loginJson.data.data.id)
+                        wepy.switchTab({
+                            url: '/pages/eventing'
+                        })
+                    } else {
+                        tip.confirm(loginJson.data.message)
+                    }
+                } else {
+                    tip.confirm('登陆失败')
+                }
+            }
+        }
     }
     methods = {
       bindAccountInput(e) {
@@ -163,8 +168,8 @@
             // wx.setStorageSync(ACCOUNT, this.account)
             // wx.setStorageSync(USER_ID, 6)
             if (rlt.data.code == 400) {
-                tip.confirm(rlt.data.message, 'TAB')
-            } else if (rlt.data.code == 500) {
+                tip.confirm(rlt.data.message)
+            } else if (rlt.data.code == 200) {
                 let loginJson = await api.login({
                     query: {
                         account: this.account,

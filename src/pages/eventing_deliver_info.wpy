@@ -54,7 +54,9 @@
             <view class="view_row">
                 <text class="label_tx">照片：</text>
             </view>
-            <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
+            <view class="view_row">
+                <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairPreview" data-src="{{item}}" src="{{item}}"></image>
+            </view>
             <view class="view_row">
                 <text class="label_tx">维修人：</text>
                 <text class="info_tx">{{machineDetail.repairChargePersonName}}</text>

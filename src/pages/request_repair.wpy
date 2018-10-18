@@ -18,8 +18,10 @@
             <view class="view_row">
                 <text class="label_tx">铭牌照片：</text>
             </view>
-            <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewNameplateImage"></image>
-            <image class="photo_image" mode="aspectFill" wx:for="{{nameplateImage}}" @tap="changeNameplatePreview" data-src="{{item}}" src="{{item}}"></image>
+            <view class="view_row">
+                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewNameplateImage"></image>
+                <image class="photo_image" mode="aspectFill" wx:for="{{nameplateImage}}" @tap="changeNameplatePreview" data-src="{{item}}" src="{{item}}"></image>
+            </view>
         </view>
         <view wx:else class="main_view">
             <view class="view_row">
@@ -99,8 +101,10 @@
             <view class="view_row">
                 <text class="label_tx">故障照片：</text>
             </view>
-            <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
-            <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+            <view class="view_row">
+                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
+                <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+            </view>
         </view>
     </view>
     <view class="detail_view_column">
