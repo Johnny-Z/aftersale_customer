@@ -103,7 +103,7 @@
             </view>
             <view class="view_row">
                 <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
-                <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+                <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" @longtap="deleteImage" data-src="{{item}}" src="{{item}}"></image>
             </view>
         </view>
     </view>
@@ -288,6 +288,9 @@
             current: e.currentTarget.dataset.src,
             urls: this.previewImageArr
           })
+        },
+        deleteImage(e) {
+          console.log('longTap: ', e)
         },
         touchdown() {
           console.log('手指anxia了...')
