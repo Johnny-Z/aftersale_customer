@@ -103,7 +103,7 @@
             </view>
             <view class="view_row">
                 <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
-                <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" @longtap="deleteImage" data-src="{{item}}" src="{{item}}"></image>
+                <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>
             </view>
         </view>
     </view>
@@ -198,6 +198,8 @@
         recordBtnVal: '按住 说话',
         recordTempSrc: '',
         previewImageArr: [],
+        touchStartTime: 0,
+        touchEndTime: 0,
         count: 0,
         isOldMachine: false,
         isRecording: false,
@@ -276,19 +278,39 @@
           let res = await wepy.chooseImage({count: 3})
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
-            this.previewImageArr = tempFilePaths
+            if (this.previewImageArr.length > 3){
+              tip.alert('最多3张')
+            } else {
+              this.previewImageArr.push(tempFilePaths)
+            }
             console.log('preview image src: ')
             console.log(tempFilePaths)
             console.log(this.previewImageArr.length)
             this.$apply()
           }
         },
-        changePreview(e) {
-          wepy.previewImage({
-            current: e.currentTarget.dataset.src,
-            urls: this.previewImageArr
-          })
+        /// 按钮触摸开始触发的事件
+        touchStart(e) {
+          console.log('touchStart: ', e)
+          this.touchStartTime = e.timeStamp
         },
+
+        /// 按钮触摸结束触发的事件
+        touchEnd(e) {
+          console.log('touchEnd: ', e)
+          this.touchEndTime = e.timeStamp
+        },
+        changePreview(e) {
+          // 控制点击事件在350ms内触发，加这层判断是为了防止长按时会触发点击事件
+          if (this.touchEndTime - this.touchStartTime < 350) {
+            console.log('changePreview: ', e)
+            wepy.previewImage({
+              current: e.currentTarget.dataset.src,
+              urls: this.previewImageArr
+            })
+          }
+        },
+        // 长按删除图片
         deleteImage(e) {
           console.log('longTap: ', e)
         },
