@@ -125,6 +125,9 @@
     <button class="single_button" @tap="buttonClick">报修</button>
 </template>
 <style lang="less">
+    page {
+        margin-bottom: 120rpx;
+    }
     .line_vw_color {
         display: flex;
         flex-direction: row;

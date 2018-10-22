@@ -214,7 +214,10 @@
           console.log(this.partList)
         },
         async bindPreviewImage() {
-          let res = await wepy.chooseImage({count: 1})
+          let res = await wepy.chooseImage({
+            count: 1,
+            sizeType: 'compressed '
+          })
           if (res.errMsg === 'chooseImage:ok') {
             this.partsImageArr = res.tempFilePaths
             this.$apply()

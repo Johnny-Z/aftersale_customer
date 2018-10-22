@@ -99,11 +99,11 @@
             </modal>
             <text class="get_input_tx">{{repairRequestInfo.content}}</text>
             <view class="view_row">
-                <text class="label_tx">故障照片：</text>
+                <text class="label_tx">故障照片（3张）：（长按删除）</text>
             </view>
             <view class="view_row">
-                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
                 <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>
+                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
             </view>
         </view>
     </view>
@@ -234,7 +234,10 @@
           this.oldNameplateInput = e.detail.value
         },
         async previewNameplateImage() {
-          let res = await wepy.chooseImage({count: 1})
+          let res = await wepy.chooseImage({
+            count: 1,
+            sizeType: 'compressed '
+          })
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
             this.nameplateImage = tempFilePaths
@@ -275,34 +278,40 @@
           this.repairRequestInfo.content = e.detail.value
         },
         async previewImage() {
-          let res = await wepy.chooseImage({count: 3})
+          let res = await wepy.chooseImage({
+            count: 3,
+            sizeType: 'compressed '
+          })
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
-            if (this.previewImageArr.length > 3){
+            if (this.previewImageArr.length >= 3) {
               tip.alert('最多3张')
+            } else if ((this.previewImageArr.length + tempFilePaths.length) > 3) {
+              tip.alert('最多3张')
+              for (var i = 0; i < (3 - this.previewImageArr.length); i++) {
+                this.previewImageArr = this.previewImageArr.concat(tempFilePaths[i])
+              }
+              this.$apply()
             } else {
-              this.previewImageArr.push(tempFilePaths)
+              this.previewImageArr = this.previewImageArr.concat(tempFilePaths)
+              this.$apply()
             }
-            console.log('preview image src: ')
-            console.log(tempFilePaths)
-            console.log(this.previewImageArr.length)
-            this.$apply()
           }
         },
-        /// 按钮触摸开始触发的事件
+        // 按钮触摸开始触发的事件
         touchStart(e) {
           console.log('touchStart: ', e)
           this.touchStartTime = e.timeStamp
         },
 
-        /// 按钮触摸结束触发的事件
+        // 按钮触摸结束触发的事件
         touchEnd(e) {
           console.log('touchEnd: ', e)
           this.touchEndTime = e.timeStamp
         },
         changePreview(e) {
-          // 控制点击事件在350ms内触发，加这层判断是为了防止长按时会触发点击事件
-          if (this.touchEndTime - this.touchStartTime < 350) {
+          // 控制点击事件在450ms内触发，加这层判断是为了防止长按时会触发点击事件
+          if (this.touchEndTime - this.touchStartTime < 450) {
             console.log('changePreview: ', e)
             wepy.previewImage({
               current: e.currentTarget.dataset.src,
@@ -313,6 +322,14 @@
         // 长按删除图片
         deleteImage(e) {
           console.log('longTap: ', e)
+          for (var i = 0; i < this.previewImageArr.length; i++) {
+            if (this.previewImageArr[i] == e.currentTarget.dataset.src) {
+              this.previewImageArr.splice(i, 1)
+              tip.alert('已删除')
+              this.$apply()
+              break
+            }
+          }
         },
         touchdown() {
           console.log('手指anxia了...')
