@@ -7,9 +7,9 @@
             </view>
         </view>
         <view wx:if="{{isOldMachine}}" class="main_view">
-            <view class="view_row">
+            <view class="view_row" @tap="showNameplateInput">
                 <text class="label_tx">机器编号：</text>
-                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showNameplateInput"></image>
+                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
             <modal hidden="{{hiddenNameplate}}" title="机器铭牌号" confirm-text="确定" no-cancel="true" @confirm="listenerNameplate" >
                 <textarea @input="bindNameplateInput" class="textareaInput" placeholder="请输入机器铭牌号"></textarea>
@@ -19,8 +19,8 @@
                 <text class="label_tx">铭牌照片：</text>
             </view>
             <view class="view_row">
-                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewNameplateImage"></image>
                 <image class="photo_image" mode="aspectFill" wx:for="{{nameplateImage}}" @tap="changeNameplatePreview" data-src="{{item}}" src="{{item}}"></image>
+                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewNameplateImage"></image>
             </view>
         </view>
         <view wx:else class="main_view">
@@ -82,17 +82,17 @@
             </view>
         </view>
         <view class="main_view">
-            <view class="view_row">
+            <view class="view_row" @tap="showTitleInput">
                 <text class="label_tx">问题概述：</text>
-                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showTitleInput"></image>
+                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
             <modal hidden="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" >
                 <textarea @input="bindTitleInput" class="textareaInput" placeholder="请在此输入问题概述（不能为空）"></textarea>
             </modal>
             <text class="get_input_tx">{{repairRequestInfo.repairTitle}}</text>
-            <view class="view_row">
+            <view class="view_row" @tap="showContentInput">
                 <text class="label_tx">具体描述：</text>
-                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showContentInput"></image>
+                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
             <modal hidden="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" >
                 <textarea @input="bindContentInput" class="textareaInput" placeholder="请在此输入详细情况（不能为空）"></textarea>
@@ -103,7 +103,7 @@
             </view>
             <view class="view_row">
                 <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>
-                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
+                <image hidden="{{hiddenPhoto}}" class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
             </view>
         </view>
     </view>
@@ -187,6 +187,7 @@
         hiddenNameplate: true,
         hiddenTitle: true,
         hiddenContent: true,
+        hiddenPhoto: false,
         machineDetail: {},
         customerList: [],
         customerListArr: [],
@@ -288,12 +289,16 @@
               tip.alert('最多3张')
             } else if ((this.previewImageArr.length + tempFilePaths.length) > 3) {
               tip.alert('最多3张')
+              this.hiddenPhoto = true
               for (var i = 0; i < (3 - this.previewImageArr.length); i++) {
                 this.previewImageArr = this.previewImageArr.concat(tempFilePaths[i])
               }
               this.$apply()
             } else {
               this.previewImageArr = this.previewImageArr.concat(tempFilePaths)
+              if (this.previewImageArr.length == 3) {
+                this.hiddenPhoto = true
+              }
               this.$apply()
             }
           }
@@ -325,6 +330,7 @@
           for (var i = 0; i < this.previewImageArr.length; i++) {
             if (this.previewImageArr[i] == e.currentTarget.dataset.src) {
               this.previewImageArr.splice(i, 1)
+              this.hiddenPhoto = false
               tip.alert('已删除')
               this.$apply()
               break
@@ -398,22 +404,23 @@
             console.log('老机器报修： ')
             this.repairRequestInfo.nameplate = this.oldNameplateInput
             this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 2).toString()
-            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo, 'true')
             this.addRepairRequestInfo(repairRequestInfoJson)
           } else {
             this.repairRequestInfo.nameplate = this.machineDetail.nameplate
             this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 1).toString()
-            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo, 'false')
             console.log('上传xinxi： ', repairRequestInfoJson)
             this.addRepairRequestInfo(repairRequestInfoJson)
           }
         }
       };
-      async addRepairRequestInfo(repairRequestInfoJson) {
+      async addRepairRequestInfo(repairRequestInfoJson, isOldMachine) {
         console.log('lalallalal:', repairRequestInfoJson)
         const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
           query: {
-            repairRequestInfo: repairRequestInfoJson
+            repairRequestInfo: repairRequestInfoJson,
+            isOldMachine: isOldMachine
           }
         })
         console.log('上传结果： ', uploadRepairRequestInfoJson)
@@ -529,10 +536,11 @@
             id: userId
           }
         })
-        console.log(getCustomerCompanyJson)
+        console.log('公司id：', getCustomerCompanyJson)
         if (getCustomerCompanyJson.data.code !== 200) {
           tip.confirm('网络错误！获取联系人信息出错！', 'BACK')
         } else {
+          this.customerList = this.customerList.concat(getCustomerCompanyJson.data.data)
             // 根据用户id和公司id获取联系人信息
           let getCustomerListJson = await api.getCustomerListByCompany({
             query: {
@@ -540,11 +548,11 @@
               customerCompany: getCustomerCompanyJson.data.data.customerCompany
             }
           })
-          console.log(getCustomerListJson)
-          if (getCustomerListJson.data.code !== 200 || getCustomerListJson.data.data.list.length < 1) {
+          console.log('联系人信息：', getCustomerListJson)
+          if (getCustomerListJson.data.code !== 200) {
             tip.confirm('网络错误！获取联系人信息出错！')
           } else {
-            this.customerList = getCustomerListJson.data.data.list
+            this.customerList = this.customerList.concat(getCustomerListJson.data.data.list)
             for (var i = 0; i < this.customerList.length; i++) {
               this.customerListArr = this.customerListArr.concat(this.customerList[i].account)
             }

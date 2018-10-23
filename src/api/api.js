@@ -24,6 +24,7 @@ const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/cu
 const uploadRepairRequestInfo = (params) => wxRequest(params, apiMall + '/repair/request/info/add')
 const getPartsSendBackInfo = (params) => wxRequest(params, apiMall + '/parts/info/getPartsInfoByRepairRecordId')
 const searchMachineByNameplate = (params) => wxRequest(params, apiMall + '/machine/selectByNameplateAndUserAccount')
+const getIssuePositionList = (params) => wxRequest(params, apiMall + '/issue/position/list/list')
 
 const uploadRepairRequestFiles = (params) => wxUploadFile(params, apiMall + '/repair/request/info/update')
 const uploadPartsInfoFiles = (params) => wxUploadFile(params, apiMall + '/parts/info/update')
@@ -46,6 +47,7 @@ export default {
   uploadRepairRequestInfo,
   getPartsSendBackInfo,
   searchMachineByNameplate,
+  getIssuePositionList,
   uploadRepairRequestFiles,
   uploadPartsInfoFiles
 }

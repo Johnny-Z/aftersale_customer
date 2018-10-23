@@ -58,19 +58,25 @@
       </view>
       <view class="view_column_right">
         <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
-        <button class="status_btn_long">部件待寄回</button>
+        <button wx:if="{{item.partsStatus=='2'}}" class="status_btn_long">部件待寄回</button>
+        <button wx:elif="{{item.partsStatus=='3'}}" class="status_btn_long">待客户接收</button>
+        <button wx:else class="status_btn_long">{{item.partsStatus}}</button>
       </view>
     </view>
   </view>
 </template>
 <script>
+    /* eslint-disable eqeqeq */
+
     import wepy from 'wepy'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
     import {
         ACCOUNT,
         REPAIR_STATUS_REPAIR_OK,
         MAINTAIN_STATUS_FINISHED,
-        INSTALL_STATUS_FINISHED
+        INSTALL_STATUS_FINISHED,
+        PARTS_STATUS_ALREADY_SENDBACK
     } from '@/utils/constant'
     export default class Eventing extends wepy.page {
       config = {
@@ -113,12 +119,15 @@
         },
         deliverListClick(e) {
           console.log(e)
-          let deliveredRecord = JSON.stringify(e)
-          wepy.navigateTo({
-            url: '/pages/eventing_deliver_info?machineDetail=' + deliveredRecord
-          })
+          if (e.partsStatus == PARTS_STATUS_ALREADY_SENDBACK) {
+            tip.confirm('等待客户接收！')
+          } else {
+            let deliveredRecord = JSON.stringify(e)
+            wepy.navigateTo({
+              url: '/pages/eventing_deliver_info?machineDetail=' + deliveredRecord
+            })
+          }
         }
-
       }
 
       onLoad() {

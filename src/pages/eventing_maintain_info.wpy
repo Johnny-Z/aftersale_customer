@@ -49,7 +49,7 @@
         <view class="main_view" wx:if="{{isExistFeedback}}">
             <view class="view_row">
                 <text class="label_tx">评价：</text>
-                <text class="info_tx">{{machineDetail.maintainFeedbackCustomerMark? machineDetail.maintainFeedbackCustomerMark:'暂无'}}</text>
+                <text class="info_tx">{{machineDetail.maintainFeedbackCustomerMark? mark[machineDetail.maintainFeedbackCustomerMark]:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">意见/建议：</text>

@@ -1,12 +1,12 @@
 <template>
     <machinedetails :machine.sync="machineDetail"></machinedetails>
     <view class="detail_view_column">
-        <view class="title_view">
+        <view class="title_view" @tap="bindIsShowRepair">
             <view class="title_view_fir_part">
                 <image class="detail_icon" src="../images/icon_detail_request.png"></image>
                 <text class="title_tx">报修信息</text>
             </view>
-            <view class="title_view_sec_part" @tap="bindIsShowRepair">
+            <view class="title_view_sec_part">
                 <image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
                 <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
             </view>
@@ -41,7 +41,7 @@
         <view class="main_view">
             <view class="view_row">
                 <text class="label_tx">故障部位：</text>
-                <text class="info_tx">{{machineDetail.maintainInfo}}</text>
+                <text class="info_tx">{{issuePositionString}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">问题描述：</text>
@@ -88,15 +88,19 @@
             </view>
             <view class="view_row" wx:for="{{partList}}" wx:key="item" @tap='bindPartsNum({{index}})'>
                 <view class="view_row_half">
-                    <text class="label_tx">{{item.partsName}}</text>
+                    <text class="info_tx">{{item.partsName}}</text>
                 </view>
-                <input class="view_row_half" type="text" @input="bindPartInput" placeholder="输入快递单号..." focus="true"/>
+                <view class="view_row_half">
+                    <input class="view_input" type="text" @input="bindPartInput" placeholder="输入快递单号..." focus="true"/>
+                </view>
             </view>
             <view class="view_row">
                 <text class="label_tx">快递照片：</text>
             </view>
-            <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
-            <image class="photo_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
+            <view class="view_row">
+                <image class="photo_image" mode="aspectFill" wx:for="{{partsImageArr}}" @tap="changePartPreview" data-src="{{item}}" src="{{item}}"></image>
+                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
+            </view>
         </view>
     </view>
     <button class="single_button" @tap="bindUploadFeedback">提交</button>
@@ -119,6 +123,9 @@
         color: #ffffff;
         border-radius: 100rpx;
         margin-left: 15rpx;
+    }
+    .view_input {
+        width: 100%;
     }
 </style>
 <script>
@@ -144,6 +151,7 @@
         isSpeaking: false,
         preRepairImageArr: [],
         preRepairVoiceSrc: '',
+        issuePositionString: '',
         repairImageArr: [],
         partList: [],
         partIndex: [],
@@ -276,6 +284,7 @@
           console.log('声音：', this.preRepairVoiceSrc)
         }
         this.getPartsInfo(this.machineDetail.id)
+        this.getPositionList()
         this.$apply()
       };
       async getPartsInfo(repairRecordId) {
@@ -291,7 +300,26 @@
           this.partList = partsInfoJson.data.data.list
         }
       }
-
+        // get issue position list
+      async getPositionList() {
+        let positionListJson = await api.getIssuePositionList()
+        console.log('get position list: ', positionListJson)
+        let partMark = positionListJson.data.data.list
+        let positionList = this.machineDetail.issuePositionList.split(',')
+        for (var i = 0; i < positionList.length; i++) {
+          for (var j = 0; j < partMark.length; j++) {
+            if (partMark[j].id.toString() == positionList[i]) {
+              if (this.issuePositionString) {
+                this.issuePositionString = this.issuePositionString + '， ' + partMark[j].name
+              } else {
+                this.issuePositionString = partMark[j].name
+              }
+              break
+            }
+          }
+        }
+        this.$apply()
+      }
         // Other properties
     }
 </script>

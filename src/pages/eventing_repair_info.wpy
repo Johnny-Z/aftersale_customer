@@ -1,12 +1,12 @@
 <template>
     <machinedetails :machine.sync="machineDetail"></machinedetails>
     <view class="detail_view_column">
-        <view class="title_view">
+        <view class="title_view" @tap="bindIsShowRepair">
             <view class="title_view_fir_part">
                 <image class="detail_icon" src="../images/icon_detail_request.png"></image>
                 <text class="title_tx">报修信息</text>
             </view>
-            <view class="title_view_sec_part" @tap="bindIsShowRepair">
+            <view class="title_view_sec_part">
                 <image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
                 <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
             </view>
@@ -43,7 +43,7 @@
         <view class="main_view">
             <view class="view_row">
                 <text class="label_tx">故障部位：</text>
-                <text class="info_tx">{{machineDetail.maintainInfo}}</text>
+                <text class="info_tx">{{issuePositionString}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">问题描述：</text>
@@ -83,10 +83,7 @@
         <view wx:if="{{isExistFeedback}}" class="main_view">
             <view class="view_row">
                 <text class="label_tx">评价：</text>
-                <text wx:if="{{machineDetail.repairFeedbackCustomerMark == 0}}" class="info_tx">非常满意</text>
-                <text wx:elif="{{machineDetail.repairFeedbackCustomerMark == 1}}" class="info_tx">满意</text>
-                <text wx:elif="{{machineDetail.repairFeedbackCustomerMark == 2}}" class="info_tx">一般</text>
-                <text wx:else class="info_tx">差</text>
+                <text class="info_tx">{{machineDetail.repairFeedbackCustomerMark? mark[machineDetail.repairFeedbackCustomerMark]:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">意见/建议：</text>
@@ -129,6 +126,8 @@
     }
 </style>
 <script>
+    /* eslint-disable eqeqeq */
+
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
@@ -149,6 +148,7 @@
         isShowRepair: false,
         preRepairImageArr: [],
         preRepairVoiceSrc: '',
+        issuePositionString: '',
         repairImageArr: [],
         isExistFeedback: false,
         repairCustomerFeedback: {
@@ -277,8 +277,29 @@
         } else {
           this.isExistFeedback = false
         }
+        this.getPositionList()
         this.$apply()
       };
+        // get issue position list
+      async getPositionList() {
+        let positionListJson = await api.getIssuePositionList()
+        console.log('get position list: ', positionListJson)
+        let partMark = positionListJson.data.data.list
+        let positionList = this.machineDetail.issuePositionList.split(',')
+        for (var i = 0; i < positionList.length; i++) {
+          for (var j = 0; j < partMark.length; j++) {
+            if (partMark[j].id.toString() == positionList[i]) {
+              if (this.issuePositionString) {
+                this.issuePositionString = this.issuePositionString + '， ' + partMark[j].name
+              } else {
+                this.issuePositionString = partMark[j].name
+              }
+              break
+            }
+          }
+        }
+        this.$apply()
+      }
 
         // Other properties
     }
