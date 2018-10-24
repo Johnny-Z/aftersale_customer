@@ -27,15 +27,15 @@
             <text class="get_input_tx">{{machineDetail.maintainSuggestion}}</text>
             <view class="view_row">
                 <text class="label_tx">保养人：</text>
-                <text class="info_tx">{{machineDetail.maintainChargePersonName}}</text>
+                <text class="info_tx">{{machineDetail.maintainChargePersonName? machineDetail.maintainChargePersonName:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">电话：</text>
-                <text class="info_tx">{{machineDetail.maintainChargePersonPhone}}</text>
+                <text class="info_tx">{{machineDetail.maintainChargePersonPhone? machineDetail.maintainChargePersonPhone:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">保养日期：</text>
-                <text class="info_tx">{{machineDetail.maintainDateActual}}</text>
+                <text class="info_tx">{{machineDetail.maintainDateActual? machineDetail.maintainDateActual:'暂无'}}</text>
             </view>
         </view>
     </view>
@@ -144,6 +144,10 @@
       onLoad(options) {
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
+        if (this.machineDetail.maintainDateActual) {
+          var time = new Date(parseInt(this.machineDetail.maintainDateActual))
+          this.machineDetail.maintainDateActual = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes()
+        }
         console.log(this.machineDetail)
         if (this.machineDetail.customerFeedback > 0) {
           this.isExistFeedback = true

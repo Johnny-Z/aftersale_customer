@@ -43,15 +43,15 @@
             </view>
             <view class="view_row">
                 <text class="label_tx">安装人员：</text>
-                <text class="info_tx">{{machineDetail.installChargePersonName}}</text>
+                <text class="info_tx">{{machineDetail.installChargePersonName? machineDetail.installChargePersonName:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">联系电话：</text>
-                <text class="info_tx">{{machineDetail.installChargePersonPhone}}</text>
+                <text class="info_tx">{{machineDetail.installChargePersonPhone? machineDetail.installChargePersonPhone:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">安装日期：</text>
-                <text class="info_tx">{{machineDetail.installActualTime}}</text>
+                <text class="info_tx">{{machineDetail.installActualTime? machineDetail.installActualTime:'暂无'}}</text>
             </view>
         </view>
     </view>
@@ -195,6 +195,10 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+        if (this.machineDetail.installActualTime) {
+          var time = new Date(parseInt(this.machineDetail.installActualTime))
+          this.machineDetail.installActualTime = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes()
+        }
         if (this.machineDetail.customerFeedback > 0) {
           this.isExistFeedback = true
         }

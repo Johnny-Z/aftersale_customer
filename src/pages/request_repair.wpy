@@ -12,7 +12,7 @@
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
             <modal hidden="{{hiddenNameplate}}" title="机器铭牌号" confirm-text="确定" no-cancel="true" @confirm="listenerNameplate" >
-                <textarea @input="bindNameplateInput" class="textareaInput" placeholder="请输入机器铭牌号"></textarea>
+                <input @input="bindNameplateInput" class="part_input" placeholder="请输入机器铭牌号"></input>
             </modal>
             <text class="get_input_tx">{{oldNameplateInput}}</text>
             <view class="view_row">
@@ -163,6 +163,19 @@
         border-radius: 100rpx;
         border: 2rpx solid #ADC7C7;
         margin-left: 15rpx;
+    }
+    .part_input {
+        width: 500rpx;
+        height: 66rpx;
+        border: 1rpx solid #007474;
+        border-radius: 6rpx;
+        font-family: PingFangSC-Regular;
+        font-size: 30rpx;
+        color: #3B403D;
+        letter-spacing: 0;
+        margin-left: 15rpx;
+        margin-right: 15rpx;
+        padding-left: 10rpx;
     }
 </style>
 <script>
@@ -363,7 +376,6 @@
           wepy.getRecorderManager().stop()
         },
         playRecord() {
-          console.log('anniu按下了...', this.recordTempSrc)
           this.isPlaying = true
           const innerAudioContextRecord = wepy.createInnerAudioContext()
           innerAudioContextRecord.autoplay = true
@@ -394,29 +406,37 @@
           })
         },
         bindPickerChange: function (e) {
-          console.log('picker发送选择改变，携带值为', e.detail.value)
           this.index = e.detail.value
           this.$apply()
         },
         uploadMachineInfo() {
-          this.repairRequestInfo.customer = this.customerList[this.index].id
-          if (this.isOldMachine) {
-            console.log('老机器报修： ')
-            this.repairRequestInfo.nameplate = this.oldNameplateInput
-            this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 2).toString()
-            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo, 'true')
-            this.addRepairRequestInfo(repairRequestInfoJson)
+          if (!this.repairRequestInfo.repairTitle) {
+            tip.alert('请输入问题概述')
+          } else if (!this.repairRequestInfo.content) {
+            tip.alert('请输入具体描述')
+          } else if (!this.recordTempSrc) {
+            tip.alert('请录制报修语音')
+          } else if (this.previewImageArr.length == 0) {
+            tip.alert('请拍下故障照片')
           } else {
-            this.repairRequestInfo.nameplate = this.machineDetail.nameplate
-            this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 1).toString()
-            let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo, 'false')
-            console.log('上传xinxi： ', repairRequestInfoJson)
-            this.addRepairRequestInfo(repairRequestInfoJson)
+            this.repairRequestInfo.customer = this.customerList[this.index].id
+            if (this.isOldMachine) {
+              console.log('老机器报修： ')
+              this.repairRequestInfo.nameplate = this.oldNameplateInput
+              this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 2).toString()
+              let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+              this.addRepairRequestInfo(repairRequestInfoJson, 'true')
+            } else {
+              this.repairRequestInfo.nameplate = this.machineDetail.nameplate
+              this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 1).toString()
+              let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+              console.log('上传xinxi： ', repairRequestInfoJson)
+              this.addRepairRequestInfo(repairRequestInfoJson, 'false')
+            }
           }
         }
       };
       async addRepairRequestInfo(repairRequestInfoJson, isOldMachine) {
-        console.log('lalallalal:', repairRequestInfoJson)
         const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
           query: {
             repairRequestInfo: repairRequestInfoJson,
@@ -512,8 +532,6 @@
       events = {};
 
       async onLoad(options) {
-        console.log('request_repair onLoad: ')
-        console.log(options)
         if (options.machineDetail === '0') {
           this.isOldMachine = true
         } else {
@@ -536,7 +554,6 @@
             id: userId
           }
         })
-        console.log('公司id：', getCustomerCompanyJson)
         if (getCustomerCompanyJson.data.code !== 200) {
           tip.confirm('网络错误！获取联系人信息出错！', 'BACK')
         } else {
@@ -548,7 +565,6 @@
               customerCompany: getCustomerCompanyJson.data.data.customerCompany
             }
           })
-          console.log('联系人信息：', getCustomerListJson)
           if (getCustomerListJson.data.code !== 200) {
             tip.confirm('网络错误！获取联系人信息出错！')
           } else {

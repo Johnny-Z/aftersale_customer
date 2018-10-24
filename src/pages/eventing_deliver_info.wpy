@@ -59,15 +59,15 @@
             </view>
             <view class="view_row">
                 <text class="label_tx">维修人：</text>
-                <text class="info_tx">{{machineDetail.repairChargePersonName}}</text>
+                <text class="info_tx">{{machineDetail.repairChargePersonName? machineDetail.repairChargePersonName:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">电话：</text>
-                <text class="info_tx">{{machineDetail.repairChargePersonPhone}}</text>
+                <text class="info_tx">{{machineDetail.repairChargePersonPhone? machineDetail.repairChargePersonPhone:'暂无'}}</text>
             </view>
             <view class="view_row">
                 <text class="label_tx">维修日期：</text>
-                <text class="info_tx">{{machineDetail.repairEndTime}}</text>
+                <text class="info_tx">{{machineDetail.repairEndTime? machineDetail.repairEndTime:'暂无'}}</text>
             </view>
         </view>
     </view>
@@ -264,6 +264,10 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+        if (this.machineDetail.repairEndTime) {
+          var time = new Date(parseInt(this.machineDetail.repairEndTime))
+          this.machineDetail.repairEndTime = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes()
+        }
         if (this.machineDetail.repairRequestPictures) {
           let preRepairImageTmp = this.machineDetail.repairRequestPictures.split(',')
           for (var i = 0; i < preRepairImageTmp.length; i++) {
