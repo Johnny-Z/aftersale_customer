@@ -1,0 +1,123 @@
+<style lang="less">
+  .login_view_column {
+    background: #FFFFFF;
+    border-radius: 26rpx;
+    margin-left: 50rpx;
+    margin-right: 50rpx;
+    margin-top: 20rpx;
+    padding-left: 70rpx;
+    padding-right: 70rpx;
+    display: flex;
+    flex-direction: column;
+  }
+  .input_view_row {
+    display: flex;
+    flex-direction: row;
+    padding-top: 70rpx;
+    padding-bottom: 20rpx;
+    border-bottom: 1px solid #F0F3F5;
+    align-items: center;// 居中对齐
+    .info_tx {
+      white-space: nowrap;// 单行显示
+    }
+    .number_input {
+      width: 100%;
+      font-family: PingFangSC-Regular;
+      font-size: 30rpx;
+      color: #3B403D;
+    }
+  }
+  .update_btn {
+    width: 100%;
+    margin-top: 92rpx;
+    margin-bottom: 80rpx;
+    background: #007474;
+    box-shadow: 0 6rpx 20rpx 0 rgba(0,116,116,0.20);
+    border-radius: 12rpx;
+    font-family: PingFangSC-Medium;
+    font-size: 34rpx;
+    color: #FFFFFF;
+    text-align: center;
+  }
+</style>
+<template>
+  <view class="detail_view_column">
+    <view class="input_view_row">
+      <text class="info_tx">账号：</text>
+      <input class="number_input" type="text" placeholder="请输入账号" @input="bindAccountInput"/>
+    </view>
+    <view class="input_view_row">
+      <text class="info_tx">姓名：</text>
+      <input class="number_input" type="text" placeholder="请输入姓名" @input="bindNameInput"/>
+    </view>
+    <view class="input_view_row">
+      <text class="info_tx">联系电话：</text>
+      <input class="number_input" type="number" placeholder="请输入联系电话" @input="bindPhoneInput"/>
+    </view>
+    <button class="update_btn" @tap="addContact">确认添加</button>
+  </view>
+</template>
+<script>
+  /* eslint-disable eqeqeq */
+
+  import wepy from 'wepy'
+  import api from '../api/api'
+  import tip from '@/utils/tip'
+
+  export default class AddContacts extends wepy.page {
+    config = {
+      navigationBarTitleText: '添加联系人'
+    }
+    data = {
+      contactInfo: {},
+      account: '',
+      name: '',
+      phone: ''
+    }
+
+    events = {
+    }
+
+    methods = {
+      bindAccountInput(e) {
+        this.account = e.detail.value
+      },
+      bindNameInput(e) {
+        this.name = e.detail.value
+      },
+      bindPhoneInput(e) {
+        this.phone = e.detail.value
+      },
+      async addContact() {
+        if (!this.account) {
+          tip.alert('账号不能为空')
+        } else if (!this.name) {
+          tip.alert('姓名不能为空')
+        } else if (!this.phone) {
+          tip.alert('联系电话不能为空')
+        } else {
+          let addContactJson = await api.addContacts({
+            query: {
+              account: this.account,
+              phone: this.phone,
+              name: this.name,
+              customerCompany: this.contactInfo.customerCompany,
+              roleId: 6,
+              address: this.contactInfo.address
+            }
+          })
+          if (addContactJson.data.code == 200) {
+            tip.confirm('添加联系人成功！', 'BACK')
+          } else {
+            tip.confirm('添加失败，请检查网络！')
+          }
+        }
+      }
+    }
+
+    onLoad(options) {
+      this.contactInfo = JSON.parse(options.contactInfo)
+    }
+  }
+
+</script>

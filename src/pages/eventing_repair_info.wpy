@@ -166,7 +166,6 @@
           this.isShowRepair = !isShow
         },
         voicePlay() {
-          console.log('eventing_repair_info:手指按下了...')
           this.isSpeaking = true
           const innerAudioContext = wepy.createInnerAudioContext()
           innerAudioContext.autoplay = true
@@ -186,7 +185,6 @@
           })
           innerAudioContext.onError((res) => {
             console.log(res.errMsg)
-            console.log(res.errCode)
             this.isSpeaking = false
             this.$apply()
           })
@@ -210,12 +208,10 @@
             urls: self.data.repairImageArr
           })
         },
-        bindPickerChange: function (e) {
-          console.log('picker发送选择改变，携带值为:', e.detail.value)
+        bindPickerChange(e) {
           this.index = e.detail.value
         },
-        bindSuggestionInput: function(e) {
-          console.log(e.detail.value)
+        bindSuggestionInput(e) {
           this.customerSuggestion = e.detail.value
         },
         async bindUploadFeedback() {
@@ -230,7 +226,6 @@
           })
           console.log('repairFeedbackJson :')
           console.log(repairFeedbackJson)
-          console.log(repairFeedbackJson.data.code)
           if (repairFeedbackJson.data.code === 200) {
             wepy.showToast({
               title: '上传成功',

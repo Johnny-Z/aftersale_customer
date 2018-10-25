@@ -1,11 +1,12 @@
 import {
   wxLogin,
   wxRequest,
+  wxRequestRaw,
   wxUploadFile
 } from '@/utils/wxRequest'
 
 const apiMall = 'https://eservice-tech.cn/api'
-// const apiMall = 'http://wxm.vaiwan.com:8081/'
+// const apiMall = 'http://192.168.1.32:8080/'
 // const apiMall = 'http://192.168.43.223:8080'
 const login = (params) => wxRequest(params, apiMall + '/login')
 const autoLogin = (params) => wxRequest(params, apiMall + '/wechat/user/info/getUsersByJsCode')
@@ -25,6 +26,10 @@ const uploadRepairRequestInfo = (params) => wxRequest(params, apiMall + '/repair
 const getPartsSendBackInfo = (params) => wxRequest(params, apiMall + '/parts/info/getPartsInfoByRepairRecordId')
 const searchMachineByNameplate = (params) => wxRequest(params, apiMall + '/machine/selectByNameplateAndUserAccount')
 const getIssuePositionList = (params) => wxRequest(params, apiMall + '/issue/position/list/list')
+const getPersonInfo = (params) => wxRequest(params, apiMall + '/wechat/user/info/getWechatUserInfoByAccount')
+const updatePassword = (params) => wxRequest(params, apiMall + '/user/updatePassword')
+const deleteContacts = (params) => wxRequestRaw(params, apiMall + '/user/update')
+const addContacts = (params) => wxRequestRaw(params, apiMall + '/user/addStaff')
 
 const uploadRepairRequestFiles = (params) => wxUploadFile(params, apiMall + '/repair/request/info/update')
 const uploadPartsInfoFiles = (params) => wxUploadFile(params, apiMall + '/parts/info/update')
@@ -48,6 +53,10 @@ export default {
   getPartsSendBackInfo,
   searchMachineByNameplate,
   getIssuePositionList,
+  getPersonInfo,
   uploadRepairRequestFiles,
+  updatePassword,
+  deleteContacts,
+  addContacts,
   uploadPartsInfoFiles
 }

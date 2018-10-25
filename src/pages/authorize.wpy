@@ -71,7 +71,7 @@
     <view class="login_view_column">
       <view class="login_view_row">
         <image class="login_image" src="../images/icon_login_account.png"></image>
-        <input class="login_input" type="text" focus="true" @input="bindAccountInput" placeholder="输入你的账号"/>
+        <input class="login_input" type="text" focus="true" @input="bindAccountInput" value="{{account}}" placeholder="输入你的账号"/>
       </view>
       <view class="login_view_row">
         <image class="login_image" src="../images/icon_login_password.png"></image>
@@ -105,7 +105,9 @@
     }
     async onLoad(options) {
         console.log('start:', options)
-        if (!options.exit) {
+        if (options.exit) {
+            this.account = wepy.getStorageSync(ACCOUNT)
+        } else {
             let fs = wx.getFileSystemManager()
             let fsStat = fs.statSync(AUTHORIZATION_PATH, false)
             console.log(fsStat)
@@ -144,11 +146,9 @@
     }
     methods = {
       bindAccountInput(e) {
-        console.log(e.detail.value)
         this.account = e.detail.value
       },
       bindPasswordInput(e) {
-        console.log(e.detail.value)
         this.password = e.detail.value
       },
       async bindLogin() {
@@ -166,9 +166,6 @@
                 }
             })
             console.log('get session resoult: ', rlt)
-            // wx.setStorageSync(AUTHORIZATION, 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJ6aGFvcHVcIixcImFjY291bnROb25FeHBpcmVkXCI6dHJ1ZSxcImFjY291bnROb25Mb2NrZWRcIjp0cnVlLFwiYWRkcmVzc1wiOlwiXCIsXCJhZ2VudFwiOjAsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzIxMzQ0MjkwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiY3VzdG9tZXJDb21wYW55XCI6XCIxXCIsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6OCxcIm5hbWVcIjpcInpoYW9wdVwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzMTg4ODg4ODg4XCIsXCJyb2xlSWRcIjozLFwidXNlcm5hbWVcIjpcInpoYW9wdVwiLFwidmFsaWRcIjpcIjFcIn0iLCJleHAiOjE1NDA2OTgxNDZ9.70rPlMhSCZmozswaWrX1aut64Ga2aGSLk6ZchGy6DODEImcD_eSye_WVcgL0mJby9Rk2vwcVcg5HbdX_QBuX_g')
-            // wx.setStorageSync(ACCOUNT, this.account)
-            // wx.setStorageSync(USER_ID, 6)
             if (rlt.data.code == 400) {
                 tip.confirm(rlt.data.message)
             } else if (rlt.data.code == 200) {

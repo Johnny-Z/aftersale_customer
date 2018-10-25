@@ -244,7 +244,6 @@
           this.$apply()
         },
         bindNameplateInput(e) {
-          console.log(e.detail.value)
           this.oldNameplateInput = e.detail.value
         },
         async previewNameplateImage() {
@@ -276,7 +275,6 @@
           this.$apply()
         },
         bindTitleInput(e) {
-          console.log(e.detail.value)
           this.repairRequestInfo.repairTitle = e.detail.value
         },
         showContentInput() {
@@ -288,7 +286,6 @@
           this.$apply()
         },
         bindContentInput(e) {
-          console.log(e.detail.value)
           this.repairRequestInfo.content = e.detail.value
         },
         async previewImage() {
@@ -568,7 +565,11 @@
           if (getCustomerListJson.data.code !== 200) {
             tip.confirm('网络错误！获取联系人信息出错！')
           } else {
-            this.customerList = this.customerList.concat(getCustomerListJson.data.data.list)
+            for (var ii = 0; ii < getCustomerListJson.data.data.list.length; ii++) {
+              if (getCustomerListJson.data.data.list.valid[ii] == '1') {
+                this.customerList = this.customerList.concat(getCustomerListJson.data.data.list[ii])
+              }
+            }
             for (var i = 0; i < this.customerList.length; i++) {
               this.customerListArr = this.customerListArr.concat(this.customerList[i].account)
             }

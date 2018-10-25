@@ -21,6 +21,7 @@ export default class extends wepy.app {
       'pages/mine',
       'pages/change_password',
       'pages/change_contacts',
+      'pages/add_contacts',
       'pages/contacts_info',
       'pages/news',
       'pages/search'
@@ -54,6 +55,11 @@ export default class extends wepy.app {
         iconPath: 'images/tab_btn_mine_normal.png',
         selectedIconPath: 'images/tab_btn_mine_selected.png'
       }]
+    },
+    'networkTimeout': {
+      'request': 10000,
+      'uploadFile': 10000,
+      'downloadFile': 10000
     }
   }
 

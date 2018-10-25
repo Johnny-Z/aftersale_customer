@@ -1,4 +1,7 @@
 <style lang="less">
+  page {
+    margin-bottom: 100rpx;
+  }
   .line_vw_color {
     display: flex;
     flex-direction: row;
@@ -21,7 +24,7 @@
     border-top: 1px solid #F0F3F5;
     align-items: center;// 居中对齐
     font-family: PingFangSC-Medium;
-    font-size: 30px;
+    font-size: 30rpx;
     color: #3B403D;
     letter-spacing: 0;
   }
@@ -29,12 +32,30 @@
     width: 10%;
   }
   .line_sec_tx {
-    width: 25%;
+    width: 30%;
   }
   .line_thi_tx {
     width: 45%;
   }
   .line_fou_tx {
+  }
+  .edit_icon {
+    width: 32rpx;
+    height: 34rpx;
+    margin-left: 12rpx;
+  }
+  .add_btn {
+    width: 100%;
+    border: 1rpx solid #007474;
+    box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
+    border-radius: 10rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 30rpx;
+    color: #007474;
+    letter-spacing: 0;
+    text-align: center;
+    position: fixed;
+    bottom:0;
   }
 </style>
 <template>
@@ -44,55 +65,111 @@
     <text class="line_thi_tx">手机号</text>
     <text class="line_fou_tx">操作</text>
   </view>
-  <view class="list_column" wx:for="{{repairRecordList}}" wx:key="item" @tap="repairRecordClick({{item}})">
+  <view class="list_column" wx:for="{{customerList}}" wx:key="item" >
     <view class="line_vw_light">
-      <text class="line_fir_tx">{{index + 1}}</text>
-      <text class="line_sec_tx">{{item.repairChargePersonName? item.repairChargePersonName: '暂无'}}</text>
-      <text class="line_thi_tx">{{item.repairChargePersonName? item.repairChargePersonName: '暂无'}}</text>
-      <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showContentInput"></image>
+      <text class="line_fir_tx">{{index}}</text>
+      <text class="line_sec_tx">{{item.name? item.name: '暂无'}}</text>
+      <text class="line_thi_tx">{{item.phone? item.phone: '暂无'}}</text>
+      <image wx:if="{{index!=0}}" class="edit_icon" src="../images/icon_btn_delete.png" @tap="bindDeleteContacts({{item}},{{index}})"></image>
     </view>
   </view>
+  <button class="add_btn" @tap="bindAddContacts" >添加联系人</button>
 </template>
 <script>
-  /* eslint-disable no-undef */
+  /* eslint-disable no-undef,eqeqeq */
 
   import wepy from 'wepy'
+  import api from '../api/api'
+  import tip from '@/utils/tip'
+  import {
+      USER_ID
+  } from '@/utils/constant'
 
   export default class ChangeContacts extends wepy.page {
     config = {
       navigationBarTitleText: '联系人管理'
     }
     data = {
-
+      customerList: []
     }
 
     events = {
     }
 
     methods = {
-      bindChangePassword() {
-        wx.navigateTo({
-          url: '/pages/change_password'
+      async bindDeleteContacts(e, index) {
+        wx.showModal({
+          title: '提醒',
+          content: '确定要删除该联系人吗？',
+          showCancel: true,
+          confirmColor: '#007474',
+          success: res => {
+            if (res.confirm) {
+              this.deleteContact(e, index)
+            }
+          }
         })
       },
-      bindChangeContacts() {
+      bindAddContacts() {
+        let contactInfo = JSON.stringify(this.customerList[0])
         wx.navigateTo({
-          url: '/pages/contacts_info'
+          url: '/pages/add_contacts?contactInfo=' + contactInfo
         })
-      },
-      bindShowNews() {
-        wx.navigateTo({
-          url: '/pages/news'
-        })
-      },
-      bindExit() {
-        wx.redirectTo({
-          url: '/pages/authorize'
-        })
+      }
+    }
+    async deleteContact(e, index) {
+      let deleteContactsJson = await api.deleteContacts({
+        query: {
+          id: e.id,
+          valid: '0'
+        }
+      })
+      if (deleteContactsJson.data.code == 200) {
+        this.customerList.splice(index, 1)
+        this.$apply()
+      } else {
+        tip.confirm('删除失败，请检查网络！')
       }
     }
 
     onLoad() {}
+
+    onShow() {
+      this.customerList = []
+      let userId = wepy.getStorageSync(USER_ID)
+      this.getCustomerList(userId)
+    }
+
+    async getCustomerList(userId) {
+          // 先获取对应公司id
+      let getCustomerCompanyJson = await api.getUserDetail({
+        query: {
+          id: userId
+        }
+      })
+      if (getCustomerCompanyJson.data.code !== 200) {
+        tip.confirm('网络错误！获取联系人信息出错！', 'BACK')
+      } else {
+        this.customerList = this.customerList.concat(getCustomerCompanyJson.data.data)
+              // 根据用户id和公司id获取联系人信息
+        let getCustomerListJson = await api.getCustomerListByCompany({
+          query: {
+            roleId: 6,
+            customerCompany: getCustomerCompanyJson.data.data.customerCompany
+          }
+        })
+        if (getCustomerListJson.data.code !== 200) {
+          tip.confirm('网络错误！获取联系人信息出错！')
+        } else {
+          for (var ii = 0; ii < getCustomerListJson.data.data.list.length; ii++) {
+            if (getCustomerListJson.data.data.list[ii].valid == '1' && getCustomerListJson.data.data.list[ii].id != this.customerList[0].id) {
+              this.customerList = this.customerList.concat(getCustomerListJson.data.data.list[ii])
+            }
+          }
+          this.$apply()
+        }
+      }
+    }
   }
 
 </script>

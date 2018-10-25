@@ -217,9 +217,7 @@
         },
           // 根据行号加入数据到数组中
         bindPartInput(e) {
-          console.log(e.detail.value)
           this.partList[this.partIndex].sendbackTrackingNumber = e.detail.value
-          console.log(this.partList)
         },
         async bindPreviewImage() {
           let res = await wepy.chooseImage({

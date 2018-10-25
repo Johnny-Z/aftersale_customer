@@ -151,12 +151,10 @@
         installBasicItemList: []
       };
       methods = {
-        bindPickerChange: function (e) {
-          console.log('picker发送选择改变，携带值为 ', e.detail.value)
+        bindPickerChange(e) {
           this.index = e.detail.value
         },
-        bindSuggestionInput: function(e) {
-          console.log(e.detail.value)
+        bindSuggestionInput(e) {
           this.customerSuggestion = e.detail.value
         },
         async bindUploadFeedback() {
@@ -210,8 +208,6 @@
             this.installInfoList = this.installInfoList.concat(tempInfoList[i])
           }
         }
-        console.log('1111111', this.installInfoList)
-        console.log('1111111', this.installBasicItemList)
         this.$apply()
       };
 
