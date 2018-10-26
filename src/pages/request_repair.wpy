@@ -11,7 +11,7 @@
                 <text class="label_tx">机器编号：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
-            <modal hidden="{{hiddenNameplate}}" title="机器铭牌号" confirm-text="确定" no-cancel="true" @confirm="listenerNameplate" >
+            <modal wx:if="{{hiddenNameplate}}" title="机器铭牌号" confirm-text="确定" no-cancel="true" @confirm="listenerNameplate" >
                 <input @input="bindNameplateInput" class="part_input" placeholder="请输入机器铭牌号"></input>
             </modal>
             <text class="get_input_tx">{{oldNameplateInput}}</text>
@@ -86,7 +86,7 @@
                 <text class="label_tx">问题概述：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
-            <modal hidden="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" >
+            <modal wx:if="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" >
                 <textarea @input="bindTitleInput" class="textareaInput" placeholder="请在此输入问题概述（不能为空）"></textarea>
             </modal>
             <text class="get_input_tx">{{repairRequestInfo.repairTitle}}</text>
@@ -94,7 +94,7 @@
                 <text class="label_tx">具体描述：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
-            <modal hidden="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" >
+            <modal wx:if="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" >
                 <textarea @input="bindContentInput" class="textareaInput" placeholder="请在此输入详细情况（不能为空）"></textarea>
             </modal>
             <text class="get_input_tx">{{repairRequestInfo.content}}</text>
@@ -197,9 +197,9 @@
         machinedetails: MachineDetails
       }
       data = {
-        hiddenNameplate: true,
-        hiddenTitle: true,
-        hiddenContent: true,
+        hiddenNameplate: false,
+        hiddenTitle: false,
+        hiddenContent: false,
         hiddenPhoto: false,
         machineDetail: {},
         customerList: [],
@@ -236,11 +236,11 @@
       };
       methods = {
         showNameplateInput() {
-          this.hiddenNameplate = false
+          this.hiddenNameplate = true
           this.$apply()
         },
         listenerNameplate() {
-          this.hiddenNameplate = true
+          this.hiddenNameplate = false
           this.$apply()
         },
         bindNameplateInput(e) {
@@ -267,22 +267,22 @@
           })
         },
         showTitleInput() {
-          this.hiddenTitle = false
+          this.hiddenTitle = true
           this.$apply()
         },
         listenerTitle() {
-          this.hiddenTitle = true
+          this.hiddenTitle = false
           this.$apply()
         },
         bindTitleInput(e) {
           this.repairRequestInfo.repairTitle = e.detail.value
         },
         showContentInput() {
-          this.hiddenContent = false
+          this.hiddenContent = true
           this.$apply()
         },
         listenerContent() {
-          this.hiddenContent = true
+          this.hiddenContent = false
           this.$apply()
         },
         bindContentInput(e) {
@@ -566,7 +566,7 @@
             tip.confirm('网络错误！获取联系人信息出错！')
           } else {
             for (var ii = 0; ii < getCustomerListJson.data.data.list.length; ii++) {
-              if (getCustomerListJson.data.data.list.valid[ii] == '1') {
+              if (getCustomerListJson.data.data.list[ii].valid == '1') {
                 this.customerList = this.customerList.concat(getCustomerListJson.data.data.list[ii])
               }
             }

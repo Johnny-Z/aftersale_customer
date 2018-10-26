@@ -6,7 +6,7 @@ import {
 } from '@/utils/wxRequest'
 
 const apiMall = 'https://eservice-tech.cn/api'
-// const apiMall = 'http://192.168.1.32:8080/'
+// const apiMall = 'http://192.168.1.31:8080/'
 // const apiMall = 'http://192.168.43.223:8080'
 const login = (params) => wxRequest(params, apiMall + '/login')
 const autoLogin = (params) => wxRequest(params, apiMall + '/wechat/user/info/getUsersByJsCode')
