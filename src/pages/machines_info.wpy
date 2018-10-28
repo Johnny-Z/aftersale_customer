@@ -133,7 +133,7 @@
 </template>
 <style lang="less">
     page {
-        margin-bottom: 120rpx;
+      padding-bottom: 120rpx;
     }
     .line_vw_color {
         display: flex;

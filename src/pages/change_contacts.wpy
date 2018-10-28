@@ -1,6 +1,6 @@
 <style lang="less">
   page {
-    margin-bottom: 100rpx;
+    padding-bottom: 100rpx;
   }
   .line_vw_color {
     display: flex;
