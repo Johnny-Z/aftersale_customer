@@ -144,7 +144,7 @@
           customerMark: '',
           customerSuggestion: ''
         },
-        mark: ['非常满意', '满意', '一般', '差评'],
+        mark: ['差评', '一般', '满意', '非常满意'],
         index: 0,
         customerSuggestion: '',
         installInfoList: [],
