@@ -109,7 +109,7 @@
           if (addContactJson.data.code == 200) {
             tip.confirm('添加联系人成功！', 'BACK')
           } else {
-            tip.confirm('添加失败，请检查网络！')
+            tip.confirm('失败！' + addContactJson.data.message)
           }
         }
       }
