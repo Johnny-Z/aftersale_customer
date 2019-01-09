@@ -129,7 +129,7 @@
             </view>
         </view>
     </view>
-    <button hidden="{{hiddenBtn}}" class="single_button" @tap="buttonClick">报修</button>
+    <button wx:if="{{hiddenBtn}}" class="single_button" @tap="buttonClick">报修</button>
 </template>
 <style lang="less">
     page {
@@ -178,7 +178,7 @@
     import MachineDetails from '../components/machine_details'
     import tip from '@/utils/tip'
     import {
-        REPAIR_STATUS_REPAIR_CUSTOMER_CONFIRMED
+        MACHINE_STATUS_IN_NORMAL
     } from '@/utils/constant'
 
     export default class MachinesInfo extends wepy.page {
@@ -190,7 +190,7 @@
       }
       data = {
         isShowMachine: false,
-        hiddenBtn: false,
+        hiddenBtn: true,
         machineDetail: {},
         installRecordList: [],
         maintainRecordList: [],
@@ -251,6 +251,12 @@
         console.log(this.machineDetail)
       };
       onShow() {
+        if (this.machineDetail.status == MACHINE_STATUS_IN_NORMAL) {
+          this.hiddenBtn = true
+        } else {
+          this.hiddenBtn = false
+        }
+        this.$apply()
         this.getInstallRecordList(this.machineDetail.nameplate)
         this.getMaintainRecordList(this.machineDetail.nameplate)
         this.getRepairRecordList(this.machineDetail.nameplate)
@@ -291,15 +297,6 @@
         for (var i = 0; i < this.repairRecordList.length; i++) {
           var time = new Date(parseInt(this.repairRecordList[i].createTime))
           this.repairRecordList[i].createTime = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate()
-        }
-        if (this.repairRecordList.length < 1) {
-          this.hiddenBtn = false
-        } else {
-          for (var ii = 0; ii < this.repairRecordList.length; ii++) {
-            if (this.repairRecordList[ii].status !== REPAIR_STATUS_REPAIR_CUSTOMER_CONFIRMED) {
-              this.hiddenBtn = true
-            }
-          }
         }
         this.$apply()
       }
