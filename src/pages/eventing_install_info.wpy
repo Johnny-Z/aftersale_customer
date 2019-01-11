@@ -99,7 +99,7 @@
             <view class="view_row">
                 <text class="label_tx">意见/建议：</text>
             </view>
-            <textarea @input="bindSuggestionInput" class="textareaInput" placeholder="输入你的意见/建议"></textarea>
+            <textarea @input="bindSuggestionInput" class="textareaInput" fixed="true" placeholder="输入你的意见/建议"></textarea>
         </view>
     </view>
     <button wx:if="{{!isExistFeedback}}" class="single_button" @tap="bindUploadFeedback">提交</button>
