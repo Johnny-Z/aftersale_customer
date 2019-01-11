@@ -1,5 +1,5 @@
 <template>
-    <machinedetails :machine.sync="machineDetail"></machinedetails>
+    <machinedetails machine="machineDetail"></machinedetails>
     <view class="detail_view_column">
         <view class="title_view">
             <view class="title_view_fir_part">

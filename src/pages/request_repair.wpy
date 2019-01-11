@@ -11,7 +11,7 @@
                 <text class="label_tx">机器编号：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
-            <modal wx:if="{{hiddenNameplate}}" title="机器铭牌号" confirm-text="确定" no-cancel="true" @confirm="listenerNameplate" >
+            <modal wx:if="{{hiddenNameplate}}" title="机器铭牌号" confirm-text="确定" no-cancel="true" @confirm="listenerNameplate" catchtouchmove="true">
                 <input @input="bindNameplateInput" class="part_input" value="{{oldNameplateInput}}" placeholder="请输入机器铭牌号"></input>
             </modal>
             <text class="get_input_tx">{{oldNameplateInput}}</text>
@@ -86,7 +86,7 @@
                 <text class="label_tx">问题概述：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
-            <modal wx:if="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" >
+            <modal wx:if="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" catchtouchmove="true" catchtouchmove="true">
                 <textarea @input="bindTitleInput" class="textareaInput" value="{{repairRequestInfo.repairTitle}}" placeholder="请在此输入问题概述（不能为空）"></textarea>
             </modal>
             <text class="get_input_tx">{{repairRequestInfo.repairTitle}}</text>
@@ -94,7 +94,7 @@
                 <text class="label_tx">具体描述：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
             </view>
-            <modal wx:if="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" >
+            <modal wx:if="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" catchtouchmove="true">
                 <textarea @input="bindContentInput" class="textareaInput" value="{{repairRequestInfo.content}}" placeholder="请在此输入详细情况（不能为空）"></textarea>
             </modal>
             <text class="get_input_tx">{{repairRequestInfo.content}}</text>
