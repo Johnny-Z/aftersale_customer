@@ -46,10 +46,10 @@
       <text class="info_tx">账号：</text>
       <input class="number_input" type="text" placeholder="请输入账号" @input="bindAccountInput"/>
     </view>
-    <view class="input_view_row">
-      <text class="info_tx">姓名：</text>
-      <input class="number_input" type="text" placeholder="请输入姓名" @input="bindNameInput"/>
-    </view>
+    <!--<view class="input_view_row">-->
+      <!--<text class="info_tx">姓名：</text>-->
+      <!--<input class="number_input" type="text" placeholder="请输入姓名" @input="bindNameInput"/>-->
+    <!--</view>-->
     <view class="input_view_row">
       <text class="info_tx">联系电话：</text>
       <input class="number_input" type="number" placeholder="请输入联系电话" @input="bindPhoneInput"/>
@@ -71,7 +71,7 @@
     data = {
       contactInfo: {},
       account: '',
-      name: '',
+      // name: '',
       phone: ''
     }
 
@@ -82,17 +82,15 @@
       bindAccountInput(e) {
         this.account = e.detail.value
       },
-      bindNameInput(e) {
-        this.name = e.detail.value
-      },
+      // bindNameInput(e) {
+      //   this.name = e.detail.value
+      // },
       bindPhoneInput(e) {
         this.phone = e.detail.value
       },
       async addContact() {
         if (!this.account) {
           tip.alert('账号不能为空')
-        } else if (!this.name) {
-          tip.alert('姓名不能为空')
         } else if (!this.phone) {
           tip.alert('联系电话不能为空')
         } else {
@@ -100,7 +98,7 @@
             query: {
               account: this.account,
               phone: this.phone,
-              name: this.name,
+              name: this.account,
               customerCompany: this.contactInfo.customerCompany,
               roleId: 6,
               address: this.contactInfo.address
