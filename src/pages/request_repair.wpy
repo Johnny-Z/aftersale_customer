@@ -515,7 +515,7 @@
         if (returnImageSrcData.code === 200) {
           console.log('count的值： ', count)
           if (count >= this.previewImageArr.length - 1) {
-            tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK')
+            tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK2')
           } else {
             count++
             repairRequestInfoJson = JSON.stringify(returnImageSrcData.data)

@@ -40,6 +40,8 @@ export default class Tips {
       success: res => {
         if (payload == 'BACK') {
           wx.navigateBack()
+        } else if (payload == 'BACK2') {
+          wx.navigateBack({delta: 2})
         } else if (payload == 'TOP') {
           wx.redirectTo({
             url: '/pages/authorize?exit=1'
