@@ -113,3 +113,10 @@ export const PARTS_STATUS_NOT_NEED = '1'
 export const PARTS_STATUS_WAIT_FOR_SENDBACK = '2'
 export const PARTS_STATUS_ALREADY_SENDBACK = '3'
 export const PARTS_STATUS_AFTERSALE_CONFIRMED = '4'
+/**
+
+ * 5：客户
+ * 6：客户联系人
+ */
+export const ROLE_ID_CUSTOMER = 5;
+export const ROLE_ID_CUSTOMER_CONTACT = 6;

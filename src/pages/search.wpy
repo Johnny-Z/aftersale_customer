@@ -84,6 +84,7 @@
 
     import wepy from 'wepy'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
     import {
         ACCOUNT
     } from '@/utils/constant'
@@ -161,7 +162,7 @@
         } else if (searchResultJson.data.message === 'notYourMachine') {
           this.isExistMachine = false
           this.$apply()
-          tip.confirm('错误：未找到该机器编号！请输入正确的机器编号！')
+          tip.confirm('警告：该机器编号不属于你，无权查看！')
         } else {
           this.isExistMachine = false
           this.$apply()
