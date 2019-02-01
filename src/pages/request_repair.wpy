@@ -450,6 +450,8 @@
           } else {
             this.addRepairVoiceSrc(repairRequestInfoJson)
           }
+        } else if (uploadRepairRequestInfoJson.data.message === '该机器已经存在！') {
+          tip.confirm('该机器编号已经存在！')
         } else {
           tip.confirm('网络错误！提交出错，请重新提交！')
         }
