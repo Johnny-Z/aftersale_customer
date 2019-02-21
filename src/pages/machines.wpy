@@ -33,6 +33,17 @@
       }
     }
   }
+  .add_btn {
+      width: 100%;
+      border: 1rpx solid #007474;
+      box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
+      border-radius: 10rpx;
+      font-family: PingFangSC-Regular;
+      font-size: 30rpx;
+      color: #007474;
+      letter-spacing: 0;
+      text-align: center;
+  }
 </style>
 <template>
   <view class="search_view">
@@ -59,6 +70,7 @@
       </view>
     </view>
   </view>
+  <button class="add_btn" @tap="addOldRepair">找不到机器？</button>
 </template>
 <script>
     /* eslint-disable no-undef */
@@ -93,6 +105,21 @@
           let machines = JSON.stringify(e)
           wepy.navigateTo({
             url: '/pages/machines_info?machineDetail=' + machines
+          })
+        },
+        addOldRepair() {
+          wx.showModal({
+            title: '发起报修',
+            content: '是否需要报修不在列表中的机器？',
+            showCancel: true,
+            confirmColor: '#007aff',
+            success: function (res) {
+              if (res.confirm) {
+                wepy.navigateTo({
+                  url: '/pages/request_repair?machineDetail=0'
+                })
+              }
+            }
           })
         }
       }

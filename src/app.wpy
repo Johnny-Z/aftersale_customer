@@ -24,6 +24,7 @@ export default class extends wepy.app {
       'pages/add_contacts',
       'pages/contacts_info',
       'pages/news',
+      'pages/authorize_result',
       'pages/search'
     ],
     window: {
