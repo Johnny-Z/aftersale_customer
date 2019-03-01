@@ -1,4 +1,4 @@
-<template>
+<template xmlns:wx="http://www.w3.org/1999/XSL/Transform">
     <machinedetails :machine="machineDetail"></machinedetails>
     <view class="detail_view_column">
         <view class="title_view">
@@ -13,35 +13,6 @@
                 <text class="info_tx">{{machineDetail.orderNum? machineDetail.orderNum:'暂无'}}</text>
             </view>
             <view class="view_row">
-                <text class="label_tx">调试结果：</text>
-                <text class="info_tx">{{machineDetail.installResult}}</text>
-            </view>
-            <view class="view_row">
-                <text class="label_tx">调试记录：</text>
-            </view>
-            <view class="view_row" >
-                <text class="info_tx" >电源电压：</text>
-                <text class="info_tx" >A-{{installBasicItemList[0].install_value? installBasicItemList[0].install_value + 'V':'暂无'}}</text>
-                <text class="info_tx" >B-{{installBasicItemList[1].install_value? installBasicItemList[1].install_value + 'V':'暂无'}}</text>
-                <text class="info_tx" >C-{{installBasicItemList[2].install_value? installBasicItemList[2].install_value + 'V':'暂无'}}</text>
-            </view>
-            <view class="view_row" >
-                <text class="info_tx" >单相电压：</text>
-                <text class="info_tx" >{{installBasicItemList[3].install_value? installBasicItemList[3].install_value + 'V':'暂无'}}</text>
-            </view>
-            <view class="view_row">
-                <text class="info_tx" >接地情况：</text>
-                <text class="info_tx" >{{installBasicItemList[4].install_value? installBasicItemList[4].install_value:'暂无'}}</text>
-            </view>
-            <view class="view_row">
-                <text class="info_tx" >机器水平：</text>
-                <text class="info_tx" >{{installBasicItemList[5].install_value? installBasicItemList[5].install_value:'暂无'}}</text>
-            </view>
-            <view class="view_row">
-                <text class="info_tx" >台板支撑：</text>
-                <text class="info_tx" >{{installBasicItemList[6].install_value? installBasicItemList[6].install_value:'暂无'}}</text>
-            </view>
-            <view class="view_row">
                 <text class="label_tx">安装人员：</text>
                 <text class="info_tx">{{machineDetail.installChargePersonName? machineDetail.installChargePersonName:'暂无'}}</text>
             </view>
@@ -52,6 +23,22 @@
             <view class="view_row">
                 <text class="label_tx">安装日期：</text>
                 <text class="info_tx">{{machineDetail.installActualTime? machineDetail.installActualTime:'暂无'}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">调试结果：</text>
+                <text class="info_tx">{{machineDetail.installResult}}</text>
+            </view>
+            <view class="view_row">
+                <text class="label_tx">基本项：</text>
+            </view>
+            <view class="list_item_row" wx:for="{{installBasicItemList}}" wx:key="item" >
+                <view class="item_left_70" >
+                    <text class="content_tx">{{item.install_content}}</text>
+                </view>
+                <view class="item_right_30">
+                    <text wx:if="{{item.install_value == '安装'}}" class="info_tx">安装</text>
+                    <text wx:else class="info_tx" >不安装</text>
+                </view>
             </view>
         </view>
     </view>
@@ -66,8 +53,8 @@
                     <text class="content_tx">{{item.install_content}}</text>
                 </view>
                 <view class="item_right">
-                    <text wx:if="{{item.install_value == 1}}" class="info_tx">完成</text>
-                    <text wx:else class="info_tx" >未完成</text>
+                    <text wx:if="{{item.install_value == ''}}" class="info_tx">未完成</text>
+                    <text wx:else class="info_tx" >{{item.install_value}}</text>
                 </view>
             </view>
         </view>
@@ -123,6 +110,13 @@
         font-size: 30rpx;
         color: #3B403D;
         letter-spacing: 0;
+    }
+    .item_left_70 {
+        width: 70%;
+    }
+    .item_right_30 {
+        width: 30%;
+        text-align: center;
     }
 </style>
 <script>
