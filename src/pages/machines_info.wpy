@@ -129,7 +129,7 @@
             </view>
         </view>
     </view>
-    <button wx:if="{{hiddenBtn}}" class="single_button" @tap="buttonClick">一键报修</button>
+    <button wx:if="{{hiddenBtn}}" class="single_button" @tap="uploadMachineInfo">一键报修</button>
 </template>
 <style lang="less">
     page {
@@ -178,7 +178,9 @@
     import MachineDetails from '../components/machine_details'
     import tip from '@/utils/tip'
     import {
-        MACHINE_STATUS_IN_NORMAL
+        MACHINE_STATUS_IN_NORMAL,
+            USER_ID,
+            ACCOUNT
     } from '@/utils/constant'
 
     export default class MachinesInfo extends wepy.page {
@@ -194,9 +196,29 @@
         machineDetail: {},
         installRecordList: [],
         maintainRecordList: [],
-        repairRecordList: []
+        repairRecordList: [],
+        repairRequestInfo: {
+//              nameplatePicture: '',
+//              voice: '',
+//              pictures: '',
+      nameplate: '',
+//              repairTitle: '',
+//              content: '',
+                customer: 0,
+                createTime: '',
+                uploadFilesAmount: ''
+//              alreadyUploadedFilesNumber: '0'
+          },
+
+          customerList: [],
+          customerListArr: [],
+
+          index: 0,
+          account: '',
+          userId: ''
       };
       methods = {
+
         bindIsShow() {
           let isShow = this.isShowMachine
           this.isShowMachine = !isShow
@@ -235,14 +257,23 @@
             tip.confirm('机器在维修流程中！')
           }
         },
-        buttonClick() {
-          let machines = JSON.stringify(this.machineDetail)
 
-            //todo: 一键报修之后，不用再进入报修详情了
-          wepy.navigateTo({
-            url: '/pages/request_repair?machineDetail=' + machines
-          })
-        }
+          uploadMachineInfo() {
+              this.repairRequestInfo.customer = this.userId
+                  if (this.isOldMachine) {
+                      console.log('老机器报修： ')
+                      this.repairRequestInfo.nameplate = this.oldNameplateInput
+//                      this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 2).toString()
+                      let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+                      this.addRepairRequestInfo(repairRequestInfoJson, 'true')
+                  } else {
+                      this.repairRequestInfo.nameplate = this.machineDetail.nameplate
+//                      this.repairRequestInfo.uploadFilesAmount = (this.previewImageArr.length + 1).toString()
+                      let repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+                      console.log('上传xinxi： ', repairRequestInfoJson)
+                      this.addRepairRequestInfo(repairRequestInfoJson, 'false')
+                  }
+          }
       };
 
       events = {};
@@ -251,6 +282,8 @@
         console.log('machines_info,onLoad: ', options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+          this.userId = wepy.getStorageSync(USER_ID)
+          this.account = wepy.getStorageSync(ACCOUNT)
       };
       onShow() {
         if (this.machineDetail.status == MACHINE_STATUS_IN_NORMAL) {
@@ -263,6 +296,32 @@
         this.getMaintainRecordList(this.machineDetail.nameplate)
         this.getRepairRecordList(this.machineDetail.nameplate)
       };
+
+       async addRepairRequestInfo(repairRequestInfoJson, isOldMachine) {
+            const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
+                query: {
+                    repairRequestInfo: repairRequestInfoJson,
+                    isOldMachine: isOldMachine
+                }
+            })
+            console.log('上传结果： ', uploadRepairRequestInfoJson)
+            if (uploadRepairRequestInfoJson.data.code === 200) {
+                this.repairRequestInfo.id = uploadRepairRequestInfoJson.data.data
+                repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
+                // 一键报修之后，不再需要用户上传图片/音频等。
+//          if (this.isOldMachine) {
+//            this.addRepairNameplateSrc(repairRequestInfoJson)
+//          } else {
+//            this.addRepairVoiceSrc(repairRequestInfoJson)
+//          }
+
+                tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK2')
+            } else if (uploadRepairRequestInfoJson.data.message === '该机器已经存在！') {
+                tip.confirm('该机器编号已经存在！')
+            } else {
+                tip.confirm(' 错误: ' +  uploadRepairRequestInfoJson.data.message)
+            }
+        };
 
       async getInstallRecordList(nameplate) {
         const installRecordListJson = await api.getInstallRecordList({

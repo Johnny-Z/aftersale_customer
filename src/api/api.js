@@ -8,7 +8,8 @@ import {
 const apiMall = 'https://aftersalesinsim.cn/api'
 // const apiMall = 'https://eservice-tech.cn/api'
 // const apiMall = 'http://192.168.1.31:8080/'
-// const apiMall = 'http://192.168.43.223:8080'
+//  ////const apiMall = 'http://127.0.0.1:8080'
+ const apiMall = 'http://192.168.1.138:8080/'
 const login = (params) => wxRequest(params, apiMall + '/login')
 const autoLogin = (params) => wxRequest(params, apiMall + '/wechat/user/info/getUsersByJsCode')
 const wxJsCode2Session = (params) => wxLogin(params, apiMall + '/wechat/user/info/loginGetUnionIdAndSave')
