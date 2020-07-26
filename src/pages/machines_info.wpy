@@ -129,7 +129,7 @@
             </view>
         </view>
     </view>
-    <button wx:if="{{hiddenBtn}}" class="single_button" @tap="buttonClick">报修</button>
+    <button wx:if="{{hiddenBtn}}" class="single_button" @tap="buttonClick">一键报修</button>
 </template>
 <style lang="less">
     page {
@@ -237,6 +237,8 @@
         },
         buttonClick() {
           let machines = JSON.stringify(this.machineDetail)
+
+            //todo: 一键报修之后，不用再进入报修详情了
           wepy.navigateTo({
             url: '/pages/request_repair?machineDetail=' + machines
           })

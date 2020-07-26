@@ -60,77 +60,77 @@
             </view>
         </view>
     </view>
-    <view class="detail_view_column">
-        <view class="title_view">
-            <view class="title_view_fir_part">
-                <text class="title_tx">语音描述</text>
-            </view>
-        </view>
-        <view class="main_view">
-            <button class="record_btn" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'default'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>
-            <view class="view_row" wx:if="{{hasRecorded}}">
-                <text class="label_tx">语音：</text>
-                <button wx:if='{{isPlaying}}' class="playing_btn" size="mini" loading="true">播放中...</button>
-                <button wx:else class="player_btn" size="mini" @tap="playRecord">点击播放</button>
-            </view>
-        </view>
-    </view>
-    <view class="detail_view_column">
-        <view class="title_view">
-            <view class="title_view_fir_part">
-                <text class="title_tx">图文描述</text>
-            </view>
-        </view>
-        <view class="main_view">
-            <view class="view_row" @tap="showTitleInput">
-                <text class="label_tx">问题概述：</text>
-                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
-            </view>
-            <modal wx:if="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" catchtouchmove="noMove" >
-                <textarea @input="bindTitleInput" class="textareaInput" value="{{repairRequestInfo.repairTitle}}" placeholder="请在此输入问题概述（不能为空）" fixed="true"></textarea>
-            </modal>
-            <text class="get_input_tx">{{repairRequestInfo.repairTitle}}</text>
-            <view class="view_row" @tap="showContentInput">
-                <text class="label_tx">具体描述：</text>
-                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
-            </view>
-            <modal wx:if="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" catchtouchmove="noMove">
-                <textarea @input="bindContentInput" class="textareaInput" value="{{repairRequestInfo.content}}" fixed="true" placeholder="请在此输入详细情况（不能为空）"></textarea>
-            </modal>
-            <text class="get_input_tx">{{repairRequestInfo.content}}</text>
-            <view class="view_row">
-                <text class="label_tx">故障照片（3张）：（长按删除）</text>
-            </view>
-            <view class="view_row">
-                <image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>
-                <image hidden="{{hiddenPhoto}}" class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>
-            </view>
-        </view>
-    </view>
-    <view class="detail_view_column">
-        <view class="title_view">
-            <view class="title_view_fir_part">
-                <text class="title_tx">联系方式</text>
-            </view>
-        </view>
-        <view class="main_view">
-            <view class="view_row">
-                <text class="label_tx">联系人：</text>
-                <picker class="picker_view" @change="bindPickerChange" value="{{index}}" range="{{customerListArr}}">
-                    <text class="picker_tx">{{customerListArr[index]}}</text>
-                </picker>
-            </view>
-            <view class="view_row">
-                <text class="label_tx">电话：</text>
-                <text class="info_tx">{{customerList[index].phone? customerList[index].phone: '暂无'}}</text>
-            </view>
-            <view class="view_row">
-                <text class="label_tx">地址：</text>
-                <text class="info_tx">{{customerList[index].address? customerList[index].address: '暂无'}}</text>
-            </view>
-        </view>
-    </view>
-    <button class="single_button" @tap="uploadMachineInfo">提交</button>
+    <!--<view class="detail_view_column">-->
+        <!--<view class="title_view">-->
+            <!--<view class="title_view_fir_part">-->
+                <!--<text class="title_tx">语音描述</text>-->
+            <!--</view>-->
+        <!--</view>-->
+        <!--<view class="main_view">-->
+            <!--<button class="record_btn" disabled="{{isRecording}}" loading="{{isRecording}}" type="{{isRecording ? 'warn' : 'default'}}" @touchstart="touchdown" @touchend="touchup">{{recordBtnVal}}</button>-->
+            <!--<view class="view_row" wx:if="{{hasRecorded}}">-->
+                <!--<text class="label_tx">语音：</text>-->
+                <!--<button wx:if='{{isPlaying}}' class="playing_btn" size="mini" loading="true">播放中...</button>-->
+                <!--<button wx:else class="player_btn" size="mini" @tap="playRecord">点击播放</button>-->
+            <!--</view>-->
+        <!--</view>-->
+    <!--</view>-->
+    <!--<view class="detail_view_column">-->
+        <!--<view class="title_view">-->
+            <!--<view class="title_view_fir_part">-->
+                <!--<text class="title_tx">图文描述</text>-->
+            <!--</view>-->
+        <!--</view>-->
+        <!--<view class="main_view">-->
+            <!--<view class="view_row" @tap="showTitleInput">-->
+                <!--<text class="label_tx">问题概述：</text>-->
+                <!--<image class="edit_icon" src="../images/icon_btn_edit.png"></image>-->
+            <!--</view>-->
+            <!--<modal wx:if="{{hiddenTitle}}" title="问题概述" confirm-text="确定" no-cancel="true" @confirm="listenerTitle" catchtouchmove="noMove" >-->
+                <!--<textarea @input="bindTitleInput" class="textareaInput" value="{{repairRequestInfo.repairTitle}}" placeholder="请在此输入问题概述（不能为空）" fixed="true"></textarea>-->
+            <!--</modal>-->
+            <!--<text class="get_input_tx">{{repairRequestInfo.repairTitle}}</text>-->
+            <!--<view class="view_row" @tap="showContentInput">-->
+                <!--<text class="label_tx">具体描述：</text>-->
+                <!--<image class="edit_icon" src="../images/icon_btn_edit.png"></image>-->
+            <!--</view>-->
+            <!--<modal wx:if="{{hiddenContent}}" title="具体描述" confirm-text="确定" no-cancel="true" @confirm="listenerContent" catchtouchmove="noMove">-->
+                <!--<textarea @input="bindContentInput" class="textareaInput" value="{{repairRequestInfo.content}}" fixed="true" placeholder="请在此输入详细情况（不能为空）"></textarea>-->
+            <!--</modal>-->
+            <!--<text class="get_input_tx">{{repairRequestInfo.content}}</text>-->
+            <!--<view class="view_row">-->
+                <!--<text class="label_tx">故障照片（3张）：（长按删除）</text>-->
+            <!--</view>-->
+            <!--<view class="view_row">-->
+                <!--<image class="photo_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>-->
+                <!--<image hidden="{{hiddenPhoto}}" class="photo_image" src="../images/icon_btn_add_photo.png" @tap="previewImage"></image>-->
+            <!--</view>-->
+        <!--</view>-->
+    <!--</view>-->
+    <!--<view class="detail_view_column">-->
+        <!--<view class="title_view">-->
+            <!--<view class="title_view_fir_part">-->
+                <!--<text class="title_tx">联系方式</text>-->
+            <!--</view>-->
+        <!--</view>-->
+        <!--<view class="main_view">-->
+            <!--<view class="view_row">-->
+                <!--<text class="label_tx">联系人：</text>-->
+                <!--<picker class="picker_view" @change="bindPickerChange" value="{{index}}" range="{{customerListArr}}">-->
+                    <!--<text class="picker_tx">{{customerListArr[index]}}</text>-->
+                <!--</picker>-->
+            <!--</view>-->
+            <!--<view class="view_row">-->
+                <!--<text class="label_tx">电话：</text>-->
+                <!--<text class="info_tx">{{customerList[index].phone? customerList[index].phone: '暂无'}}</text>-->
+            <!--</view>-->
+            <!--<view class="view_row">-->
+                <!--<text class="label_tx">地址：</text>-->
+                <!--<text class="info_tx">{{customerList[index].address? customerList[index].address: '暂无'}}</text>-->
+            <!--</view>-->
+        <!--</view>-->
+    <!--</view>-->
+    <button class="single_button" @tap="uploadMachineInfo">一键报修</button>
 </template>
 <style lang="less">
     page {
@@ -408,15 +408,16 @@
           this.$apply()
         },
         uploadMachineInfo() {
-          if (!this.repairRequestInfo.repairTitle) {
-            tip.alert('请输入问题概述')
-          } else if (!this.repairRequestInfo.content) {
-            tip.alert('请输入具体描述')
-          } else if (!this.recordTempSrc) {
-            tip.alert('请录制报修语音')
-          } else if (this.previewImageArr.length == 0) {
-            tip.alert('请拍下故障照片')
-          } else {
+//          if (!this.repairRequestInfo.repairTitle) {
+//            tip.alert('请输入问题概述')
+//          } else if (!this.repairRequestInfo.content) {
+//            tip.alert('请输入具体描述')
+//          } else if (!this.recordTempSrc) {
+//            tip.alert('请录制报修语音')
+//          } else if (this.previewImageArr.length == 0) {
+//            tip.alert('请拍下故障照片')
+//          } else
+              {
             this.repairRequestInfo.customer = this.customerList[this.index].id
             if (this.isOldMachine) {
               console.log('老机器报修： ')
@@ -445,17 +446,22 @@
         if (uploadRepairRequestInfoJson.data.code === 200) {
           this.repairRequestInfo.id = uploadRepairRequestInfoJson.data.data
           repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
-          if (this.isOldMachine) {
-            this.addRepairNameplateSrc(repairRequestInfoJson)
-          } else {
-            this.addRepairVoiceSrc(repairRequestInfoJson)
-          }
+
+            ///一键报修之后，不再需要用户上传图片/音频等。
+//          if (this.isOldMachine) {
+//            this.addRepairNameplateSrc(repairRequestInfoJson)
+//          } else {
+//            this.addRepairVoiceSrc(repairRequestInfoJson)
+//          }
+
+            tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK2')
         } else if (uploadRepairRequestInfoJson.data.message === '该机器已经存在！') {
           tip.confirm('该机器编号已经存在！')
         } else {
           tip.confirm('网络错误！提交出错，请重新提交！')
         }
       }
+
       async addRepairNameplateSrc(repairRequestInfoJson) {
         let updateNameplaceSrcJson = await api.uploadRepairRequestFiles({
           query: {
