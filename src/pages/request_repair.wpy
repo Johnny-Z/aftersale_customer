@@ -417,7 +417,12 @@
 //          } else if (this.previewImageArr.length == 0) {
 //            tip.alert('请拍下故障照片')
 //          } else
-              {
+
+        if (!this.oldNameplateInput || this.oldNameplateInput.length==0) {
+            tip.alert('请输铭牌号')
+        } else if ( this.nameplateImage.length == 0) {
+            tip.alert('请拍机器问题照片')
+        } else {
             this.repairRequestInfo.customer = this.customerList[this.index].id
             if (this.isOldMachine) {
               console.log('老机器报修： ')
@@ -436,6 +441,7 @@
         }
       };
       async addRepairRequestInfo(repairRequestInfoJson, isOldMachine) {
+
         const uploadRepairRequestInfoJson = await api.uploadRepairRequestInfo({
           query: {
             repairRequestInfo: repairRequestInfoJson,
@@ -448,11 +454,11 @@
           repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
 
             ///一键报修之后，不再需要用户上传图片/音频等。
-//          if (this.isOldMachine) {
-//            this.addRepairNameplateSrc(repairRequestInfoJson)
-//          } else {
+          if (this.isOldMachine) {
+            this.addRepairNameplateSrc(repairRequestInfoJson)
+          } else {
 //            this.addRepairVoiceSrc(repairRequestInfoJson)
-//          }
+          }
 
             tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK2')
         } else if (uploadRepairRequestInfoJson.data.message === '该机器已经存在！') {

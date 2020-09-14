@@ -35,11 +35,11 @@
   }
   .add_btn {
       width: 100%;
-      border: 1rpx solid #007474;
-      box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
+      border: 2rpx solid #007474;
+      box-shadow: 0 8rpx 16rpx 0 rgba(0,116,116,0.20);
       border-radius: 10rpx;
       font-family: PingFangSC-Regular;
-      font-size: 30rpx;
+      font-size: 50rpx;
       color: #007474;
       letter-spacing: 0;
       text-align: center;
@@ -49,7 +49,7 @@
   <view class="search_view">
     <view class="search_input" @tap="searchClick">
       <image class="search_icon" src="../images/icon_search.png"></image>
-      <text class="search_tx">输入机器编号</text>
+      <text class="search_tx">输入机器编号查找</text>
     </view>
   </view>
   <view class="list_column">
@@ -64,13 +64,13 @@
         <button wx:elif="{{item.status == 2}}" class="status_btn_color">安装中</button>
         <button wx:elif="{{item.status == 3}}" class="status_btn_light">正常</button>
         <button wx:elif="{{item.status == 4}}" class="status_btn_color">保养中</button>
-        <button wx:elif="{{item.status == 5}}" class="status_btn_color_warn">修理中</button>
+        <button wx:elif="{{item.status == 5}}" class="status_btn_color_warn">待维修</button>
         <button wx:elif="{{item.status == 6}}" class="status_btn_color_warn">审核中</button>
         <button wx:else class="status_btn_color">{{item.status}}</button>
       </view>
     </view>
   </view>
-  <button class="add_btn" @tap="addOldRepair">找不到机器？</button>
+  <button class="add_btn" @tap="addOldRepair">未搜索到编号，请手动输入</button>
 </template>
 <script>
     /* eslint-disable no-undef */
