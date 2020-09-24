@@ -162,6 +162,16 @@ radio .wx-radio-input.wx-radio-input-checked::before{
     border-top: 1px solid #F0F3F5;
     padding-bottom: 30rpx;
   }
+  .main_view_ff {
+     display: flex;
+    //display:inline; ///为了 显示字数较多的 维修方法。。。但是无效，todo
+     flex-direction: column;
+     border-top: 1px solid #F0F3F5;
+     padding-bottom: 30rpx;
+   }
+  .accept-city{
+    margin-left:5rpx;
+  }
   .detail_icon {
     width: 32rpx;
     height: 34rpx;
@@ -185,6 +195,16 @@ radio .wx-radio-input.wx-radio-input-checked::before{
   flex-direction: row;
   width: 50%;
 }
+
+.view_row_ff {
+  //display: flex;
+  display:inline; ///为了 显示字数较多的 维修方法...无效，todo
+  flex-direction: row;
+  background: #ffffff;
+  padding-top: 30rpx;
+  align-items: center;// 居中对齐
+
+}
 .label_tx {
   font-family: PingFangSC-Regular;
   font-size: 30rpx;
@@ -199,6 +219,17 @@ radio .wx-radio-input.wx-radio-input-checked::before{
   letter-spacing: 0;
   margin-left: 0rpx;
   margin-right: 15rpx;
+}
+.info_tx2 {
+  font-family: PingFangSC-Regular;
+  font-size: 30rpx;
+  color: #001C00;
+  letter-spacing: 0;
+  margin-left: 0rpx;
+  margin-right: 15rpx;
+  width: 30rpx;
+  //display: inline-block; display:inline;
+  padding-right: 2rpx;
 }
 .get_input_tx {
   font-family: PingFangSC-Regular;

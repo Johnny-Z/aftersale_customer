@@ -421,7 +421,7 @@
         if (!this.oldNameplateInput || this.oldNameplateInput.length==0) {
             tip.alert('请输铭牌号')
         } else if ( this.nameplateImage.length == 0) {
-            tip.alert('请拍机器问题照片')
+            tip.alert('请拍机器铭牌号照片')
         } else {
             this.repairRequestInfo.customer = this.customerList[this.index].id
             if (this.isOldMachine) {
@@ -453,14 +453,14 @@
           this.repairRequestInfo.id = uploadRepairRequestInfoJson.data.data
           repairRequestInfoJson = JSON.stringify(this.repairRequestInfo)
 
-            ///一键报修之后，不再需要用户上传图片/音频等。
+            // 一键报修之后，不再需要用户上传图片/音频等。
           if (this.isOldMachine) {
             this.addRepairNameplateSrc(repairRequestInfoJson)
           } else {
 //            this.addRepairVoiceSrc(repairRequestInfoJson)
           }
 
-            tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK2')
+//            tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK2')
         } else if (uploadRepairRequestInfoJson.data.message === '该机器已经存在！') {
           tip.confirm('该机器编号已经存在！')
         } else {
@@ -485,7 +485,9 @@
         if (returnNameplateSrcData.code === 200) {
           repairRequestInfoJson = JSON.stringify(returnNameplateSrcData.data)
           console.log('return结果： ', repairRequestInfoJson)
-          this.addRepairVoiceSrc(repairRequestInfoJson)
+            //  一键报修之后，不再需要用户上传图片/音频等。
+//          this.addRepairVoiceSrc(repairRequestInfoJson)
+            tip.confirm('报修成功！已通知厂家尽快处理！', 'BACK2')
         } else {
           tip.confirm('网络错误！提交出错，请重新提交！')
         }
@@ -554,9 +556,10 @@
         let userId = wepy.getStorageSync(USER_ID)
         this.getCustomerList(userId)
         let res = await wepy.getSetting()
-        if (!res.authSetting['scope.record']) {
-          wepy.authorize({scope: 'scope.record'})
-        }
+        // 一键报修，不再需要录音
+//        if (!res.authSetting['scope.record']) {
+//          wepy.authorize({scope: 'scope.record'})
+//        }
         this.$apply()
       };
       async getCustomerList(userId) {
